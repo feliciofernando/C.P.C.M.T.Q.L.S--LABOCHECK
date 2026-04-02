@@ -55,6 +55,26 @@ const CAMEL_TO_SNAKE: Record<string, string> = {
   // Admin
   dataCriacao: 'data_criacao',
   dataUltimoAcesso: 'data_ultimo_acesso',
+  // Site Content - Director Message
+  authorName: 'author_name',
+  authorPosition: 'author_position',
+  isActive: 'is_active',
+  updatedAt: 'updated_at',
+  createdAt: 'created_at',
+  // Site Content - Eventos
+  eventDate: 'event_date',
+  displayDate: 'display_date',
+  // Site Content - FAQs
+  sortOrder: 'sort_order',
+  // Site Content - Documentos
+  fileUrl: 'file_url',
+  // Site Content - Directores
+  photoUrl: 'photo_url',
+  // Site Content - Site Sections
+  sectionKey: 'section_key',
+  // Site Content - Noticias
+  isHighlighted: 'is_highlighted',
+  newsDate: 'news_date',
 }
 
 // Mapeamento inverso

@@ -21,6 +21,7 @@ import {
   CreditCard,
   Bell,
   Settings,
+  Globe,
 } from 'lucide-react';
 
 import LoginModal from './LoginModal';
@@ -30,6 +31,7 @@ import PainelVisualizar from './PainelVisualizar';
 import LicencaPVC from './LicencaPVC';
 import PainelAlertas from './PainelAlertas';
 import PainelConfiguracoes from './PainelConfiguracoes';
+import PainelSiteContent from './PainelSiteContent';
 import HeroSection from './HeroSection';
 import NavBar from './NavBar';
 import ExploreSection from './ExploreSection';
@@ -293,7 +295,7 @@ function AdminDashboard() {
       {/* Admin Content */}
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="w-full grid grid-cols-6 mb-6 bg-white border border-[#d1d1cc] h-auto p-1">
+          <TabsList className="w-full grid grid-cols-4 sm:grid-cols-8 mb-6 bg-white border border-[#d1d1cc] h-auto p-1">
             <TabsTrigger
               value="inscrever"
               className="text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
@@ -341,6 +343,14 @@ function AdminDashboard() {
               <Settings className="w-4 h-4 mr-1.5 hidden sm:inline" />
               <span className="hidden sm:inline">Configurações</span>
               <span className="sm:hidden">Config</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="conteudo"
+              className="text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
+            >
+              <Globe className="w-4 h-4 mr-1.5 hidden sm:inline" />
+              <span className="hidden sm:inline">Conteúdo</span>
+              <span className="sm:hidden">Site</span>
             </TabsTrigger>
           </TabsList>
 
@@ -404,6 +414,10 @@ function AdminDashboard() {
 
           <TabsContent value="configuracoes">
             <PainelConfiguracoes />
+          </TabsContent>
+
+          <TabsContent value="conteudo">
+            <PainelSiteContent />
           </TabsContent>
         </Tabs>
       </main>
