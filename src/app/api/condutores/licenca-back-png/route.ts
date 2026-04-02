@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-server';
 import { toCamelCase } from '@/lib/utils-supabase';
 import sharp from 'sharp';
+import { svgToPngSized } from '@/lib/svg-render';
 import { readFileSync } from 'fs';
 import path from 'path';
-import { getSvgFontStyle, getFontFamily } from '@/lib/svg-fonts';
 
 let cachedLundaSulBuf: Buffer | null = null;
 let cachedAngolaFlagBuf: Buffer | null = null;
@@ -117,10 +117,6 @@ async function generateBackPNG(c: {
 
   const backSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${BW}" height="${BH}" viewBox="0 0 ${BW} ${BH}">
   <defs>
-    <style>
-${getSvgFontStyle()}
-text { font-family: ${getFontFamily()}; }
-    </style>
     <linearGradient id="greenGrad" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" style="stop-color:#145028;stop-opacity:1" />
       <stop offset="100%" style="stop-color:#0f3d1d;stop-opacity:1" />
@@ -161,7 +157,8 @@ text { font-family: ${getFontFamily()}; }
   <line x1="400" y1="${BH - 35}" x2="800" y2="${BH - 35}" stroke="#d4a017" stroke-width="1" opacity="0.4"/>
 </svg>`;
 
-  let basePng = sharp(Buffer.from(backSvg)).png({ quality: 100 });
+  const backSvgPng = svgToPngSized(backSvg, BW, BH);
+  let basePng = sharp(backSvgPng);
   const lundaSulImage = await getLundaSulImage();
   basePng = basePng.composite([{ input: lundaSulImage, left: 70, top: 495 }]);
   const angolaFlagImage = await getAngolaFlagImage();

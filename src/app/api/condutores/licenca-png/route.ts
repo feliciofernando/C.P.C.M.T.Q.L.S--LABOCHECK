@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-server';
 import { toCamelCase } from '@/lib/utils-supabase';
-import sharp from 'sharp';
+import { svgToPngSized } from '@/lib/svg-render';
 import { readFileSync } from 'fs';
 import path from 'path';
-import { getSvgFontStyle, getFontFamily } from '@/lib/svg-fonts';
 
 let cachedLogoBase64: string | null = null;
 function getLogoBase64(): string {
@@ -117,8 +116,6 @@ async function generateFrontPNG(c: {
 
   const frontSvg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
   <defs>
-    ${getSvgFontStyle()}
-    <style>text { font-family: ${getFontFamily()}; }</style>
     <linearGradient id="headerGrad" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" style="stop-color:#1f6b36;stop-opacity:1" />
       <stop offset="100%" style="stop-color:#145028;stop-opacity:1" />
@@ -159,7 +156,7 @@ async function generateFrontPNG(c: {
   <line x1="480" y1="715" x2="720" y2="715" stroke="#1a1a1a" stroke-width="1.5"/>
 </svg>`;
 
-  return await sharp(Buffer.from(frontSvg)).png({ quality: 100 }).toBuffer();
+  return svgToPngSized(frontSvg, W, H);
 }
 
 function escapeXml(str: string): string {

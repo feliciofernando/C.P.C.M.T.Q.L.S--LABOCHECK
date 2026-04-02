@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-server';
 import { toCamelCase } from '@/lib/utils-supabase';
-import sharp from 'sharp';
+import { svgToPngSized } from '@/lib/svg-render';
 import { PDFDocument } from 'pdf-lib';
 import { readFileSync } from 'fs';
 import path from 'path';
-import { getSvgFontStyle, getFontFamily } from '@/lib/svg-fonts';
 
 // Cache logo
 let cachedLogoBase64: string | null = null;
@@ -71,13 +70,9 @@ function buildFrontSVG(c: Record<string, unknown>): string {
   const DARK = '#1a1a1a';
   const WHITE = '#ffffff';
   const LGRAY = '#f0f0eb';
-  const FF = getFontFamily();
+  const FF = 'sans-serif';
 
-  const fontStyle = getSvgFontStyle();
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">`;
-  if (fontStyle) {
-    svg += `<defs><style>${fontStyle}</style></defs>`;
-  }
   svg += `<rect x="0" y="0" width="${W}" height="${H}" fill="${WHITE}"/>`;
 
   // Green header
@@ -150,13 +145,9 @@ function buildBackSVG(c: Record<string, unknown>): string {
   const DARK = '#1a1a1a';
   const WHITE = '#ffffff';
   const GRAY = '#6b6b6b';
-  const FF = getFontFamily();
+  const FF = 'sans-serif';
 
-  const fontStyle = getSvgFontStyle();
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">`;
-  if (fontStyle) {
-    svg += `<defs><style>${fontStyle}</style></defs>`;
-  }
   svg += `<rect x="0" y="0" width="${W}" height="${H}" fill="${WHITE}"/>`;
 
   // Top info bar
@@ -210,17 +201,9 @@ async function generateLicensePDF(c: Record<string, unknown>): Promise<Buffer> {
 
   const cardW = 595;
   const cardH = 421;
-  const scale = 3;
 
-  const frontPng = await sharp(Buffer.from(frontSVG))
-    .resize(cardW * scale, cardH * scale, { fit: 'fill' })
-    .png({ compressionLevel: 6 })
-    .toBuffer();
-
-  const backPng = await sharp(Buffer.from(backSVG))
-    .resize(cardW * scale, cardH * scale, { fit: 'fill' })
-    .png({ compressionLevel: 6 })
-    .toBuffer();
+  const frontPng = svgToPngSized(frontSVG, cardW * 3, cardH * 3);
+  const backPng = svgToPngSized(backSVG, cardW * 3, cardH * 3);
 
   const pdfDoc = await PDFDocument.create();
 
