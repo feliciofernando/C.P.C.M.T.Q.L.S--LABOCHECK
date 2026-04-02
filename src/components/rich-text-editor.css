@@ -1,0 +1,322 @@
+/* ===== RICH TEXT EDITOR STYLES ===== */
+/* Tema visual adaptado para C.P.C.M.T.Q.L.S -- LABOCHECK */
+
+/* Wrapper principal do editor */
+.rich-text-editor-wrapper {
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: var(--card);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rich-text-editor-wrapper:focus-within {
+  border-color: var(--ring);
+  box-shadow: 0 0 0 2px rgba(26, 92, 46, 0.12);
+}
+
+.dark .rich-text-editor-wrapper:focus-within {
+  box-shadow: 0 0 0 2px rgba(46, 163, 86, 0.15);
+}
+
+/* ===== TOOLBAR ===== */
+.rich-text-editor-wrapper [class*="toolbar"] {
+  border-bottom: 1px solid var(--border);
+  background: var(--muted);
+  padding: 4px 8px;
+  gap: 2px;
+}
+
+/* Botoes da toolbar */
+.rich-text-editor-wrapper [class*="toolbar"] button {
+  color: var(--foreground);
+  border-radius: 4px;
+  padding: 6px 8px;
+  font-size: 13px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  min-width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rich-text-editor-wrapper [class*="toolbar"] button:hover {
+  background: var(--accent);
+  color: var(--foreground);
+}
+
+.rich-text-editor-wrapper [class*="toolbar"] button[class*="active"],
+.rich-text-editor-wrapper [class*="toolbar"] button[aria-pressed="true"] {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+/* Separador */
+.rich-text-editor-wrapper [class*="toolbar"] hr,
+.rich-text-editor-wrapper [class*="toolbar"] [class*="separator"] {
+  border-color: var(--border);
+  margin: 0 4px;
+  height: 20px;
+}
+
+/* Select de tipo de bloco */
+.rich-text-editor-wrapper [class*="toolbar"] select {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 13px;
+  background: var(--card);
+  color: var(--foreground);
+  cursor: pointer;
+  min-height: 32px;
+}
+
+.rich-text-editor-wrapper [class*="toolbar"] select:hover {
+  border-color: var(--primary);
+}
+
+/* ===== AREA DE CONTEUDO ===== */
+.rich-text-editor-content {
+  padding: 16px 20px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--foreground);
+  outline: none;
+  min-height: 250px;
+  cursor: text;
+}
+
+.rich-text-editor-content [data-placeholder]::before {
+  color: var(--muted-foreground);
+  font-style: italic;
+}
+
+/* ===== TIPOGRAFIA DO EDITOR ===== */
+
+/* Titulos */
+.rich-text-editor-content h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 1.25rem;
+  margin-bottom: 0.75rem;
+  color: var(--foreground);
+}
+
+.rich-text-editor-content h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.35;
+  margin-top: 1.1rem;
+  margin-bottom: 0.6rem;
+  color: var(--foreground);
+}
+
+.rich-text-editor-content h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  color: var(--foreground);
+}
+
+/* Paragrafo */
+.rich-text-editor-content p {
+  margin-bottom: 0.75rem;
+}
+
+/* Listas */
+.rich-text-editor-content ul,
+.rich-text-editor-content ol {
+  padding-left: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.rich-text-editor-content ul {
+  list-style-type: disc;
+}
+
+.rich-text-editor-content ol {
+  list-style-type: decimal;
+}
+
+.rich-text-editor-content li {
+  margin-bottom: 0.25rem;
+}
+
+.rich-text-editor-content li > p {
+  margin-bottom: 0.25rem;
+}
+
+/* Citacao */
+.rich-text-editor-content blockquote {
+  border-left: 3px solid var(--primary);
+  padding: 8px 16px;
+  margin: 0.75rem 0;
+  background: var(--muted);
+  border-radius: 0 4px 4px 0;
+  color: var(--muted-foreground);
+  font-style: italic;
+}
+
+/* Codigo inline */
+.rich-text-editor-content code {
+  background: var(--muted);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.9em;
+  font-family: "Consolas", "Monaco", "Courier New", monospace;
+  color: var(--primary);
+}
+
+/* Bloco de codigo */
+.rich-text-editor-content pre {
+  background: #1e1e2e;
+  color: #cdd6f4;
+  padding: 16px;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 0.75rem 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  border: 1px solid var(--border);
+}
+
+.rich-text-editor-content pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+/* Linha horizontal */
+.rich-text-editor-content hr {
+  border: none;
+  border-top: 2px solid var(--border);
+  margin: 1.25rem 0;
+}
+
+/* Link */
+.rich-text-editor-content a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.15s ease;
+}
+
+.rich-text-editor-content a:hover {
+  color: var(--primary);
+  opacity: 0.8;
+}
+
+/* Destaque (highlight) */
+.rich-text-editor-content mark {
+  background: #fef08a;
+  padding: 1px 3px;
+  border-radius: 2px;
+}
+
+.dark .rich-text-editor-content mark {
+  background: #854d0e;
+  color: #fef08a;
+}
+
+/* Imagens */
+.rich-text-editor-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin: 0.75rem 0;
+}
+
+/* Tabelas */
+.rich-text-editor-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.75rem 0;
+}
+
+.rich-text-editor-content th,
+.rich-text-editor-content td {
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.rich-text-editor-content th {
+  background: var(--muted);
+  font-weight: 600;
+}
+
+/* ===== MODO READONLY ===== */
+.rich-text-editor-content [contenteditable="false"] {
+  cursor: default;
+}
+
+/* ===== MODO DARK ADAPTACOES ===== */
+.dark .rich-text-editor-content pre {
+  background: #0d1117;
+  color: #e6edf3;
+  border-color: #30363d;
+}
+
+/* ===== DIALOG DE LINK ===== */
+.rich-text-editor-wrapper [role="dialog"] {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.dark .rich-text-editor-wrapper [role="dialog"] {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.rich-text-editor-wrapper [role="dialog"] input {
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 8px 12px;
+  color: var(--foreground);
+  width: 100%;
+  font-size: 14px;
+}
+
+.rich-text-editor-wrapper [role="dialog"] input:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(26, 92, 46, 0.12);
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 640px) {
+  .rich-text-editor-content {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .rich-text-editor-wrapper [class*="toolbar"] {
+    padding: 4px;
+  }
+
+  .rich-text-editor-wrapper [class*="toolbar"] button {
+    padding: 5px 6px;
+    font-size: 12px;
+    min-width: 28px;
+    height: 28px;
+  }
+
+  .rich-text-editor-content h1 {
+    font-size: 1.4rem;
+  }
+
+  .rich-text-editor-content h2 {
+    font-size: 1.2rem;
+  }
+
+  .rich-text-editor-content h3 {
+    font-size: 1.05rem;
+  }
+}
