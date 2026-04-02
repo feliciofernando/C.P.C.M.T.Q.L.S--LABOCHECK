@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -14,8 +14,16 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import { Textarea } from '@/components/ui/textarea';
-import { UserPlus, Loader2, Upload } from 'lucide-react';
+import {
+  UserPlus,
+  Loader2,
+  Upload,
+  Search,
+  Pencil,
+  Trash2,
+  XCircle,
+  Save,
+} from 'lucide-react';
 import { toast } from 'sonner';
 
 interface FormularioRegistoProps {
@@ -24,9 +32,14 @@ interface FormularioRegistoProps {
 
 export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps) {
   const [loading, setLoading] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
   const [fotoBase64, setFotoBase64] = useState('');
+  const [editId, setEditId] = useState<string | null>(null);
+  const [editNome, setEditNome] = useState('');
+  const [editOrdem, setEditOrdem] = useState<number | null>(null);
+  const [searchInput, setSearchInput] = useState('');
 
-  const [form, setForm] = useState({
+  const defaultForm = {
     nomeCompleto: '',
     dataNascimento: '',
     sexo: '',
@@ -57,10 +70,116 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
     instituicaoFormacao: '',
     nacionalidade: 'Angolana',
     provincia: 'Lunda Sul',
-  });
+  };
+
+  const [form, setForm] = useState(defaultForm);
 
   const updateField = (field: string, value: string | boolean) => {
     setForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const resetForm = useCallback(() => {
+    setForm(defaultForm);
+    setFotoBase64('');
+    setEditId(null);
+    setEditNome('');
+    setEditOrdem(null);
+  }, []);
+
+  const handleSearch = async () => {
+    if (!searchInput.trim()) {
+      toast.error('Digite um nome ou numero de ordem para buscar');
+      return;
+    }
+
+    setSearchLoading(true);
+    try {
+      const res = await fetch(
+        `/api/condutores/consulta?search=${encodeURIComponent(searchInput.trim())}`
+      );
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Condutor nao encontrado');
+      }
+
+      const condutor = await res.json();
+
+      setEditId(condutor.id);
+      setEditNome(condutor.nomeCompleto || '');
+      setEditOrdem(condutor.numeroOrdem || null);
+      setFotoBase64(condutor.fotoBase64 || '');
+
+      setForm({
+        nomeCompleto: condutor.nomeCompleto || '',
+        dataNascimento: condutor.dataNascimento ? condutor.dataNascimento.slice(0, 10) : '',
+        sexo: condutor.sexo || '',
+        numeroBI: condutor.numeroBI || '',
+        dataEmissaoBI: condutor.dataEmissaoBI ? condutor.dataEmissaoBI.slice(0, 10) : '',
+        estadoCivil: condutor.estadoCivil || '',
+        telefone1: condutor.telefone1 || '',
+        telefone2: condutor.telefone2 || '',
+        endereco: condutor.endereco || '',
+        municipio: condutor.municipio || '',
+        tipoVeiculo: condutor.tipoVeiculo || '',
+        marcaVeiculo: condutor.marcaVeiculo || '',
+        modeloVeiculo: condutor.modeloVeiculo || '',
+        corVeiculo: condutor.corVeiculo || '',
+        matriculaVeiculo: condutor.matriculaVeiculo || '',
+        numeroCartaConducao: condutor.numeroCartaConducao || '',
+        categoriaCarta: condutor.categoriaCarta || '',
+        tempoExperiencia: condutor.tempoExperiencia || '',
+        municipioTrabalho: condutor.municipioTrabalho || '',
+        horarioTrabalho: condutor.horarioTrabalho || '',
+        temBI: Boolean(condutor.temBI),
+        temCartaConducao: Boolean(condutor.temCartaConducao),
+        temDocumentoVeiculo: Boolean(condutor.temDocumentoVeiculo),
+        temSeguroVeiculo: Boolean(condutor.temSeguroVeiculo),
+        temCapacete: Boolean(condutor.temCapacete),
+        temColeteRefletor: Boolean(condutor.temColeteRefletor),
+        participouFormacao: Boolean(condutor.participouFormacao),
+        instituicaoFormacao: condutor.instituicaoFormacao || '',
+        nacionalidade: condutor.nacionalidade || 'Angolana',
+        provincia: condutor.provincia || 'Lunda Sul',
+      });
+
+      toast.success('Condutor carregado para edicao');
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Erro na busca';
+      toast.error(message);
+    } finally {
+      setSearchLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!editId) return;
+
+    const confirmed = window.confirm(
+      'Tem certeza que deseja eliminar este condutor? Esta accao e irreversivel.'
+    );
+    if (!confirmed) return;
+
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/condutores/${editId}`, {
+        method: 'DELETE',
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Erro ao eliminar');
+      }
+
+      toast.success('Condutor eliminado com sucesso');
+      resetForm();
+      onSucesso();
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Erro ao eliminar';
+      toast.error(message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleFotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,41 +219,128 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
     }
 
     setLoading(true);
-    try {
-      const res = await fetch('/api/condutores/registo', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, fotoBase64 }),
-      });
 
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || 'Erro ao registar');
+    if (editId) {
+      // EDIT mode
+      try {
+        const res = await fetch(`/api/condutores/${editId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...form, fotoBase64 }),
+        });
+
+        if (!res.ok) {
+          const data = await res.json();
+          throw new Error(data.error || 'Erro ao actualizar');
+        }
+
+        toast.success('Condutor actualizado com sucesso!');
+        resetForm();
+        onSucesso();
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Erro ao actualizar';
+        toast.error(message);
+      } finally {
+        setLoading(false);
       }
+    } else {
+      // CREATE mode
+      try {
+        const res = await fetch('/api/condutores/registo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...form, fotoBase64 }),
+        });
 
-      // Reset form
-      setForm({
-        nomeCompleto: '', dataNascimento: '', sexo: '', numeroBI: '', dataEmissaoBI: '',
-        estadoCivil: '', telefone1: '', telefone2: '', endereco: '', municipio: '',
-        tipoVeiculo: '', marcaVeiculo: '', modeloVeiculo: '', corVeiculo: '',
-        matriculaVeiculo: '', numeroCartaConducao: '', categoriaCarta: '', tempoExperiencia: '',
-        municipioTrabalho: '', horarioTrabalho: '', temBI: false, temCartaConducao: false,
-        temDocumentoVeiculo: false, temSeguroVeiculo: false, temCapacete: false,
-        temColeteRefletor: false, participouFormacao: false, instituicaoFormacao: '',
-        nacionalidade: 'Angolana', provincia: 'Lunda Sul',
-      });
-      setFotoBase64('');
-      onSucesso();
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Erro ao registar';
-      toast.error(message);
-    } finally {
-      setLoading(false);
+        if (!res.ok) {
+          const data = await res.json();
+          throw new Error(data.error || 'Erro ao registar');
+        }
+
+        resetForm();
+        onSucesso();
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Erro ao registar';
+        toast.error(message);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
+      {/* Search Bar */}
+      <div className="bg-white border border-[#d1d1cc] rounded-lg p-4">
+        <div className="flex items-center gap-3">
+          <Search className="w-5 h-5 text-[#6b6b6b] shrink-0" />
+          <Input
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleSearch();
+              }
+            }}
+            placeholder="Buscar por nome, numero de BI ou numero de ordem..."
+            className="flex-1"
+          />
+          <Button
+            type="button"
+            onClick={handleSearch}
+            disabled={searchLoading}
+            variant="outline"
+            className="border-[#1a5c2e] text-[#1a5c2e] hover:bg-[#1a5c2e] hover:text-white shrink-0"
+          >
+            {searchLoading ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <Search className="w-4 h-4 mr-2" />
+            )}
+            Buscar
+          </Button>
+        </div>
+      </div>
+
+      {/* Edit Mode Banner */}
+      {editId && (
+        <div className="bg-amber-50 border border-amber-300 rounded-lg p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <Pencil className="w-5 h-5 text-amber-600 shrink-0" />
+            <p className="text-sm font-medium text-amber-800">
+              Editando: <span className="font-bold">{editNome}</span>
+              {editOrdem !== null && (
+                <span className="ml-2 text-amber-600">
+                  &mdash; No de Ordem: {editOrdem}
+                </span>
+              )}
+            </p>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <Button
+              type="button"
+              onClick={resetForm}
+              variant="outline"
+              className="text-sm h-8 border-gray-400 text-gray-700 hover:bg-gray-100"
+            >
+              <XCircle className="w-4 h-4 mr-1" />
+              Cancelar Edicao
+            </Button>
+            <Button
+              type="button"
+              onClick={handleDelete}
+              disabled={loading}
+              variant="destructive"
+              className="text-sm h-8 bg-red-600 hover:bg-red-700"
+            >
+              <Trash2 className="w-4 h-4 mr-1" />
+              Eliminar Condutor
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* Foto Upload */}
       <div className="flex items-start gap-4">
         <div className="w-28 h-36 border-2 border-dashed border-[#d1d1cc] rounded-lg flex flex-col items-center justify-center bg-white overflow-hidden">
@@ -511,10 +717,18 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
         >
           {loading ? (
             <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+          ) : editId ? (
+            <Save className="w-4 h-4 mr-2" />
           ) : (
             <UserPlus className="w-4 h-4 mr-2" />
           )}
-          {loading ? 'A registar...' : 'Registar Condutor'}
+          {loading
+            ? editId
+              ? 'A guardar...'
+              : 'A registar...'
+            : editId
+              ? 'Guardar Alteracoes'
+              : 'Registar Condutor'}
         </Button>
       </div>
     </form>
