@@ -124,6 +124,35 @@ function LoadingState() {
 }
 
 /* ==============================================================
+   HTML CONTENT RENDERER (safe, styled)
+   ============================================================== */
+function HtmlContent({ html, className = '' }: { html: string; className?: string }) {
+  if (!html) return null;
+  // If content has HTML tags, render as HTML; otherwise render as plain text with paragraphs
+  const hasHtml = /<[a-z][\s\S]*>/i.test(html);
+  if (!hasHtml) {
+    // Plain text - render as paragraphs
+    return (
+      <div className={`text-sm text-[#6b6b6b] leading-relaxed space-y-3 ${className}`}>
+        {html.split('\n\n').map((p, i) => (
+          p.trim() && <p key={i} className="text-justify indent-8">{p.trim()}</p>
+        ))}
+      </div>
+    );
+  }
+  return (
+    <div
+      className={`prose prose-sm max-w-none ${className}`}
+      style={{ color: '#6b6b6b', fontSize: '14px', lineHeight: '1.7' }}
+      dangerouslySetInnerHTML={{
+        __html: html.replace(/<p>\s*<\/p>/g, ''),
+      }}
+      suppressHydrationWarning
+    />
+  );
+}
+
+/* ==============================================================
    EMPTY STATE
    ============================================================== */
 function EmptyState({ message }: { message: string }) {
@@ -215,13 +244,7 @@ function DirectorMessageContent() {
 
             <Separator className="bg-[#d1d1cc] my-4" />
 
-            <div className="text-sm text-[#6b6b6b] leading-relaxed space-y-4">
-              {message.content.split('\n\n').map((paragraph, i) => (
-                <p key={i} className="indent-8 text-justify">
-                  {paragraph}
-                </p>
-              ))}
-            </div>
+            <HtmlContent html={message.content} className="text-[#1a1a1a] text-sm sm:text-base" />
 
             <Separator className="bg-[#d1d1cc] my-6" />
 
@@ -388,9 +411,7 @@ function LegislacaoContent() {
                     {item.title}
                   </h3>
                   {item.description && (
-                    <p className="text-xs sm:text-sm text-[#6b6b6b] leading-relaxed">
-                      {item.description}
-                    </p>
+                    <div className="text-xs sm:text-sm text-[#6b6b6b] leading-relaxed line-clamp-3" dangerouslySetInnerHTML={{ __html: item.description }} />
                   )}
                 </div>
               </div>
@@ -449,7 +470,7 @@ function FaqItem({
       {open && (
         <div className="px-4 sm:px-5 pb-4 sm:pb-5">
           <div className="ml-9 pl-4 border-l-2 border-[#d4a017]/40">
-            <p className="text-sm text-[#6b6b6b] leading-relaxed">{answer}</p>
+            <HtmlContent html={answer} />
           </div>
         </div>
       )}
@@ -550,9 +571,7 @@ function DocumentosContent() {
                 {doc.title}
               </h3>
               {doc.description && (
-                <p className="text-xs text-[#6b6b6b] leading-relaxed mb-4">
-                  {doc.description}
-                </p>
+                <div className="text-xs text-[#6b6b6b] leading-relaxed mb-4 line-clamp-2" dangerouslySetInnerHTML={{ __html: doc.description }} />
               )}
 
               <div className="flex items-center justify-between">
@@ -643,9 +662,7 @@ function GaleriasContent() {
                     </p>
                   )}
                   {director.description && (
-                    <p className="text-xs text-[#6b6b6b] leading-relaxed max-w-xs">
-                      {director.description}
-                    </p>
+                    <div className="text-xs text-[#6b6b6b] leading-relaxed max-w-xs" dangerouslySetInnerHTML={{ __html: director.description }} />
                   )}
                 </div>
               </CardContent>
@@ -692,11 +709,7 @@ function SobreContent() {
           </CardHeader>
           <CardContent className="p-5 sm:p-6">
             <div className="text-sm text-[#6b6b6b] leading-relaxed space-y-4">
-              {(missao.content || '').split('\n\n').map((paragraph, i) => (
-                <p key={i} className="text-justify indent-8">
-                  {paragraph}
-                </p>
-              ))}
+              <HtmlContent html={missao.content || ''} />
             </div>
           </CardContent>
         </Card>
@@ -713,11 +726,7 @@ function SobreContent() {
           </CardHeader>
           <CardContent className="p-5 sm:p-6">
             <div className="text-sm text-[#6b6b6b] leading-relaxed space-y-4">
-              {(visao.content || '').split('\n\n').map((paragraph, i) => (
-                <p key={i} className="text-justify indent-8">
-                  {paragraph}
-                </p>
-              ))}
+              <HtmlContent html={visao.content || ''} />
             </div>
           </CardContent>
         </Card>
@@ -787,11 +796,7 @@ function SobreContent() {
           </CardHeader>
           <CardContent className="p-5 sm:p-6">
             <div className="text-sm text-[#6b6b6b] leading-relaxed space-y-4">
-              {(historia.content || '').split('\n\n').map((paragraph, i) => (
-                <p key={i} className="text-justify indent-8">
-                  {paragraph}
-                </p>
-              ))}
+              <HtmlContent html={historia.content || ''} />
             </div>
           </CardContent>
         </Card>
@@ -910,9 +915,7 @@ function NoticiasContent() {
                     {news.title}
                   </h3>
                   {(news.excerpt || news.content) && (
-                    <p className="text-xs sm:text-sm text-[#6b6b6b] leading-relaxed">
-                      {news.excerpt || news.content}
-                    </p>
+                    <div className="text-xs sm:text-sm text-[#6b6b6b] leading-relaxed line-clamp-3" dangerouslySetInnerHTML={{ __html: news.excerpt || news.content || '' }} />
                   )}
 
                   <div className="mt-3 flex items-center gap-1 text-xs font-medium text-[#1a5c2e] opacity-0 group-hover:opacity-100 transition-opacity">

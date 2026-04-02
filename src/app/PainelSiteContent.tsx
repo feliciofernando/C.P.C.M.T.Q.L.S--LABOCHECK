@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { RichTextEditor } from '@/components/rich-text-editor';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import {
@@ -524,7 +525,7 @@ export default function PainelSiteContent() {
             </div>
             <div className="mt-4">
               <label className="text-xs font-semibold text-[#1a1a1a] mb-1 block">Conteúdo</label>
-              <Textarea value={directorForm.content} onChange={e => setDirectorForm(p => ({ ...p, content: e.target.value }))} rows={8} />
+              <RichTextEditor content={directorForm.content} onChange={html => setDirectorForm(p => ({ ...p, content: html }))} placeholder="Escreva a mensagem do director..." minHeight="200px" maxHeight="400px" />
             </div>
             <div className="mt-4 flex items-center gap-2">
               <input type="checkbox" id="dir-active" checked={directorForm.isActive} onChange={e => setDirectorForm(p => ({ ...p, isActive: e.target.checked }))} className="rounded" />
@@ -606,7 +607,7 @@ export default function PainelSiteContent() {
             </div>
             <div className="sm:col-span-2">
               <label className="text-xs font-semibold text-[#1a1a1a] mb-1 block">Descrição</label>
-              <Textarea value={formData.description || ''} onChange={e => updateForm('description', e.target.value)} rows={4} />
+              <RichTextEditor content={formData.description || ''} onChange={html => updateForm('description', html)} placeholder="Descrição..." minHeight="150px" maxHeight="300px" />
             </div>
           </div>
           <div className="mt-4 flex items-center gap-2">
@@ -674,7 +675,7 @@ export default function PainelSiteContent() {
             </div>
             <div className="sm:col-span-2">
               <label className="text-xs font-semibold text-[#1a1a1a] mb-1 block">Descrição</label>
-              <Textarea value={formData.description || ''} onChange={e => updateForm('description', e.target.value)} rows={4} />
+              <RichTextEditor content={formData.description || ''} onChange={html => updateForm('description', html)} placeholder="Descrição..." minHeight="150px" maxHeight="300px" />
             </div>
           </div>
           <div className="mt-4 flex items-center gap-2">
@@ -733,7 +734,7 @@ export default function PainelSiteContent() {
             </div>
             <div>
               <label className="text-xs font-semibold text-[#1a1a1a] mb-1 block">Resposta</label>
-              <Textarea value={formData.answer || ''} onChange={e => updateForm('answer', e.target.value)} rows={6} />
+              <RichTextEditor content={formData.answer || ''} onChange={html => updateForm('answer', html)} placeholder="Resposta da pergunta..." minHeight="150px" maxHeight="300px" />
             </div>
             <div className="w-32">
               <label className="text-xs font-semibold text-[#1a1a1a] mb-1 block">Ordem</label>
@@ -810,7 +811,7 @@ export default function PainelSiteContent() {
             </div>
             <div className="sm:col-span-2">
               <label className="text-xs font-semibold text-[#1a1a1a] mb-1 block">Descrição</label>
-              <Textarea value={formData.description || ''} onChange={e => updateForm('description', e.target.value)} rows={3} />
+              <RichTextEditor content={formData.description || ''} onChange={html => updateForm('description', html)} placeholder="Descrição do documento..." minHeight="120px" maxHeight="250px" />
             </div>
           </div>
           <div className="mt-4 flex items-center gap-2">
@@ -884,7 +885,7 @@ export default function PainelSiteContent() {
             </div>
             <div className="sm:col-span-2">
               <label className="text-xs font-semibold text-[#1a1a1a] mb-1 block">Descrição</label>
-              <Textarea value={formData.description || ''} onChange={e => updateForm('description', e.target.value)} rows={4} />
+              <RichTextEditor content={formData.description || ''} onChange={html => updateForm('description', html)} placeholder="Descrição..." minHeight="150px" maxHeight="300px" />
             </div>
           </div>
           <div className="mt-4 flex items-center gap-2">
@@ -960,7 +961,7 @@ export default function PainelSiteContent() {
             </div>
             <div className="sm:col-span-2">
               <label className="text-xs font-semibold text-[#1a1a1a] mb-1 block">Conteúdo</label>
-              <Textarea value={formData.content || ''} onChange={e => updateForm('content', e.target.value)} rows={6} />
+              <RichTextEditor content={formData.content || ''} onChange={html => updateForm('content', html)} placeholder="Conteúdo da secção..." minHeight="180px" maxHeight="350px" />
             </div>
           </div>
           <div className="mt-4 flex items-center gap-2">
@@ -1037,11 +1038,11 @@ export default function PainelSiteContent() {
             </div>
             <div className="sm:col-span-2">
               <label className="text-xs font-semibold text-[#1a1a1a] mb-1 block">Resumo</label>
-              <Textarea value={formData.excerpt || ''} onChange={e => updateForm('excerpt', e.target.value)} rows={3} />
+              <RichTextEditor content={formData.excerpt || ''} onChange={html => updateForm('excerpt', html)} placeholder="Resumo da notícia..." minHeight="120px" maxHeight="250px" />
             </div>
             <div className="sm:col-span-2">
-              <label className="text-xs font-semibold text-[#1a1a1a] mb-1 block">Conteúdo</label>
-              <Textarea value={formData.content || ''} onChange={e => updateForm('content', e.target.value)} rows={8} />
+              <label className="text-xs font-semibold text-[#1a1a1a] mb-1 block">Conteúdo Completo</label>
+              <RichTextEditor content={formData.content || ''} onChange={html => updateForm('content', html)} placeholder="Conteúdo completo da notícia..." minHeight="200px" maxHeight="500px" />
             </div>
           </div>
           <SaveCancelButtons />
