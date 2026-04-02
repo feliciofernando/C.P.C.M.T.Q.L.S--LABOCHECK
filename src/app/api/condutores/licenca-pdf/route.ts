@@ -202,8 +202,8 @@ async function generateLicensePDF(c: Record<string, unknown>): Promise<Buffer> {
   const cardW = 595;
   const cardH = 421;
 
-  const frontPng = svgToPngSized(frontSVG, cardW * 3, cardH * 3);
-  const backPng = svgToPngSized(backSVG, cardW * 3, cardH * 3);
+  const frontPng = await svgToPngSized(frontSVG, cardW * 3, cardH * 3);
+  const backPng = await svgToPngSized(backSVG, cardW * 3, cardH * 3);
 
   const pdfDoc = await PDFDocument.create();
 

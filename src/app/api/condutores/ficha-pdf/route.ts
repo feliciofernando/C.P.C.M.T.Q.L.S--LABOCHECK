@@ -294,7 +294,7 @@ function buildFichaSVG(c: Record<string, unknown>): string {
 
 async function generateFichaPDF(c: Record<string, unknown>): Promise<Buffer> {
   const svgContent = buildFichaSVG(c);
-  const pngBuffer = svgToPngSized(svgContent, 595 * 3, 842 * 3);
+  const pngBuffer = await svgToPngSized(svgContent, 595 * 3, 842 * 3);
 
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage([595, 842]);

@@ -156,7 +156,7 @@ async function generateFrontPNG(c: {
   <line x1="480" y1="715" x2="720" y2="715" stroke="#1a1a1a" stroke-width="1.5"/>
 </svg>`;
 
-  return svgToPngSized(frontSvg, W, H);
+  return await svgToPngSized(frontSvg, W, H);
 }
 
 function escapeXml(str: string): string {

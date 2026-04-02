@@ -157,7 +157,7 @@ async function generateBackPNG(c: {
   <line x1="400" y1="${BH - 35}" x2="800" y2="${BH - 35}" stroke="#d4a017" stroke-width="1" opacity="0.4"/>
 </svg>`;
 
-  const backSvgPng = svgToPngSized(backSvg, BW, BH);
+  const backSvgPng = await svgToPngSized(backSvg, BW, BH);
   let basePng = sharp(backSvgPng);
   const lundaSulImage = await getLundaSulImage();
   basePng = basePng.composite([{ input: lundaSulImage, left: 70, top: 495 }]);
