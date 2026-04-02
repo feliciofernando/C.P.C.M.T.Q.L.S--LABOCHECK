@@ -15,27 +15,17 @@ export async function GET(request: NextRequest) {
     let data = null;
     let error = null;
 
-    if (!isNaN(numSearch)) {
-      // Try exact match on numero_ordem first
-      const exact = await supabase
+    if (!isNaN(numSearch) && String(numSearch) === search.trim()) {
+      // Pure number: search ONLY by exact numero_ordem
+      const res = await supabase
         .from('condutores')
         .select('*')
         .eq('numero_ordem', numSearch)
         .limit(1);
-
-      if (exact.data && exact.data.length > 0) {
-        data = exact.data;
-      } else {
-        // Fallback: search BI and name containing the number
-        const fallback = await supabase
-          .from('condutores')
-          .select('*')
-          .or(`numero_bi.ilike.%${search}%,nome_completo.ilike.%${search}%`)
-          .limit(1);
-        data = fallback.data;
-        error = fallback.error;
-      }
+      data = res.data;
+      error = res.error;
     } else {
+      // Text: search by BI or name
       const res = await supabase
         .from('condutores')
         .select('*')
