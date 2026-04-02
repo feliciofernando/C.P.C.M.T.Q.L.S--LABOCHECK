@@ -32,6 +32,7 @@ import LicencaPVC from './LicencaPVC';
 import PainelAlertas from './PainelAlertas';
 import PainelConfiguracoes from './PainelConfiguracoes';
 import PainelSiteContent from './PainelSiteContent';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import HeroSection from './HeroSection';
 import NavBar from './NavBar';
 import ExploreSection from './ExploreSection';
@@ -417,7 +418,9 @@ function AdminDashboard() {
           </TabsContent>
 
           <TabsContent value="conteudo">
-            <PainelSiteContent />
+            <ErrorBoundary>
+              <PainelSiteContent />
+            </ErrorBoundary>
           </TabsContent>
         </Tabs>
       </main>

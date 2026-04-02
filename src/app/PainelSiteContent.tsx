@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { RichTextEditor } from '@/components/rich-text-editor';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import {
@@ -25,7 +25,26 @@ import {
   Building2,
   Newspaper,
   RefreshCw,
+  AlertTriangle,
 } from 'lucide-react';
+
+/* Dynamic import for RichTextEditor — isolates Tiptap crashes */
+const RichTextEditor = dynamic(
+  () => import('@/components/rich-text-editor').then(mod => mod.RichTextEditor),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="border border-[#d1d1cc] rounded-lg animate-pulse bg-gray-100" style={{ minHeight: '150px' }}>
+        <div className="h-10 bg-gray-200 rounded-t-lg" />
+        <div className="p-4 space-y-2">
+          <div className="h-3 bg-gray-200 rounded w-3/4" />
+          <div className="h-3 bg-gray-200 rounded w-1/2" />
+          <div className="h-3 bg-gray-200 rounded w-2/3" />
+        </div>
+      </div>
+    ),
+  }
+);
 
 /* ==============================
    TYPES
@@ -182,6 +201,7 @@ export default function PainelSiteContent() {
   const [showForm, setShowForm] = useState(false);
   const [editingItem, setEditingItem] = useState<any>(null);
   const [formData, setFormData] = useState<any>({});
+  const [fetchError, setFetchError] = useState<string | null>(null);
 
   /* ==============================
      FETCH DATA
@@ -189,24 +209,31 @@ export default function PainelSiteContent() {
 
   const fetchData = useCallback(async () => {
     setLoading(true);
+    setFetchError(null);
     try {
       if (activeSection === 'director') {
         const res = await fetch('/api/site/director-message');
-        if (res.ok) {
-          const data = await res.json();
-          setDirectorMessage(data);
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ error: 'Erro de ligação ao servidor' }));
+          throw new Error(err.error || `Erro ${res.status}`);
         }
+        const data = await res.json();
+        setDirectorMessage(data);
       } else {
         const section = SECTIONS.find(s => s.key === activeSection);
         if (!section) return;
         const res = await fetch(`${section.apiBase}?all=true`);
-        if (res.ok) {
-          const data = await res.json();
-          setItems(Array.isArray(data) ? data : []);
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ error: 'Erro de ligação ao servidor' }));
+          throw new Error(err.error || `Erro ${res.status}`);
         }
+        const data = await res.json();
+        setItems(Array.isArray(data) ? data : []);
       }
-    } catch {
-      toast.error('Erro ao carregar dados');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Erro ao carregar dados';
+      setFetchError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -394,6 +421,24 @@ export default function PainelSiteContent() {
   };
 
   /* ==============================
+     RENDER: ERROR CARD (reusable)
+     ============================== */
+
+  const ErrorCard = () => (
+    <Card className="border-orange-200 bg-orange-50/50">
+      <CardContent className="p-6 text-center">
+        <AlertTriangle className="w-10 h-10 text-orange-400 mx-auto mb-3" />
+        <p className="text-sm font-semibold text-orange-700 mb-1">Erro ao carregar dados</p>
+        <p className="text-xs text-orange-600 mb-4">{fetchError}</p>
+        <Button variant="outline" size="sm" onClick={fetchData} className="gap-1.5">
+          <RefreshCw className="w-3.5 h-3.5" />
+          Tentar Novamente
+        </Button>
+      </CardContent>
+    </Card>
+  );
+
+  /* ==============================
      RENDER: ACTIVE STATUS BADGE
      ============================== */
 
@@ -496,6 +541,8 @@ export default function PainelSiteContent() {
       return <p className="text-sm text-[#6b6b6b] py-8 text-center">A carregar...</p>;
     }
 
+    if (fetchError) return <ErrorCard />;
+
     return (
       <div className="space-y-4">
         <SectionHeader
@@ -582,7 +629,8 @@ export default function PainelSiteContent() {
   const renderEventosSection = () => (
     <div className="space-y-4">
       <SectionHeader title="Eventos" onAdd={startAdd} />
-      {showForm || editingItem ? (
+      {fetchError ? <ErrorCard /> : null}
+      {!fetchError && (showForm || editingItem) ? (
         <FormCard title={editingItem ? 'Editar Evento' : 'Adicionar Evento'}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -662,7 +710,8 @@ export default function PainelSiteContent() {
   const renderLegislacaoSection = () => (
     <div className="space-y-4">
       <SectionHeader title="Legislação" onAdd={startAdd} />
-      {showForm || editingItem ? (
+      {fetchError ? <ErrorCard /> : null}
+      {!fetchError && (showForm || editingItem) ? (
         <FormCard title={editingItem ? 'Editar Legislação' : 'Adicionar Legislação'}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="sm:col-span-2">
@@ -685,7 +734,7 @@ export default function PainelSiteContent() {
           <SaveCancelButtons />
         </FormCard>
       ) : null}
-      {loading ? (
+      {!fetchError && loading ? (
         <p className="text-sm text-[#6b6b6b] py-8 text-center">A carregar...</p>
       ) : items.length === 0 && !showForm ? (
         <Card className="border-[#d1d1cc] shadow-sm">
@@ -694,7 +743,7 @@ export default function PainelSiteContent() {
             <p className="text-[#6b6b6b] text-sm">Nenhuma legislação registada.</p>
           </CardContent>
         </Card>
-      ) : (
+      ) : !fetchError && items.length > 0 ? (
         <div className="space-y-2 max-h-[60vh] overflow-y-auto">
           {(items as Legislacao[]).map(item => (
             <Card key={item.id} className="border-[#d1d1cc] shadow-sm">
@@ -714,7 +763,7 @@ export default function PainelSiteContent() {
             </Card>
           ))}
         </div>
-      )}
+      ) : fetchError ? null : null}
     </div>
   );
 
@@ -725,7 +774,8 @@ export default function PainelSiteContent() {
   const renderFaqsSection = () => (
     <div className="space-y-4">
       <SectionHeader title="Perguntas Frequentes" onAdd={startAdd} />
-      {showForm || editingItem ? (
+      {fetchError ? <ErrorCard /> : null}
+      {!fetchError && (showForm || editingItem) ? (
         <FormCard title={editingItem ? 'Editar FAQ' : 'Adicionar FAQ'}>
           <div className="grid grid-cols-1 gap-4">
             <div>
@@ -748,7 +798,7 @@ export default function PainelSiteContent() {
           <SaveCancelButtons />
         </FormCard>
       ) : null}
-      {loading ? (
+      {!fetchError && loading ? (
         <p className="text-sm text-[#6b6b6b] py-8 text-center">A carregar...</p>
       ) : items.length === 0 && !showForm ? (
         <Card className="border-[#d1d1cc] shadow-sm">
@@ -757,7 +807,7 @@ export default function PainelSiteContent() {
             <p className="text-[#6b6b6b] text-sm">Nenhuma FAQ registada.</p>
           </CardContent>
         </Card>
-      ) : (
+      ) : !fetchError && items.length > 0 ? (
         <div className="space-y-2 max-h-[60vh] overflow-y-auto">
           {(items as FAQ[]).map(item => (
             <Card key={item.id} className="border-[#d1d1cc] shadow-sm">
@@ -779,7 +829,7 @@ export default function PainelSiteContent() {
             </Card>
           ))}
         </div>
-      )}
+      ) : fetchError ? null : null}
     </div>
   );
 
@@ -790,7 +840,8 @@ export default function PainelSiteContent() {
   const renderDocumentosSection = () => (
     <div className="space-y-4">
       <SectionHeader title="Documentos" onAdd={startAdd} />
-      {showForm || editingItem ? (
+      {fetchError ? <ErrorCard /> : null}
+      {!fetchError && (showForm || editingItem) ? (
         <FormCard title={editingItem ? 'Editar Documento' : 'Adicionar Documento'}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="sm:col-span-2">
@@ -821,7 +872,7 @@ export default function PainelSiteContent() {
           <SaveCancelButtons />
         </FormCard>
       ) : null}
-      {loading ? (
+      {!fetchError && loading ? (
         <p className="text-sm text-[#6b6b6b] py-8 text-center">A carregar...</p>
       ) : items.length === 0 && !showForm ? (
         <Card className="border-[#d1d1cc] shadow-sm">
@@ -830,7 +881,7 @@ export default function PainelSiteContent() {
             <p className="text-[#6b6b6b] text-sm">Nenhum documento registado.</p>
           </CardContent>
         </Card>
-      ) : (
+      ) : !fetchError && items.length > 0 ? (
         <div className="space-y-2 max-h-[60vh] overflow-y-auto">
           {(items as Documento[]).map(item => (
             <Card key={item.id} className="border-[#d1d1cc] shadow-sm">
@@ -853,7 +904,7 @@ export default function PainelSiteContent() {
             </Card>
           ))}
         </div>
-      )}
+      ) : fetchError ? null : null}
     </div>
   );
 
@@ -864,7 +915,8 @@ export default function PainelSiteContent() {
   const renderDirectoresSection = () => (
     <div className="space-y-4">
       <SectionHeader title="Directores" onAdd={startAdd} />
-      {showForm || editingItem ? (
+      {fetchError ? <ErrorCard /> : null}
+      {!fetchError && (showForm || editingItem) ? (
         <FormCard title={editingItem ? 'Editar Director' : 'Adicionar Director'}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -895,7 +947,7 @@ export default function PainelSiteContent() {
           <SaveCancelButtons />
         </FormCard>
       ) : null}
-      {loading ? (
+      {!fetchError && loading ? (
         <p className="text-sm text-[#6b6b6b] py-8 text-center">A carregar...</p>
       ) : items.length === 0 && !showForm ? (
         <Card className="border-[#d1d1cc] shadow-sm">
@@ -904,7 +956,7 @@ export default function PainelSiteContent() {
             <p className="text-[#6b6b6b] text-sm">Nenhum director registado.</p>
           </CardContent>
         </Card>
-      ) : (
+      ) : !fetchError && items.length > 0 ? (
         <div className="space-y-2 max-h-[60vh] overflow-y-auto">
           {(items as Director[]).map(item => (
             <Card key={item.id} className="border-[#d1d1cc] shadow-sm">
@@ -933,7 +985,7 @@ export default function PainelSiteContent() {
             </Card>
           ))}
         </div>
-      )}
+      ) : fetchError ? null : null}
     </div>
   );
 
@@ -944,7 +996,8 @@ export default function PainelSiteContent() {
   const renderSectionsSection = () => (
     <div className="space-y-4">
       <SectionHeader title="Seções (Sobre)" onAdd={startAdd} />
-      {showForm || editingItem ? (
+      {fetchError ? <ErrorCard /> : null}
+      {!fetchError && (showForm || editingItem) ? (
         <FormCard title={editingItem ? 'Editar Seção' : 'Adicionar Seção'}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -971,7 +1024,7 @@ export default function PainelSiteContent() {
           <SaveCancelButtons />
         </FormCard>
       ) : null}
-      {loading ? (
+      {!fetchError && loading ? (
         <p className="text-sm text-[#6b6b6b] py-8 text-center">A carregar...</p>
       ) : items.length === 0 && !showForm ? (
         <Card className="border-[#d1d1cc] shadow-sm">
@@ -980,7 +1033,7 @@ export default function PainelSiteContent() {
             <p className="text-[#6b6b6b] text-sm">Nenhuma seção registada.</p>
           </CardContent>
         </Card>
-      ) : (
+      ) : !fetchError && items.length > 0 ? (
         <div className="space-y-2 max-h-[60vh] overflow-y-auto">
           {(items as SiteSection[]).map(item => (
             <Card key={item.id} className="border-[#d1d1cc] shadow-sm">
@@ -1000,7 +1053,7 @@ export default function PainelSiteContent() {
             </Card>
           ))}
         </div>
-      )}
+      ) : fetchError ? null : null}
     </div>
   );
 
@@ -1011,7 +1064,8 @@ export default function PainelSiteContent() {
   const renderNoticiasSection = () => (
     <div className="space-y-4">
       <SectionHeader title="Notícias" onAdd={startAdd} />
-      {showForm || editingItem ? (
+      {fetchError ? <ErrorCard /> : null}
+      {!fetchError && (showForm || editingItem) ? (
         <FormCard title={editingItem ? 'Editar Notícia' : 'Adicionar Notícia'}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="sm:col-span-2">
@@ -1048,7 +1102,7 @@ export default function PainelSiteContent() {
           <SaveCancelButtons />
         </FormCard>
       ) : null}
-      {loading ? (
+      {!fetchError && loading ? (
         <p className="text-sm text-[#6b6b6b] py-8 text-center">A carregar...</p>
       ) : items.length === 0 && !showForm ? (
         <Card className="border-[#d1d1cc] shadow-sm">
@@ -1057,7 +1111,7 @@ export default function PainelSiteContent() {
             <p className="text-[#6b6b6b] text-sm">Nenhuma notícia registada.</p>
           </CardContent>
         </Card>
-      ) : (
+      ) : !fetchError && items.length > 0 ? (
         <div className="space-y-2 max-h-[60vh] overflow-y-auto">
           {(items as Noticia[]).map(item => (
             <Card key={item.id} className="border-[#d1d1cc] shadow-sm">
@@ -1082,7 +1136,7 @@ export default function PainelSiteContent() {
             </Card>
           ))}
         </div>
-      )}
+      ) : fetchError ? null : null}
     </div>
   );
 
