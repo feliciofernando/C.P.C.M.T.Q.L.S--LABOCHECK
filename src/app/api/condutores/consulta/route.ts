@@ -12,17 +12,38 @@ export async function GET(request: NextRequest) {
     }
 
     const numSearch = parseInt(search);
-    let query = supabase
-      .from('condutores')
-      .select('*');
+    let data = null;
+    let error = null;
 
     if (!isNaN(numSearch)) {
-      query = query.or(`numero_bi.ilike.%${search}%,numero_ordem.eq.${numSearch},nome_completo.ilike.%${search}%`);
-    } else {
-      query = query.or(`numero_bi.ilike.%${search}%,nome_completo.ilike.%${search}%`);
-    }
+      // Try exact match on numero_ordem first
+      const exact = await supabase
+        .from('condutores')
+        .select('*')
+        .eq('numero_ordem', numSearch)
+        .limit(1);
 
-    const { data, error } = await query.limit(1);
+      if (exact.data && exact.data.length > 0) {
+        data = exact.data;
+      } else {
+        // Fallback: search BI and name containing the number
+        const fallback = await supabase
+          .from('condutores')
+          .select('*')
+          .or(`numero_bi.ilike.%${search}%,nome_completo.ilike.%${search}%`)
+          .limit(1);
+        data = fallback.data;
+        error = fallback.error;
+      }
+    } else {
+      const res = await supabase
+        .from('condutores')
+        .select('*')
+        .or(`numero_bi.ilike.%${search}%,nome_completo.ilike.%${search}%`)
+        .limit(1);
+      data = res.data;
+      error = res.error;
+    }
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
