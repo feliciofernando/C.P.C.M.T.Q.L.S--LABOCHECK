@@ -102,24 +102,48 @@ export async function svgToPng(svgString: string, options?: SvgToPngOptions): Pr
 }
 
 /**
- * Renders SVG to PNG at a specific target size.
- * The SVG's width/height attributes are temporarily overridden.
+ * Renders SVG to PNG at a specific target resolution.
+ *
+ * Uses fitTo zoom to scale the rendering without modifying the SVG's
+ * viewBox or coordinate system. This ensures all content fills the
+ * entire output image.
+ *
+ * @param svgString - The SVG markup (with its original viewBox)
+ * @param targetWidth - Desired output width in pixels
+ * @param targetHeight - Desired output height in pixels
  */
 export async function svgToPngSized(svgString: string, targetWidth: number, targetHeight: number): Promise<Buffer> {
-  // Override width/height in the SVG root element
-  const sizedSvg = svgString.replace(
-    /(<svg[^>]*?)\s+width="[^"]*"/,
-    '$1'
-  ).replace(
-    /(<svg[^>]*?)\s+height="[^"]*"/,
-    '$1'
-  ).replace(
-    /(<svg[^>]*?)\s+viewBox="[^"]*"/,
-    '$1'
-  ).replace(
-    /<svg/,
-    `<svg width="${targetWidth}" height="${targetHeight}" viewBox="0 0 ${targetWidth} ${targetHeight}"`
-  );
+  // Extract the original SVG width to calculate zoom factor
+  const widthMatch = svgString.match(/\bwidth="([^"]+)"/);
+  let originalWidth = targetWidth;
 
-  return svgToPng(sizedSvg);
+  if (widthMatch) {
+    const parsed = parseFloat(widthMatch[1]);
+    if (!isNaN(parsed) && parsed > 0) {
+      originalWidth = parsed;
+    }
+  }
+
+  // Calculate zoom factor to reach target width
+  const zoom = targetWidth / originalWidth;
+
+  await ensureInitialized();
+
+  const fontBuffers = loadFontBuffers();
+
+  const resvgOpts: Parameters<typeof Resvg>[1] = {};
+
+  if (fontBuffers.length > 0) {
+    resvgOpts.font = {
+      fontBuffers,
+      sansSerifFamily: 'Liberation Sans',
+    };
+  }
+
+  // Use zoom mode to scale the SVG content to fill the full target size
+  resvgOpts.fitTo = { mode: 'zoom', value: zoom };
+
+  const resvg = new Resvg(svgString, resvgOpts);
+  const rendered = resvg.render();
+  return Buffer.from(rendered.asPng());
 }
