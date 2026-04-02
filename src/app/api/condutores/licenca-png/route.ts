@@ -4,6 +4,7 @@ import { toCamelCase } from '@/lib/utils-supabase';
 import sharp from 'sharp';
 import { readFileSync } from 'fs';
 import path from 'path';
+import { getSvgFontStyle, getFontFamily } from '@/lib/svg-fonts';
 
 let cachedLogoBase64: string | null = null;
 function getLogoBase64(): string {
@@ -116,7 +117,8 @@ async function generateFrontPNG(c: {
 
   const frontSvg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
   <defs>
-    <style>text { font-family: Georgia, 'Times New Roman', serif; }</style>
+    ${getSvgFontStyle()}
+    <style>text { font-family: ${getFontFamily()}; }</style>
     <linearGradient id="headerGrad" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" style="stop-color:#1f6b36;stop-opacity:1" />
       <stop offset="100%" style="stop-color:#145028;stop-opacity:1" />

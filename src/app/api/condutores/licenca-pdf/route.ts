@@ -5,6 +5,7 @@ import sharp from 'sharp';
 import { PDFDocument } from 'pdf-lib';
 import { readFileSync } from 'fs';
 import path from 'path';
+import { getSvgFontStyle, getFontFamily } from '@/lib/svg-fonts';
 
 // Cache logo
 let cachedLogoBase64: string | null = null;
@@ -70,9 +71,13 @@ function buildFrontSVG(c: Record<string, unknown>): string {
   const DARK = '#1a1a1a';
   const WHITE = '#ffffff';
   const LGRAY = '#f0f0eb';
-  const FF = 'Helvetica,Arial,sans-serif';
+  const FF = getFontFamily();
 
+  const fontStyle = getSvgFontStyle();
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">`;
+  if (fontStyle) {
+    svg += `<defs><style>${fontStyle}</style></defs>`;
+  }
   svg += `<rect x="0" y="0" width="${W}" height="${H}" fill="${WHITE}"/>`;
 
   // Green header
@@ -145,9 +150,13 @@ function buildBackSVG(c: Record<string, unknown>): string {
   const DARK = '#1a1a1a';
   const WHITE = '#ffffff';
   const GRAY = '#6b6b6b';
-  const FF = 'Helvetica,Arial,sans-serif';
+  const FF = getFontFamily();
 
+  const fontStyle = getSvgFontStyle();
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">`;
+  if (fontStyle) {
+    svg += `<defs><style>${fontStyle}</style></defs>`;
+  }
   svg += `<rect x="0" y="0" width="${W}" height="${H}" fill="${WHITE}"/>`;
 
   // Top info bar

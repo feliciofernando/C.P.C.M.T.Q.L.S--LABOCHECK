@@ -5,6 +5,7 @@ import sharp from 'sharp';
 import { PDFDocument } from 'pdf-lib';
 import { readFileSync } from 'fs';
 import path from 'path';
+import { getSvgFontStyle, getFontFamily } from '@/lib/svg-fonts';
 
 // Cache logo
 let cachedLogoBase64: string | null = null;
@@ -85,7 +86,7 @@ function buildFichaSVG(c: Record<string, unknown>): string {
   const LGRAY = '#f0f0eb';
   const GRAY = '#6b6b6b';
   const DGRAY = '#d1d1cc';
-  const FF = 'Helvetica,Arial,sans-serif';
+  const FF = getFontFamily();
 
   let y = 44;
   const addY = (amount: number) => { y += amount; };
@@ -104,7 +105,11 @@ function buildFichaSVG(c: Record<string, unknown>): string {
       `<text x="${ML + 178}" y="${y}" fill="${DARK}" font-size="10" font-family="${FF}">${esc(truncate(String(value || '-'), valueMaxLen))}</text>\n`;
   };
 
+  const fontStyle = getSvgFontStyle();
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">`;
+  if (fontStyle) {
+    svg += `<defs><style>${fontStyle}</style></defs>`;
+  }
   svg += `<rect x="0" y="0" width="${W}" height="${H}" fill="${WHITE}"/>`;
 
   if (logoBase64) {
