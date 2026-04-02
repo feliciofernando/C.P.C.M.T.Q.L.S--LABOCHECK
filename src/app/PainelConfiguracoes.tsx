@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import {
   Loader2, Upload, Image as ImageIcon, Trash2, CheckCircle2, Info,
-  Save, Sun, Moon
+  Save, Sun, Moon, QrCode, RefreshCw
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -19,6 +19,8 @@ export default function PainelConfiguracoes() {
   const [preview, setPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { theme, setTheme } = useTheme();
+  const [qrLoading, setQrLoading] = useState(false);
+  const [qrResult, setQrResult] = useState<{ total: number; updated: number; errors: number; siteUrl: string } | null>(null);
 
   const loadSettings = useCallback(async () => {
     setLoading(true);
@@ -250,6 +252,59 @@ export default function PainelConfiguracoes() {
               </div>
             </div>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* QR Code Section */}
+      <Card className="border-[#d1d1cc] dark:border-[#30363d]">
+        <CardHeader className="bg-[#1a5c2e] text-white py-4 px-6">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <QrCode className="w-5 h-5" />
+            QR Codes - Escaneamento
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-6 space-y-4">
+          <p className="text-sm text-[#6b6b6b] dark:text-[#8b949e]">
+            Regenera todos os QR Codes com o URL completo do site para que funcionem
+            ao serem escaneados no telemovel.
+          </p>
+          <Button
+            onClick={async () => {
+              setQrLoading(true);
+              setQrResult(null);
+              try {
+                const res = await fetch('/api/condutores/regenerar-qr', { method: 'POST' });
+                const data = await res.json();
+                if (!res.ok) {
+                  toast.error(data.error || 'Erro ao regenerar');
+                } else {
+                  setQrResult(data);
+                  toast.success(`${data.updated} QR Codes regenerados com sucesso!`);
+                }
+              } catch {
+                toast.error('Erro ao regenerar QR Codes');
+              } finally {
+                setQrLoading(false);
+              }
+            }}
+            disabled={qrLoading}
+            className="bg-[#1a5c2e] hover:bg-[#0f3d1d] text-white gap-2"
+          >
+            {qrLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
+            {qrLoading ? 'A gerar...' : 'Regenerar QR Codes'}
+          </Button>
+          {qrResult && (
+            <div className="bg-[#1a5c2e]/10 dark:bg-[#2ea356]/10 rounded-lg px-4 py-3 border border-[#1a5c2e]/30 dark:border-[#2ea356]/30">
+              <div className="flex items-center gap-2 mb-2">
+                <CheckCircle2 className="w-4 h-4 text-[#1a5c2e] dark:text-[#2ea356]" />
+                <span className="text-sm font-medium text-[#1a1a1a] dark:text-[#e6e6e1]">QR Codes regenerados com sucesso</span>
+              </div>
+              <div className="text-xs text-[#6b6b6b] dark:text-[#8b949e] space-y-0.5">
+                <p>Total: {qrResult.total} | Actualizados: {qrResult.updated} | Erros: {qrResult.errors}</p>
+                <p>URL configurado: <span className="font-medium text-[#1a1a1a] dark:text-[#e6e6e1]">{qrResult.siteUrl}</span></p>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 
