@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+  nome      String   @default("Administrador")
+  role      String   @default("admin")
+  activo    Boolean  @default(true)
+  dataCriacao DateTime @default(now())
+  dataUltimoAcesso DateTime?
+}
+
+model Condutor {
+  id                String   @id @default(cuid())
+  numeroOrdem       Int      @unique
+  status            String   @default("ATIVA")
+
+  // 1. Dados Pessoais
+  nomeCompleto      String
+  dataNascimento    String
+  sexo              String
+  numeroBI          String   @unique
+  dataEmissaoBI     String
+  estadoCivil       String
+  telefone1         String
+  telefone2         String   @default("")
+  endereco          String
+  municipio         String
+
+  // 2. Dados Profissionais
+  tipoVeiculo       String
+  marcaVeiculo      String   @default("")
+  modeloVeiculo     String   @default("")
+  corVeiculo        String   @default("")
+  matriculaVeiculo  String   @default("")
+  numeroCartaConducao String @default("")
+  categoriaCarta    String   @default("")
+  tempoExperiencia  String   @default("")
+
+  // 3. Local de Trabalho
+  municipioTrabalho String   @default("")
+  horarioTrabalho   String   @default("")
+
+  // 4. Documentacao
+  temBI             Boolean  @default(false)
+  temCartaConducao  Boolean  @default(false)
+  temDocumentoVeiculo Boolean @default(false)
+  temSeguroVeiculo  Boolean  @default(false)
+  temCapacete       Boolean  @default(false)
+  temColeteRefletor Boolean  @default(false)
+
+  // 5. Formacao
+  participouFormacao Boolean  @default(false)
+  instituicaoFormacao String  @default("")
+
+  // Dados da Licenca
+  numeroMembro      String   @default("")
+  nacionalidade     String   @default("Angolana")
+  provincia         String   @default("Lunda Sul")
+  dataEmissaoLicenca String  @default("")
+  validadeLicenca   String   @default("")
+
+  // QR Code (armazenado como base64 JPEG)
+  qrCodeBase64      String   @default("")
+
+  // Metadados
+  fotoBase64        String   @default("")
+  dataRegisto       DateTime @default(now())
+  dataAtualizacao   DateTime @updatedAt
+
+  // Relacao com Alertas
+  alertas            Alerta[]
+
+  @@index([nomeCompleto])
+  @@index([numeroBI])
+  @@index([numeroOrdem])
+  @@index([status])
+}
+
+model Alerta {
+  id               String   @id @default(cuid())
+  condutorId       String
+  condutor         Condutor @relation(fields: [condutorId], references: [id], onDelete: Cascade)
+  tipo             String
+  dataValidade     String
+  mensagem         String
+  prioridade       String   @default("ALTA")
+  estado           String   @default("PENDENTE")
+  dataCriacao      DateTime @default(now())
+  dataLeitura      DateTime?
+  dataResolucao    DateTime?
+  resolucao        String   @default("")
+
+  @@index([condutorId])
+  @@index([estado])
+  @@index([tipo])
+  @@index([dataCriacao])
+}
