@@ -7,6 +7,14 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   reactStrictMode: false,
+  async rewrites() {
+    return [
+      {
+        source: '/admin',
+        destination: '/',
+      },
+    ];
+  },
 };
 
 export default nextConfig;

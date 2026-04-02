@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect, Suspense } from 'react';
 import { useSession, signOut } from 'next-auth/react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, usePathname } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -50,9 +50,10 @@ interface AlertCount {
    ============================== */
 function PublicPage() {
   const { data: session, status } = useSession();
-  const [loginOpen, setLoginOpen] = useState(false);
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const consultaBI = searchParams.get('consulta') || undefined;
+  const isAdminRoute = pathname === '/admin';
 
   if (status === 'authenticated' && session) {
     return <AdminDashboard />;
@@ -62,7 +63,7 @@ function PublicPage() {
     <>
       {/* Public Header */}
       <header className="bg-[#1a5c2e] text-white">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center">
           <div className="flex items-center gap-3">
             <img
               src="/logotipo.jpg"
@@ -78,14 +79,6 @@ function PublicPage() {
               </p>
             </div>
           </div>
-          <Button
-            variant="ghost"
-            onClick={() => setLoginOpen(true)}
-            className="text-white/80 hover:text-white hover:bg-white/10 text-xs sm:text-sm gap-1.5"
-          >
-            <Shield className="w-4 h-4" />
-            <span className="hidden sm:inline">Admin</span>
-          </Button>
         </div>
       </header>
 
@@ -148,8 +141,8 @@ function PublicPage() {
         </div>
       </footer>
 
-      {/* Login Modal */}
-      <LoginModal open={loginOpen} onOpenChange={setLoginOpen} />
+      {/* Login Modal - only visible on /admin route */}
+      <LoginModal open={isAdminRoute} onOpenChange={() => {}} />
     </>
   );
 }
