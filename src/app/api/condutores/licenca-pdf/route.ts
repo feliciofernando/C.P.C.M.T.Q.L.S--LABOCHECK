@@ -1,6 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-server';
 import { toCamelCase } from '@/lib/utils-supabase';
+import sharp from 'sharp';
+import { PDFDocument } from 'pdf-lib';
+import { readFileSync } from 'fs';
+import path from 'path';
+
+// Cache logo
+let cachedLogoBase64: string | null = null;
+function getLogoBase64(): string {
+  if (cachedLogoBase64) return cachedLogoBase64;
+  try {
+    const imgPath = path.join(process.cwd(), 'public', 'logotipo.jpg');
+    const buf = readFileSync(imgPath);
+    cachedLogoBase64 = `data:image/jpeg;base64,${buf.toString('base64')}`;
+    return cachedLogoBase64;
+  } catch {
+    return '';
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -20,7 +38,7 @@ export async function POST(request: NextRequest) {
     }
 
     const condutor = toCamelCase(rawCondutor) as Record<string, unknown>;
-    const pdfBuffer = generateLicensePDF(condutor);
+    const pdfBuffer = await generateLicensePDF(condutor);
 
     return new NextResponse(pdfBuffer, {
       headers: {
@@ -34,188 +52,174 @@ export async function POST(request: NextRequest) {
   }
 }
 
-function generateLicensePDF(c: {
-  nomeCompleto: string;
-  sexo: string;
-  numeroMembro: string;
-  tipoVeiculo: string;
-  nacionalidade: string;
-  provincia: string;
-  dataEmissaoLicenca: string;
-  validadeLicenca: string;
-  numeroOrdem: number;
-  numeroBI: string;
-  fotoBase64: string;
-}): Buffer {
+function esc(str: string): string {
+  return String(str || '-').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function buildFrontSVG(c: Record<string, unknown>): string {
   const W = 595;
-  const H = 842;
-  const cardW = 400;
-  const cardH = 240;
-  const cardX = Math.floor((W - cardW) / 2);
+  const H = 421;
+  const GREEN = '#1a5c2e';
+  const GOLD = '#d4a017';
+  const DARK = '#1a1a1a';
+  const WHITE = '#ffffff';
+  const LGRAY = '#f0f0eb';
 
-  const toPdfY = (screenY: number) => H - screenY;
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">`;
+  svg += `<rect x="0" y="0" width="${W}" height="${H}" fill="${WHITE}"/>`;
 
-  const o: string[] = [];
-  const e = (s: string) => s.replace(/[()\\]/g, '\\$&');
+  // Green header
+  svg += `<rect x="0" y="0" width="${W}" height="68" fill="${GREEN}"/>`;
+  svg += `<line x1="0" y1="68" x2="${W}" y2="68" stroke="${GOLD}" stroke-width="2"/>`;
 
-  const rect = (x: number, y: number, w: number, h: number, fill: string, stroke = false) => {
-    o.push(`${fill} rg ${x} ${y} ${w} ${h} re${stroke ? ' S' : ' f'}`);
+  // Header text
+  svg += `<text x="${W / 2}" y="22" text-anchor="middle" fill="${GOLD}" font-size="15" font-weight="bold" font-family="Helvetica,Arial,sans-serif" letter-spacing="3">C.P.C.M.T.Q.L.S</text>`;
+  svg += `<text x="${W / 2}" y="38" text-anchor="middle" fill="${GOLD}" font-size="5.5" font-family="Helvetica,Arial,sans-serif">CONSELHO PROVINCIAL DOS CONDUTORES DE MOTOCICLOS, TRICICLOS E QUADRICICLOS DA LUNDA SUL</text>`;
+  svg += `<text x="${W / 2}" y="56" text-anchor="middle" fill="${GOLD}" font-size="14" font-weight="bold" font-family="Helvetica,Arial,sans-serif" letter-spacing="1">LICEN\u00CA PROFISSIONAL DE CONDUTOR</text>`;
+
+  // Fields
+  const LX = 30;
+  const RX = 305;
+  let ly = 92;
+  let ry = 92;
+  const gap = 18;
+
+  const leftField = (label: string, value: string) => {
+    let s = `<text x="${LX}" y="${ly}" fill="${GREEN}" font-size="8" font-weight="bold" font-family="Helvetica,Arial,sans-serif">${esc(label)}:</text>`;
+    s += `<text x="${LX}" y="${ly + 13}" fill="${DARK}" font-size="11" font-weight="bold" font-family="Helvetica,Arial,sans-serif">${esc(value || '-')}</text>`;
+    return s;
   };
 
-  const horizontalLine = (x1: number, y: number, x2: number, w = 0.5, color = '0.1 0.1 0.1') => {
-    o.push(`${color} RG ${w} w ${x1} ${y} m ${x2} ${y} l S`);
+  const rightField = (label: string, value: string) => {
+    let s = `<text x="${RX}" y="${ry}" fill="${GREEN}" font-size="8" font-weight="bold" font-family="Helvetica,Arial,sans-serif">${esc(label)}:</text>`;
+    s += `<text x="${RX}" y="${ry + 13}" fill="${DARK}" font-size="11" font-weight="bold" font-family="Helvetica,Arial,sans-serif">${esc(value || '-')}</text>`;
+    return s;
   };
 
-  const drawText = (x: number, y: number, str: string, size: number, font: string, color: string) => {
-    o.push('BT');
-    o.push(`${color} rg`);
-    o.push(`/${font} ${size} Tf`);
-    o.push(`${x} ${y} Td`);
-    o.push(`(${e(str)}) Tj`);
-    o.push('ET');
-  };
+  svg += leftField('Nome Completo', String(c.nomeCompleto)); ly += gap * 2;
+  svg += leftField('Sexo', String(c.sexo)); ly += gap * 2;
+  svg += leftField('No Membro', String(c.numeroMembro)); ly += gap * 2;
+  svg += leftField('Categoria', String(c.tipoVeiculo)); ly += gap * 2;
 
-  const approxCharWidth = (size: number, bold: boolean) => size * (bold ? 0.6 : 0.52);
-  const textWidth = (str: string, size: number, bold: boolean) => str.length * approxCharWidth(size, bold);
+  svg += rightField('Titulo', 'Condutor Profissional'); ry += gap * 2;
+  svg += rightField('Nacionalidade', String(c.nacionalidade || 'Angolana')); ry += gap * 2;
+  svg += rightField('Provincia', String(c.provincia || 'Lunda Sul')); ry += gap * 2;
 
-  const drawCenterText = (cx: number, y: number, str: string, size: number, font: string, color: string, bold: boolean) => {
-    const w = textWidth(str, size, bold);
-    drawText(cx - w / 2, y, str, size, font, color);
-  };
+  // Barcode area
+  const bcY = Math.max(ly, ry) + 5;
+  const bcH = 36;
+  svg += `<rect x="30" y="${bcY}" width="${W - 60}" height="${bcH}" fill="#111"/>`;
+  svg += `<text x="${W / 2}" y="${bcY + bcH / 2 + 4}" text-anchor="middle" fill="${WHITE}" font-size="9" font-family="Courier New,monospace" letter-spacing="1">CPCMTQLS-${String(c.numeroOrdem).padStart(6, '0')}-${esc(String(c.numeroBI || ''))}</text>`;
 
-  const drawRightText = (rightX: number, y: number, str: string, size: number, font: string, color: string, bold: boolean) => {
-    const w = textWidth(str, size, bold);
-    drawText(rightX - w, y, str, size, font, color);
-  };
+  // Photo placeholder
+  const phW = 90;
+  const phH = 110;
+  const phX = W - 30 - phW;
+  const phY = 82;
+  svg += `<rect x="${phX}" y="${phY}" width="${phW}" height="${phH}" fill="${LGRAY}" stroke="#aaa" stroke-width="1"/>`;
 
-  const gold = '0.831 0.627 0.09';
-  const green = '0.102 0.361 0.180';
-  const black = '0.1 0.1 0.1';
-  const white = '1 1 1';
-  const cx = cardX + cardW / 2;
+  // Signature area
+  const sigY = bcY + bcH + 30;
+  svg += `<line x1="${W / 2 - 65}" y1="${sigY}" x2="${W / 2 + 65}" y2="${sigY}" stroke="${DARK}" stroke-width="0.5"/>`;
+  svg += `<text x="${W / 2}" y="${sigY + 14}" text-anchor="middle" fill="${DARK}" font-size="9" font-weight="bold" font-family="Helvetica,Arial,sans-serif">O DIRECTOR EXECUTIVO</text>`;
 
-  const frontScreenTop = 60;
-  const frontPdfTop = toPdfY(frontScreenTop);
-  const frontPdfBottom = toPdfY(frontScreenTop + cardH);
+  // Footer line
+  svg += `<line x1="30" y1="${H - 50}" x2="${W - 30}" y2="${H - 50}" stroke="${DARK}" stroke-width="0.5"/>`;
 
-  rect(cardX, frontPdfBottom, cardW, cardH, white);
-  o.push(`${black} RG 2 w ${cardX} ${frontPdfBottom} ${cardW} ${cardH} re S`);
+  svg += '</svg>';
+  return svg;
+}
 
-  const greenH = 52;
-  rect(cardX, frontPdfTop - greenH, cardW, greenH, green);
-  horizontalLine(cardX, frontPdfTop - greenH, cardX + cardW, 1.5, gold);
+function buildBackSVG(c: Record<string, unknown>): string {
+  const W = 595;
+  const H = 421;
+  const GREEN = '#1a5c2e';
+  const GOLD = '#d4a017';
+  const DARK = '#1a1a1a';
+  const WHITE = '#ffffff';
+  const GRAY = '#6b6b6b';
 
-  drawCenterText(cx, frontPdfTop - 16, 'C.P.C.M.T.Q.L.S', 14, 'F2', gold, true);
-  drawCenterText(cx, frontPdfTop - 24, 'CONSELHO PROVINCIAL DOS CONDUTORES DE MOTOCICLOS, TRICICLOS E QUADRICICLOS DA LUNDA SUL', 5.5, 'F1', gold, false);
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">`;
+  svg += `<rect x="0" y="0" width="${W}" height="${H}" fill="${WHITE}"/>`;
 
-  drawCenterText(cx, frontPdfTop - 36, 'LICENCA PROFISSIONAL DE CONDUTOR', 13, 'F2', gold, true);
-  const titleW = textWidth('LICENCA PROFISSIONAL DE CONDUTOR', 13, true);
-  horizontalLine(cx - titleW / 2, frontPdfTop - 38, cx + titleW / 2, 0.8, gold);
+  // Top info bar
+  svg += `<rect x="0" y="0" width="${W}" height="36" fill="${WHITE}"/>`;
+  svg += `<text x="30" y="24" fill="${GREEN}" font-size="10" font-weight="bold" font-family="Helvetica,Arial,sans-serif">Data de Emiss\u00E3o: ${esc(String(c.dataEmissaoLicenca || '-'))}</text>`;
+  svg += `<text x="${W - 30}" y="24" text-anchor="end" fill="${GREEN}" font-size="10" font-weight="bold" font-family="Helvetica,Arial,sans-serif">Validade: ${esc(String(c.validadeLicenca || '-'))}</text>`;
 
-  const fieldStartY = frontPdfTop - greenH - 14;
-  let fy = fieldStartY;
+  // Green section with declaration
+  const greenTop = 50;
+  const greenH = 155;
+  svg += `<rect x="0" y="${greenTop}" width="${W}" height="${greenH}" fill="${GREEN}"/>`;
 
-  const drawField = (label: string, value: string, size = 10.5) => {
-    drawText(cardX + 18, fy, `${label} ${value}`, size, 'F1', black);
-    fy -= size + 4;
-  };
-
-  drawField('Nome:', c.nomeCompleto, 11);
-  drawField('Sexo:', c.sexo, 10);
-  drawText(cardX + 18, fy, `Membro n\u00BA: ${c.numeroMembro}`, 8.5, 'F1', black);
-  fy -= 12.5;
-  drawField('Categoria:', c.tipoVeiculo, 10);
-  drawField('Titulo:', 'Condutor Profissional', 10);
-  drawField('Nacionalidade:', c.nacionalidade || 'Angolana', 10);
-  drawField('Provincia:', c.provincia || 'Lunda Sul', 10);
-
-  const sigY = frontPdfBottom + 18;
-  drawCenterText(cx, sigY + 4, 'O DIRECTOR EXECUTIVO', 9, 'F2', black, true);
-  horizontalLine(cx - 60, sigY - 4, cx + 60, 0.5, black);
-
-  const phX = cardX + cardW - 106;
-  const phY = frontPdfBottom + 10;
-  const phW = 88;
-  const phH = 108;
-  rect(phX, phY, phW, phH, '0.91 0.91 0.89');
-  o.push(`${black} RG 1.5 w ${phX} ${phY} ${phW} ${phH} re S`);
-  drawCenterText(phX + phW / 2, phY + phH / 2 + 4, 'FOTO', 10, 'F1', '0.6 0.6 0.6', true);
-
-  const backScreenTop = frontScreenTop + cardH + 35;
-  const backPdfTop = toPdfY(backScreenTop);
-  const backPdfBottom = toPdfY(backScreenTop + cardH);
-
-  rect(cardX, backPdfBottom, cardW, cardH, white);
-  o.push(`${black} RG 2 w ${cardX} ${backPdfBottom} ${cardW} ${cardH} re S`);
-
-  drawText(cardX + 18, backPdfTop - 16, `Data de Emissao: ${c.dataEmissaoLicenca}`, 10, 'F2', black, true);
-  drawRightText(cardX + cardW - 18, backPdfTop - 16, `Validade: ${c.validadeLicenca}`, 10, 'F2', black, true);
-
-  const bcY = backPdfTop - 50;
-  const bcH = 28;
-  rect(cardX + 30, bcY, cardW - 60, bcH, black);
-  drawCenterText(cx, bcY + 10, `CPCMTQLS-${String(c.numeroOrdem).padStart(6, '0')}-${c.numeroBI}`, 8, 'F1', white, false);
-
-  const greenSectionTop = bcY - 8;
-  const greenSectionH = greenSectionTop - backPdfBottom;
-  rect(cardX, backPdfBottom, cardW, greenSectionH, green);
-
-  const gLines = [
-    'Este passe e distribuido para o uso pessoal ao condutor profissional',
-    'credenciado pelo Conselho Provincial da Lunda Sul. E intransferivel e',
-    'deve-se acompanhar por um outro documento de Identificacao sempre',
+  const lines = [
+    'Este passe \u00E9 distribu\u00EDdo para o uso pessoal ao condutor profissional',
+    'credenciado pelo Conselho Provincial da Lunda Sul. \u00C9 intransfer\u00EDvel e',
+    'deve-se acompanhar por um outro documento de Identifica\u00E7\u00E3o sempre',
     'que solicitado. Em caso de extravio, contactar a C.P.C.M.T.Q.L.S.',
   ];
-  let gy = greenSectionTop - 16;
-  for (const gLine of gLines) {
-    drawText(cardX + 18, gy, gLine, 7, 'F1', white);
-    gy -= 10;
+  let ly = greenTop + 25;
+  for (const line of lines) {
+    svg += `<text x="30" y="${ly}" fill="${WHITE}" font-size="9" font-family="Helvetica,Arial,sans-serif">${esc(line)}</text>`;
+    ly += 14;
   }
+  svg += `<text x="${W / 2}" y="${ly + 8}" text-anchor="middle" fill="${GOLD}" font-size="9" font-weight="bold" font-family="Helvetica,Arial,sans-serif">Contactos: 941-000-517 / 924-591-350</text>`;
+  svg += `<text x="${W / 2}" y="${ly + 22}" text-anchor="middle" fill="${WHITE}" font-size="8" font-family="Helvetica,Arial,sans-serif">Decreto Presidencial N\u00BA 245/15</text>`;
 
-  drawCenterText(cx, gy - 2, 'Contactos: 941-000-517 / 924-591-350', 8, 'F1', gold, true);
-  drawCenterText(cx, gy - 14, 'Decreto Presidencial N\u00BA 245/15', 7, 'F1', white, false);
+  // Bottom section
+  const bottomY = greenTop + greenH + 20;
+  svg += `<line x1="30" y1="${bottomY}" x2="${W - 30}" y2="${bottomY}" stroke="${DARK}" stroke-width="0.5"/>`;
 
-  const bottomRowY = backPdfBottom + 22;
-  horizontalLine(cardX + 14, bottomRowY, cardX + cardW - 14, 0.3, '1 1 1');
-
-  const flagX = cardX + 14;
-  const flagY = backPdfBottom + 6;
-  const flagW = 32;
+  // Flag placeholder (3 stripes)
+  const flagX = 30;
+  const flagY = H - 50;
+  const flagW = 40;
   const flagH = 20;
-  rect(flagX, flagY, flagW, flagH / 2, '0.753 0.224 0.169');
-  rect(flagX, flagY, flagW, flagH / 2, black, true);
-  rect(flagX, flagY, flagW, flagH / 2, '0.1 0.1 0.1');
-  drawCenterText(flagX + flagW / 2, flagY + 5, '*', 8, 'F1', '0.945 0.769 0.059', false);
+  svg += `<rect x="${flagX}" y="${flagY}" width="${flagW}" height="${flagH / 3}" fill="#C0392B"/>`;
+  svg += `<rect x="${flagX}" y="${flagY + flagH / 3}" width="${flagW}" height="${flagH / 3}" fill="#111"/>`;
+  svg += `<rect x="${flagX}" y="${flagY + (flagH / 3) * 2}" width="${flagW}" height="${flagH / 3}" fill="#F0C808"/>`;
 
-  drawCenterText(cx, backPdfBottom + 11, '"Mototaxistas organizados, transito mais seguro"', 8, 'F1', white, false);
-  drawRightText(cardX + cardW - 14, backPdfBottom + 11, 'Lunda Sul', 9, 'F2', white, true);
+  // Motto
+  svg += `<text x="${W / 2}" y="${H - 38}" text-anchor="middle" fill="${DARK}" font-size="9" font-family="Helvetica,Arial,sans-serif">\u201CMototaxistas organizados, tr\u00E2nsito mais seguro\u201D</text>`;
+  svg += `<text x="${W - 30}" y="${H - 38}" text-anchor="end" fill="${DARK}" font-size="10" font-weight="bold" font-family="Helvetica,Arial,sans-serif">Lunda Sul</text>`;
 
-  const content = o.join('\n');
-  const contentBuf = Buffer.from(content, 'latin1');
+  svg += '</svg>';
+  return svg;
+}
 
-  const objs: string[] = [];
-  const add = (s: string) => { objs.push(s); return objs.length; };
+async function generateLicensePDF(c: Record<string, unknown>): Promise<Buffer> {
+  const frontSVG = buildFrontSVG(c);
+  const backSVG = buildBackSVG(c);
 
-  add('<< /Type /Catalog /Pages 2 0 R >>');
-  add(`<< /Type /Pages /Kids [3 0 R] /Count 1 >>`);
-  add(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>`);
-  add(`<< /Length ${contentBuf.length} >>\nstream\n${content}\nendstream`);
-  add('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>');
-  add('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>');
+  const cardW = 595;
+  const cardH = 421;
+  const scale = 3;
 
-  let pdf = '%PDF-1.4\n';
-  const offsets: number[] = [];
-  for (let i = 0; i < objs.length; i++) {
-    offsets.push(pdf.length);
-    pdf += `${i + 1} 0 obj\n${objs[i]}\nendobj\n`;
-  }
+  const frontPng = await sharp(Buffer.from(frontSVG))
+    .resize(cardW * scale, cardH * scale, { fit: 'fill' })
+    .png({ compressionLevel: 6 })
+    .toBuffer();
 
-  const xrefOff = pdf.length;
-  pdf += `xref\n0 ${objs.length + 1}\n0000000000 65535 f \n`;
-  for (const off of offsets) {
-    pdf += `${String(off).padStart(10, '0')} 00000 n \n`;
-  }
-  pdf += `trailer\n<< /Size ${objs.length + 1} /Root 1 0 R >>\nstartxref\n${xrefOff}\n%%EOF`;
+  const backPng = await sharp(Buffer.from(backSVG))
+    .resize(cardW * scale, cardH * scale, { fit: 'fill' })
+    .png({ compressionLevel: 6 })
+    .toBuffer();
 
-  return Buffer.from(pdf, 'latin1');
+  const pdfDoc = await PDFDocument.create();
+
+  // Page 1 - Front
+  const page1 = pdfDoc.addPage([595, 842]);
+  const frontImg = await pdfDoc.embedPng(frontPng);
+  page1.drawImage(frontImg, { x: 0, y: 842 - cardH, width: cardW, height: cardH });
+
+  // Page 2 - Back
+  const page2 = pdfDoc.addPage([595, 842]);
+  const backImg = await pdfDoc.embedPng(backPng);
+  page2.drawImage(backImg, { x: 0, y: 842 - cardH, width: cardW, height: cardH });
+
+  pdfDoc.setTitle(`Licenca Profissional - ${c.nomeCompleto}`);
+  pdfDoc.setAuthor('C.P.C.M.T.Q.L.S');
+  pdfDoc.setSubject('Licenca Profissional de Condutor');
+
+  return Buffer.from(await pdfDoc.save());
 }
