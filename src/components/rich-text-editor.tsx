@@ -5,8 +5,7 @@ import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
 import TextAlign from '@tiptap/extension-text-align'
 import Link from '@tiptap/extension-link'
-import Color from '@tiptap/extension-color'
-import { TextStyle } from '@tiptap/extension-text-style'
+import { TextStyleKit } from '@tiptap/extension-text-style'
 import Highlight from '@tiptap/extension-highlight'
 import Image from '@tiptap/extension-image'
 import Placeholder from '@tiptap/extension-placeholder'
@@ -303,8 +302,7 @@ export function RichTextEditor({
           target: '_blank',
         },
       }),
-      Color,
-      TextStyle,
+      TextStyleKit,
       Highlight.configure({ multicolor: true }),
       Image.configure({ inline: false, allowBase64: true }),
       Placeholder.configure({ placeholder }),
@@ -396,8 +394,8 @@ export function RichTextEditor({
     return 0
   })()
 
-  const currentTextColor = (editor.getAttributes('textStyle').color as string) || ''
-  const currentHighlight = (editor.getAttributes('highlight').color as string) || ''
+  const currentTextColor = (editor.getAttributes('textStyle')?.color as string) || ''
+  const currentHighlight = (editor.getAttributes('highlight')?.color as string) || ''
 
   return (
     <div className="border border-[#d1d1cc] rounded-lg overflow-hidden bg-white shadow-sm">
