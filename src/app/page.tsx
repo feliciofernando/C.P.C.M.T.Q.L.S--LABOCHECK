@@ -31,6 +31,9 @@ import LicencaPVC from './LicencaPVC';
 import PainelAlertas from './PainelAlertas';
 import PainelConfiguracoes from './PainelConfiguracoes';
 import HeroSection from './HeroSection';
+import NavBar from './NavBar';
+import ExploreSection from './ExploreSection';
+import { SectionPageContent } from './SectionPages';
 
 interface Stats {
   total: number;
@@ -54,10 +57,34 @@ function PublicPage() {
   const pathname = usePathname();
   const consultaBI = searchParams.get('consulta') || undefined;
   const isAdminRoute = pathname === '/admin';
+  const [activeSection, setActiveSection] = useState<string | null>(null);
 
   if (status === 'authenticated' && session) {
     return <AdminDashboard />;
   }
+
+  if (activeSection) {
+    return (
+      <div className="min-h-screen flex flex-col bg-[#f5f5f0]">
+        <SectionPageContent
+          section={activeSection}
+          onBack={() => setActiveSection(null)}
+        />
+      </div>
+    );
+  }
+
+  const handleNavigate = (section: string) => {
+    if (section === 'consultar') {
+      const el = document.getElementById('consultar-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      setActiveSection(section);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   return (
     <>
@@ -81,6 +108,9 @@ function PublicPage() {
           </div>
         </div>
       </header>
+
+      {/* Navigation Bar with Dropdowns */}
+      <NavBar onNavigate={handleNavigate} />
 
       {/* Hero Section */}
       <HeroSection />
@@ -107,7 +137,7 @@ function PublicPage() {
       </section>
 
       {/* Consultar Section */}
-      <section className="max-w-4xl mx-auto px-4 py-12">
+      <section id="consultar-section" className="max-w-4xl mx-auto px-4 py-12">
         <Card className="border-[#d1d1cc] shadow-md">
           <CardHeader className="bg-[#1a5c2e] text-white py-5 px-6">
             <CardTitle className="text-lg flex items-center gap-2 justify-center">
@@ -120,6 +150,9 @@ function PublicPage() {
           </CardContent>
         </Card>
       </section>
+
+      {/* Explore Section - 8 Cards */}
+      <ExploreSection onNavigate={handleNavigate} />
 
       {/* Public Footer */}
       <footer className="bg-[#0f3d1d] text-white mt-auto">
