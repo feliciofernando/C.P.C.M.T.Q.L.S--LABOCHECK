@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseServer } from '@/lib/supabase-server';
+import { supabase } from '@/lib/supabase-server';
 import { toCamelCase } from '@/lib/utils-supabase';
 
 export async function POST(request: NextRequest) {
@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'ID obrigatorio' }, { status: 400 });
     }
 
-    const { data: rawCondutor, error } = await supabaseServer
+    const { data: rawCondutor, error } = await supabase
       .from('condutores')
       .select('*')
       .eq('id', id)
