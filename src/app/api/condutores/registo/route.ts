@@ -20,8 +20,9 @@ export async function POST(request: NextRequest) {
     // Gerar numero_membro
     const numeroMembro = `${String(nextNumeroOrdem).padStart(6, '0')}/C.P.C.M.T.Q.L.S/${String(new Date().getFullYear()).slice(2)}`;
 
-    // Gerar QR Code como JPEG base64
-    const qrData = `/?consulta=${encodeURIComponent(data.numeroBI)}`;
+    // Gerar QR Code com URL completo do site
+    const siteUrl = process.env.NEXTAUTH_URL?.replace(/\/$/, '') || '';
+    const qrData = `${siteUrl}/?consulta=${encodeURIComponent(data.numeroBI)}`;
     const qrCodePng = await QRCode.toDataURL(qrData, {
       type: 'image/png',
       width: 400,
