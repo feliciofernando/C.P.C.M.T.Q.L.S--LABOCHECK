@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import Link from 'next/link';
 
 interface Slide {
   id: string;
@@ -180,15 +179,10 @@ export default function HeroSlideshow() {
         <p className="text-sm sm:text-base lg:text-lg opacity-95 max-w-3xl mx-auto leading-relaxed font-medium">
           {currentSlide?.subtitulo}
         </p>
-        {currentSlide?.textoBotao && currentSlide?.textoBotao.trim() && (
-          <div className="mt-8">
-            <Link
-              href={currentSlide.linkBotao || '#'}
-              className="inline-flex items-center gap-2 bg-[#d4a017] hover:bg-[#b8880f] text-[#0f3d1d] font-bold px-8 py-3 rounded-full text-sm sm:text-base transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105"
-            >
-              {currentSlide.textoBotao}
-            </Link>
-          </div>
+        {currentSlide?.textoBotao && currentSlide.textoBotao.trim() && (
+          <p className="mt-8 text-sm sm:text-base lg:text-lg font-semibold tracking-widest uppercase text-[#d4a017] drop-shadow-[0_1px_3px_rgba(0,0,0,0.4)]">
+            {currentSlide.textoBotao}
+          </p>
         )}
       </div>
 
