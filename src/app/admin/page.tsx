@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useSession, signOut } from 'next-auth/react';
+import { useSession, signOut, getSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState, useCallback, useRef } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -71,25 +71,36 @@ function AdminLoginForm() {
 
     setLoading(true);
     try {
-      const result = await signIn('credentials', {
-        username,
-        password,
-        redirect: false,
-      });
+      // Obter CSRF token
+      const csrfRes = await fetch('/api/auth/csrf');
+      const { csrfToken } = await csrfRes.json();
 
-      if (result?.error) {
-        toast.error('Credenciais invalidas');
-        setPassword('');
-      } else {
-        toast.success('Sessao iniciada com sucesso');
-        setUsername('');
-        setPassword('');
-        // Recarregar a pagina para mostrar o dashboard
-        window.location.replace('/admin');
+      // Criar formulario invisivel e submeter via POST para callback
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '/api/auth/callback/credentials';
+
+      const fields = {
+        username: username,
+        password: password,
+        csrfToken: csrfToken,
+        callbackUrl: '/admin',
+      };
+
+      for (const [key, value] of Object.entries(fields)) {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = value;
+        form.appendChild(input);
       }
-    } catch {
-      toast.error('Erro ao iniciar sessao');
-    } finally {
+
+      document.body.appendChild(form);
+      form.submit();
+      // Nao precisa de setLoading(false) porque a pagina vai recarregar
+    } catch (err) {
+      console.error('Login error:', err);
+      toast.error('Erro ao iniciar sessao. Tente novamente.');
       setLoading(false);
     }
   };

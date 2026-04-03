@@ -7,53 +7,73 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const authOptions = {
+  // URL detectada automaticamente para funcionar em localhost e Vercel
+  __experimental: {},
+
   providers: [
     CredentialsProvider({
+      id: "credentials",
       name: "Credenciais",
       credentials: {
         username: { label: "Utilizador", type: "text" },
         password: { label: "Palavra-passe", type: "password" },
       },
       async authorize(credentials) {
+        console.log('[AUTH] authorize called with username:', credentials?.username);
+
         if (!credentials?.username || !credentials?.password) {
+          console.log('[AUTH] Missing credentials');
           return null;
         }
 
-        // Validar credenciais contra a tabela admin_users no Supabase
-        const { data, error } = await supabase
-          .from("admin_users")
-          .select("id, username, nome, role, activo")
-          .eq("username", credentials.username)
-          .eq("password", credentials.password)
-          .eq("activo", true)
-          .single();
+        try {
+          // Validar credenciais contra a tabela admin_users no Supabase
+          const { data, error } = await supabase
+            .from("admin_users")
+            .select("id, username, nome, role, activo")
+            .eq("username", credentials.username)
+            .eq("password", credentials.password)
+            .eq("activo", true)
+            .single();
 
-        if (error || !data) {
+          console.log('[AUTH] Supabase result - error:', error ? error.message : 'none', 'data:', data ? 'found' : 'null');
+
+          if (error || !data) {
+            return null;
+          }
+
+          // Actualizar ultimo acesso
+          try {
+            await supabase
+              .from("admin_users")
+              .update({ data_ultimo_acesso: new Date().toISOString() })
+              .eq("id", data.id);
+          } catch {
+            // nao bloquear login se falhar actualizacao
+          }
+
+          console.log('[AUTH] Login successful for:', data.username);
+          return {
+            id: data.id,
+            name: data.nome,
+            role: data.role,
+          };
+        } catch (err) {
+          console.error('[AUTH] Exception in authorize:', err);
           return null;
         }
-
-        // Actualizar ultimo acesso
-        await supabase
-          .from("admin_users")
-          .update({ data_ultimo_acesso: new Date().toISOString() })
-          .eq("id", data.id);
-
-        return {
-          id: data.id,
-          name: data.nome,
-          role: data.role,
-        };
       },
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET || "cpcmtqls-secret-key-lunda-sul-2025",
   session: {
     strategy: "jwt" as const,
-    maxAge: 1 * 60 * 60, // 1 hora - sessao curta para seguranca
-    updateAge: 15 * 60,  // Renova o JWT a cada 15 min de actividade
+    maxAge: 1 * 60 * 60,
+    updateAge: 15 * 60,
   },
   pages: {
-    signIn: "/",
+    signIn: "/admin",
+    newUser: "/admin",
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -77,7 +97,35 @@ const authOptions = {
         httpOnly: true,
         sameSite: "lax" as const,
         path: "/",
-        secure: false, // true em producao com HTTPS
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
+    // Adicionar cookies necessarios para NextAuth
+    pkceCodeVerifier: {
+      name: "next-auth.pkce.code_verifier",
+      options: {
+        httpOnly: true,
+        sameSite: "lax" as const,
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
+    callbackUrl: {
+      name: "next-auth.callback-url",
+      options: {
+        httpOnly: true,
+        sameSite: "lax" as const,
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
+    csrfToken: {
+      name: "next-auth.csrf-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax" as const,
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
       },
     },
   },
