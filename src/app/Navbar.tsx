@@ -16,7 +16,6 @@ import {
   Newspaper,
   Phone,
   Building2,
-  Image,
   FileText,
   Calendar,
   HelpCircle,
@@ -93,9 +92,49 @@ const menuItems: MenuItem[] = [
 ];
 
 /* ==============================
-   DESKTOP SUBMENU COMPONENT
+   DROPDOWN ITEM (reutilizavel)
    ============================== */
-function DesktopDropdown({ items }: { items: SubMenuItem[] }) {
+function DropdownItems({ items, onNavigate }: { items: SubMenuItem[]; onNavigate: (href: string) => void }) {
+  return (
+    <>
+      {/* Gold top accent */}
+      <div className="h-[2px] bg-gradient-to-r from-[#d4a017] via-[#f0c040] to-[#d4a017]" />
+      <div className="p-2">
+        {items.map((sub, i) => {
+          const Icon = sub.icon;
+          return (
+            <button
+              key={i}
+              onClick={() => onNavigate(sub.href)}
+              className="w-full flex items-start gap-3 px-3 py-2.5 rounded-lg text-left hover:bg-[#1a5c2e]/[0.07] transition-colors group/item"
+            >
+              {Icon && (
+                <div className="w-9 h-9 rounded-lg bg-[#1a5c2e]/[0.08] group-hover/item:bg-[#1a5c2e]/[0.15] flex items-center justify-center flex-shrink-0 text-[#1a5c2e] group-hover/item:text-[#d4a017] transition-colors mt-0.5">
+                  {Icon}
+                </div>
+              )}
+              <div className="min-w-0">
+                <div className="text-sm font-semibold text-[#1a1a1a] group-hover/item:text-[#1a5c2e] transition-colors leading-tight">
+                  {sub.label}
+                </div>
+                {sub.desc && (
+                  <div className="text-xs text-[#6b6b6b] mt-0.5 leading-snug">
+                    {sub.desc}
+                  </div>
+                )}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </>
+  );
+}
+
+/* ==============================
+   DESKTOP DROPDOWN WRAPPER
+   ============================== */
+function NavDropdown({ item, onNavigate }: { item: MenuItem; onNavigate: (href: string) => void }) {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [visible, setVisible] = useState(false);
 
@@ -104,7 +143,7 @@ function DesktopDropdown({ items }: { items: SubMenuItem[] }) {
     setVisible(true);
   };
   const hide = () => {
-    timeoutRef.current = setTimeout(() => setVisible(false), 150);
+    timeoutRef.current = setTimeout(() => setVisible(false), 200);
   };
 
   return (
@@ -113,49 +152,22 @@ function DesktopDropdown({ items }: { items: SubMenuItem[] }) {
       onMouseEnter={show}
       onMouseLeave={hide}
     >
+      {/* Trigger button */}
+      <button className="flex items-center gap-1.5 px-3 py-2 text-[13px] font-semibold text-white/90 hover:text-white rounded-md transition-colors hover:bg-white/10">
+        {item.icon}
+        <span>{item.label}</span>
+        <ChevronDown
+          className={`w-3.5 h-3.5 transition-all duration-300 ${visible ? 'rotate-180 opacity-100' : 'opacity-60'}`}
+        />
+      </button>
+
+      {/* Dropdown panel */}
       <div
-        className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 w-72 rounded-xl bg-white shadow-2xl shadow-black/20 border border-gray-100 overflow-hidden z-[60]
+        className={`absolute top-full left-1/2 -translate-x-1/2 mt-0 pt-2 w-72 rounded-b-xl bg-white shadow-2xl shadow-black/20 border border-gray-100 border-t-0 overflow-hidden z-[60]
           transition-all duration-200 origin-top
           ${visible ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}
       >
-        {/* Gold top accent */}
-        <div className="h-[2px] bg-gradient-to-r from-[#d4a017] via-[#f0c040] to-[#d4a017]" />
-        <div className="p-2">
-          {items.map((sub, i) => {
-            const Icon = sub.icon;
-            return (
-              <button
-                key={i}
-                onClick={() => {
-                  const el = document.querySelector(sub.href);
-                  if (el) {
-                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  } else {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }
-                  setVisible(false);
-                }}
-                className="w-full flex items-start gap-3 px-3 py-2.5 rounded-lg text-left hover:bg-[#1a5c2e]/[0.07] transition-colors group/item"
-              >
-                {Icon && (
-                  <div className="w-9 h-9 rounded-lg bg-[#1a5c2e]/[0.08] group-hover/item:bg-[#1a5c2e]/[0.15] flex items-center justify-center flex-shrink-0 text-[#1a5c2e] group-hover/item:text-[#d4a017] transition-colors mt-0.5">
-                    {Icon}
-                  </div>
-                )}
-                <div className="min-w-0">
-                  <div className="text-sm font-semibold text-[#1a1a1a] group-hover/item:text-[#1a5c2e] transition-colors leading-tight">
-                    {sub.label}
-                  </div>
-                  {sub.desc && (
-                    <div className="text-xs text-[#6b6b6b] mt-0.5 leading-snug">
-                      {sub.desc}
-                    </div>
-                  )}
-                </div>
-              </button>
-            );
-          })}
-        </div>
+        <DropdownItems items={item.children!} onNavigate={onNavigate} />
       </div>
     </div>
   );
@@ -177,7 +189,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const onResize = () => {
-      if (window.innerWidth >= 768) {
+      if (window.innerWidth >= 1024) {
         setOpen(false);
         setExpandedMobile(null);
       }
@@ -225,7 +237,6 @@ export default function Navbar() {
                 alt="C.P.C.M.T.Q.L.S"
                 className="w-9 h-9 md:w-10 md:h-10 rounded-full border-2 border-[#d4a017] group-hover:border-[#f0c040] transition-all duration-300 group-hover:shadow-[0_0_12px_rgba(212,160,23,0.4)]"
               />
-              {/* Pulse dot */}
               <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-[#d4a017] rounded-full border-2 border-[#1a5c2e]" />
             </div>
             <div className="hidden sm:block">
@@ -243,17 +254,11 @@ export default function Navbar() {
             {menuItems.map((item) => {
               if (item.children) {
                 return (
-                  <div
+                  <NavDropdown
                     key={item.label}
-                    className="relative group"
-                  >
-                    <button className="flex items-center gap-1.5 px-3 py-2 text-[13px] font-semibold text-white/90 hover:text-white rounded-md transition-colors group-hover:bg-white/10">
-                      {item.icon}
-                      <span>{item.label}</span>
-                      <ChevronDown className="w-3.5 h-3.5 opacity-60 group-hover:opacity-100 group-hover:rotate-180 transition-all duration-300" />
-                    </button>
-                    <DesktopDropdown items={item.children} />
-                  </div>
+                    item={item}
+                    onNavigate={handleNavClick}
+                  />
                 );
               }
 
@@ -310,7 +315,6 @@ export default function Navbar() {
                         }`}
                       />
                     </button>
-                    {/* Submenu items */}
                     <div
                       className={`overflow-hidden transition-all duration-300 ${
                         isExpanded ? 'max-h-96 ml-4 border-l-2 border-[#d4a017]/30' : 'max-h-0 ml-4'
