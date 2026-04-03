@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 
 import PainelConsultar from './PainelConsultar';
-import HeroSection from './HeroSection';
+import HeroSlideshow from './HeroSlideshow';
 import Navbar from './Navbar';
 import NoticiasSection from './NoticiasSection';
 import ServicosSection from './ServicosSection';
@@ -32,7 +32,7 @@ function PublicPage() {
 
       {/* Hero Section */}
       <div id="inicio">
-        <HeroSection />
+        <HeroSlideshow />
       </div>
 
       {/* Info Cards */}

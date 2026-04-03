@@ -27,6 +27,8 @@ import {
   LayoutGrid,
   Loader2,
   ShieldCheck,
+  Image as ImageIcon,
+  Play,
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -40,6 +42,7 @@ import PainelConfiguracoes from '../PainelConfiguracoes';
 import PainelNoticias from '../PainelNoticias';
 import PainelServicos from '../PainelServicos';
 import AdminCards from '../AdminCards';
+import PainelHeroSlides from '../PainelHeroSlides';
 
 interface Stats {
   total: number;
@@ -285,6 +288,7 @@ function AdminDashboard() {
       <nav className="bg-[#0f3d1d] text-white no-print sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center overflow-x-auto no-scrollbar gap-1 py-1">
+            <NavButton active={activeTab === 'slides'} onClick={() => setActiveTab('slides')} icon={<Play className="w-4 h-4" />} label="Slides" />
             <NavButton active={activeTab === 'inscrever'} onClick={() => setActiveTab('inscrever')} icon={<UserPlus className="w-4 h-4" />} label="Inscrever" />
             <NavButton active={activeTab === 'visualizar'} onClick={() => setActiveTab('visualizar')} icon={<FileText className="w-4 h-4" />} label="Base de Dados" />
             <NavButton active={activeTab === 'licenca'} onClick={() => setActiveTab('licenca')} icon={<CreditCard className="w-4 h-4" />} label="Licenca" />
@@ -301,7 +305,15 @@ function AdminDashboard() {
       {/* Admin Content */}
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="w-full grid grid-cols-5 sm:grid-cols-9 mb-6 bg-white border border-[#d1d1cc] h-auto p-1">
+          <TabsList className="w-full grid grid-cols-5 sm:grid-cols-10 mb-6 bg-white border border-[#d1d1cc] h-auto p-1">
+            <TabsTrigger
+              value="slides"
+              className="text-xs sm:text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
+            >
+              <Play className="w-4 h-4 mr-1 hidden sm:inline" />
+              <span className="sm:hidden"><Play className="w-4 h-4" /></span>
+              <span className="hidden sm:inline">Slides</span>
+            </TabsTrigger>
             <TabsTrigger
               value="inscrever"
               className="text-xs sm:text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
@@ -380,6 +392,10 @@ function AdminDashboard() {
               <span className="hidden sm:inline">Config</span>
             </TabsTrigger>
           </TabsList>
+
+          <TabsContent value="slides">
+            <PainelHeroSlides />
+          </TabsContent>
 
           <TabsContent value="inscrever">
             <Card className="border-[#d1d1cc] shadow-sm">
