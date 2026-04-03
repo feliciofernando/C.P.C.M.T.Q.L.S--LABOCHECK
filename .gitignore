@@ -63,3 +63,5 @@ worklog.md
 # Claude AI config
 .claude
 .claudeignore
+# Temp images
+temp-images/

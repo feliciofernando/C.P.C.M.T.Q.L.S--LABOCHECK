@@ -6,7 +6,7 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const handler = NextAuth({
+const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credenciais",
@@ -48,7 +48,7 @@ const handler = NextAuth({
   ],
   secret: process.env.NEXTAUTH_SECRET || "cpcmtqls-secret-key-lunda-sul-2025",
   session: {
-    strategy: "jwt",
+    strategy: "jwt" as const,
     maxAge: 8 * 60 * 60, // 8 hours
   },
   pages: {
@@ -68,6 +68,8 @@ const handler = NextAuth({
       return session;
     },
   },
-});
+};
 
-export { handler as GET, handler as POST };
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST, authOptions };

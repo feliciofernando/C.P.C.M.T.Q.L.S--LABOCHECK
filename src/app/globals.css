@@ -176,6 +176,15 @@
   position: relative;
 }
 
+/* No scrollbar (for horizontal scrolling nav) */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* Status badges */
 .status-ativa {
   background-color: #1a5c2e;

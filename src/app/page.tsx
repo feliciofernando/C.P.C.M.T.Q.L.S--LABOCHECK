@@ -21,6 +21,9 @@ import {
   CreditCard,
   Bell,
   Settings,
+  Newspaper,
+  Briefcase,
+  LayoutGrid,
 } from 'lucide-react';
 
 import LoginModal from './LoginModal';
@@ -30,7 +33,14 @@ import PainelVisualizar from './PainelVisualizar';
 import LicencaPVC from './LicencaPVC';
 import PainelAlertas from './PainelAlertas';
 import PainelConfiguracoes from './PainelConfiguracoes';
+import PainelNoticias from './PainelNoticias';
+import PainelServicos from './PainelServicos';
 import HeroSection from './HeroSection';
+import Navbar from './Navbar';
+import NoticiasSection from './NoticiasSection';
+import ServicosSection from './ServicosSection';
+import CardsSection from './CardsSection';
+import AdminCards from './AdminCards';
 
 interface Stats {
   total: number;
@@ -61,32 +71,16 @@ function PublicPage() {
 
   return (
     <>
-      {/* Public Header */}
-      <header className="bg-[#1a5c2e] text-white">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center">
-          <div className="flex items-center gap-3">
-            <img
-              src="/logotipo.jpg"
-              alt="C.P.C.M.T.Q.L.S"
-              className="w-12 h-12 rounded-full border-2 border-[#d4a017]"
-            />
-            <div>
-              <h1 className="text-base sm:text-lg font-bold tracking-wide leading-tight">
-                C.P.C.M.T.Q.L.S
-              </h1>
-              <p className="text-[10px] sm:text-xs opacity-90 leading-tight hidden sm:block">
-                Conselho Provincial dos Condutores de Motociclos, Triciclos e Quadriciclos da Lunda Sul
-              </p>
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* Navigation Bar */}
+      <Navbar />
 
       {/* Hero Section */}
-      <HeroSection />
+      <div id="inicio">
+        <HeroSection />
+      </div>
 
       {/* Info Cards */}
-      <section className="max-w-6xl mx-auto px-4 -mt-6 relative z-10">
+      <section id="sobre" className="max-w-6xl mx-auto px-4 -mt-6 relative z-10">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <InfoCard
             icon={<Phone className="w-5 h-5" />}
@@ -106,8 +100,11 @@ function PublicPage() {
         </div>
       </section>
 
+      {/* Servicos Section */}
+      <ServicosSection />
+
       {/* Consultar Section */}
-      <section className="max-w-4xl mx-auto px-4 py-12">
+      <section id="consultar" className="max-w-4xl mx-auto px-4 py-12">
         <Card className="border-[#d1d1cc] shadow-md">
           <CardHeader className="bg-[#1a5c2e] text-white py-5 px-6">
             <CardTitle className="text-lg flex items-center gap-2 justify-center">
@@ -121,8 +118,14 @@ function PublicPage() {
         </Card>
       </section>
 
+      {/* Cards Section with blur overlay */}
+      <CardsSection />
+
+      {/* Noticias Section */}
+      <NoticiasSection />
+
       {/* Public Footer */}
-      <footer className="bg-[#0f3d1d] text-white mt-auto">
+      <footer id="contactos" className="bg-[#0f3d1d] text-white mt-auto">
         <div className="max-w-6xl mx-auto px-4 py-6 text-center">
           <p className="font-semibold text-sm">C.P.C.M.T.Q.L.S</p>
           <p className="opacity-80 text-xs mt-1">
@@ -257,37 +260,58 @@ function AdminDashboard() {
         </div>
       </header>
 
+      {/* Admin Nav */}
+      <nav className="bg-[#0f3d1d] text-white no-print sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex items-center overflow-x-auto no-scrollbar gap-1 py-1">
+            <NavButton active={activeTab === 'inscrever'} onClick={() => setActiveTab('inscrever')} icon={<UserPlus className="w-4 h-4" />} label="Inscrever" />
+            <NavButton active={activeTab === 'visualizar'} onClick={() => setActiveTab('visualizar')} icon={<FileText className="w-4 h-4" />} label="Base de Dados" />
+            <NavButton active={activeTab === 'licenca'} onClick={() => setActiveTab('licenca')} icon={<CreditCard className="w-4 h-4" />} label="Licenca" />
+            <NavButton active={activeTab === 'alertas'} onClick={() => setActiveTab('alertas')} icon={<Bell className="w-4 h-4" />} label="Alertas" badge={alertCount.PENDENTE > 0 ? alertCount.PENDENTE : undefined} />
+            <NavButton active={activeTab === 'consultar'} onClick={() => setActiveTab('consultar')} icon={<Search className="w-4 h-4" />} label="Consultar" />
+            <NavButton active={activeTab === 'noticias'} onClick={() => setActiveTab('noticias')} icon={<Newspaper className="w-4 h-4" />} label="Noticias" />
+            <NavButton active={activeTab === 'servicos'} onClick={() => setActiveTab('servicos')} icon={<Briefcase className="w-4 h-4" />} label="Servicos" />
+            <NavButton active={activeTab === 'cards'} onClick={() => setActiveTab('cards')} icon={<LayoutGrid className="w-4 h-4" />} label="Cards" />
+            <NavButton active={activeTab === 'configuracoes'} onClick={() => setActiveTab('configuracoes')} icon={<Settings className="w-4 h-4" />} label="Config" />
+          </div>
+        </div>
+      </nav>
+
       {/* Admin Content */}
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="w-full grid grid-cols-6 mb-6 bg-white border border-[#d1d1cc] h-auto p-1">
+          <TabsList className="w-full grid grid-cols-5 sm:grid-cols-9 mb-6 bg-white border border-[#d1d1cc] h-auto p-1">
             <TabsTrigger
               value="inscrever"
-              className="text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
+              className="text-xs sm:text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
             >
-              <UserPlus className="w-4 h-4 mr-1.5 hidden sm:inline" />
-              Inscrever
+              <UserPlus className="w-4 h-4 mr-1 hidden sm:inline" />
+              <span className="sm:hidden"><UserPlus className="w-4 h-4" /></span>
+              <span className="hidden sm:inline">Inscrever</span>
             </TabsTrigger>
             <TabsTrigger
               value="visualizar"
-              className="text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
+              className="text-xs sm:text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
             >
-              <FileText className="w-4 h-4 mr-1.5 hidden sm:inline" />
-              Base de Dados
+              <FileText className="w-4 h-4 mr-1 hidden sm:inline" />
+              <span className="sm:hidden"><FileText className="w-4 h-4" /></span>
+              <span className="hidden sm:inline">Base Dados</span>
             </TabsTrigger>
             <TabsTrigger
               value="licenca"
-              className="text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
+              className="text-xs sm:text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
             >
-              <CreditCard className="w-4 h-4 mr-1.5 hidden sm:inline" />
-              Licenca PVC
+              <CreditCard className="w-4 h-4 mr-1 hidden sm:inline" />
+              <span className="sm:hidden"><CreditCard className="w-4 h-4" /></span>
+              <span className="hidden sm:inline">Licenca</span>
             </TabsTrigger>
             <TabsTrigger
               value="alertas"
-              className="text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none relative"
+              className="text-xs sm:text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none relative"
             >
-              <Bell className="w-4 h-4 mr-1.5 hidden sm:inline" />
-              Alertas
+              <Bell className="w-4 h-4 mr-1 hidden sm:inline" />
+              <span className="sm:hidden"><Bell className="w-4 h-4" /></span>
+              <span className="hidden sm:inline">Alertas</span>
               {alertCount.PENDENTE > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
                   {alertCount.PENDENTE > 99 ? '99+' : alertCount.PENDENTE}
@@ -296,18 +320,43 @@ function AdminDashboard() {
             </TabsTrigger>
             <TabsTrigger
               value="consultar"
-              className="text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
+              className="text-xs sm:text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
             >
-              <Search className="w-4 h-4 mr-1.5 hidden sm:inline" />
-              Consultar
+              <Search className="w-4 h-4 mr-1 hidden sm:inline" />
+              <span className="sm:hidden"><Search className="w-4 h-4" /></span>
+              <span className="hidden sm:inline">Consultar</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="noticias"
+              className="text-xs sm:text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
+            >
+              <Newspaper className="w-4 h-4 mr-1 hidden sm:inline" />
+              <span className="sm:hidden"><Newspaper className="w-4 h-4" /></span>
+              <span className="hidden sm:inline">Noticias</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="servicos"
+              className="text-xs sm:text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
+            >
+              <Briefcase className="w-4 h-4 mr-1 hidden sm:inline" />
+              <span className="sm:hidden"><Briefcase className="w-4 h-4" /></span>
+              <span className="hidden sm:inline">Servicos</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="cards"
+              className="text-xs sm:text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
+            >
+              <LayoutGrid className="w-4 h-4 mr-1 hidden sm:inline" />
+              <span className="sm:hidden"><LayoutGrid className="w-4 h-4" /></span>
+              <span className="hidden sm:inline">Cards</span>
             </TabsTrigger>
             <TabsTrigger
               value="configuracoes"
-              className="text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
+              className="text-xs sm:text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
             >
-              <Settings className="w-4 h-4 mr-1.5 hidden sm:inline" />
-              <span className="hidden sm:inline">Configuracoes</span>
-              <span className="sm:hidden">Config</span>
+              <Settings className="w-4 h-4 mr-1 hidden sm:inline" />
+              <span className="sm:hidden"><Settings className="w-4 h-4" /></span>
+              <span className="hidden sm:inline">Config</span>
             </TabsTrigger>
           </TabsList>
 
@@ -369,6 +418,38 @@ function AdminDashboard() {
             </Card>
           </TabsContent>
 
+          <TabsContent value="noticias">
+            <Card className="border-[#d1d1cc] shadow-sm">
+              <CardHeader className="bg-[#1a5c2e] text-white py-4 px-6">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Newspaper className="w-5 h-5" />
+                  Gestao de Noticias
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <PainelNoticias />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="servicos">
+            <Card className="border-[#d1d1cc] shadow-sm">
+              <CardHeader className="bg-[#1a5c2e] text-white py-4 px-6">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Briefcase className="w-5 h-5" />
+                  Gestao de Servicos
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <PainelServicos />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="cards">
+            <AdminCards />
+          </TabsContent>
+
           <TabsContent value="configuracoes">
             <PainelConfiguracoes />
           </TabsContent>
@@ -414,6 +495,36 @@ function InfoCard({
         ))}
       </CardContent>
     </Card>
+  );
+}
+
+/* ==============================
+   ADMIN NAV BUTTON
+   ============================== */
+function NavButton({ active, onClick, icon, label, badge }: {
+  active: boolean;
+  onClick: () => void;
+  icon: React.ReactNode;
+  label: string;
+  badge?: number;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-colors ${
+        active
+          ? 'bg-[#1a5c2e] text-white'
+          : 'text-white/70 hover:text-white hover:bg-white/10'
+      }`}
+    >
+      {icon}
+      <span className="hidden md:inline">{label}</span>
+      {badge !== undefined && badge > 0 && (
+        <span className="bg-red-500 text-white text-[9px] font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center px-1">
+          {badge > 99 ? '99+' : badge}
+        </span>
+      )}
+    </button>
   );
 }
 
