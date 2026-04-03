@@ -65,6 +65,14 @@ function PublicPage() {
   const consultaBI = searchParams.get('consulta') || undefined;
   const isAdminRoute = pathname === '/admin';
 
+  // Verificar se acabou de sair (para impedir retroceder ao admin)
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      // Substituir a entrada do historico para impedir retroceder ao admin
+      window.history.replaceState({}, '', '/');
+    }
+  }, [status]);
+
   if (status === 'authenticated' && session) {
     return <AdminDashboard />;
   }
@@ -206,8 +214,22 @@ function AdminDashboard() {
     loadAlertCount();
   };
 
-  const handleLogout = () => {
-    signOut({ callbackUrl: '/' });
+  const handleLogout = async () => {
+    // Limpar TODOS os cookies de sessao do NextAuth
+    document.cookie.split(';').forEach((cookie) => {
+      const name = cookie.split('=')[0].trim();
+      if (name.startsWith('next-auth') || name.startsWith('__Secure-next-auth')) {
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+      }
+    });
+
+    // Fazer signOut e redireccionar (substitui historico para impedir retroceder)
+    await signOut({
+      redirect: false,
+    });
+
+    // Limpar historico do browser e forcar redireccionamento
+    window.location.replace('/');
   };
 
   return (

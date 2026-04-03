@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSession, signIn } from 'next-auth/react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -24,6 +24,22 @@ export default function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const { status } = useSession();
+
+  // Limpar campos quando o dialog abre
+  useEffect(() => {
+    if (open) {
+      setUsername('');
+      setPassword('');
+    }
+  }, [open]);
+
+  // Se ja esta autenticado, fechar o dialog
+  useEffect(() => {
+    if (status === 'authenticated') {
+      onOpenChange(false);
+    }
+  }, [status, onOpenChange]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,11 +58,16 @@ export default function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
       if (result?.error) {
         toast.error('Credenciais invalidas');
+        // Limpar password apos erro
+        setPassword('');
       } else {
         toast.success('Sessao iniciada com sucesso');
-        onOpenChange(false);
         setUsername('');
         setPassword('');
+        onOpenChange(false);
+
+        // Redireccionar para admin via replace (impede retroceder ao login)
+        window.location.replace('/admin');
       }
     } catch {
       toast.error('Erro ao iniciar sessao');
@@ -56,8 +77,8 @@ export default function LoginModal({ open, onOpenChange }: LoginModalProps) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+    <Dialog open={open && status !== 'authenticated'} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md" onInteractOutside={(e) => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-[#1a5c2e]">
             <ShieldCheck className="w-5 h-5" />
@@ -76,7 +97,8 @@ export default function LoginModal({ open, onOpenChange }: LoginModalProps) {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Utilizador"
-              autoComplete="username"
+              autoComplete="off"
+              autoFocus={open}
             />
           </div>
           <div className="space-y-2">
@@ -87,7 +109,7 @@ export default function LoginModal({ open, onOpenChange }: LoginModalProps) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Palavra-passe"
-              autoComplete="current-password"
+              autoComplete="off"
             />
           </div>
           <Button

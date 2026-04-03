@@ -49,7 +49,8 @@ const authOptions = {
   secret: process.env.NEXTAUTH_SECRET || "cpcmtqls-secret-key-lunda-sul-2025",
   session: {
     strategy: "jwt" as const,
-    maxAge: 8 * 60 * 60, // 8 hours
+    maxAge: 1 * 60 * 60, // 1 hora - sessao curta para seguranca
+    updateAge: 15 * 60,  // Renova o JWT a cada 15 min de actividade
   },
   pages: {
     signIn: "/",
@@ -58,6 +59,7 @@ const authOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.role = user.role || "admin";
+        token.loginTime = Date.now();
       }
       return token;
     },
@@ -66,6 +68,17 @@ const authOptions = {
         (session.user as Record<string, unknown>).role = token.role;
       }
       return session;
+    },
+  },
+  cookies: {
+    sessionToken: {
+      name: `next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax" as const,
+        path: "/",
+        secure: false, // true em producao com HTTPS
+      },
     },
   },
 };
