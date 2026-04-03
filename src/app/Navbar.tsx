@@ -240,18 +240,11 @@ export default function Navbar() {
               />
               <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-[#d4a017] rounded-full border-2 border-[#1a5c2e]" />
             </div>
-            <div className="hidden sm:block">
-              <h1 className="text-sm md:text-base font-bold tracking-wide leading-tight">
-                C.P.C.M.T.Q.L.S
-              </h1>
-              <p className="text-[9px] md:text-[10px] text-[#d4a017]/90 font-medium tracking-wider leading-tight">
-                LABOCHECK
-              </p>
-            </div>
+
           </button>
 
-          {/* Desktop menu */}
-          <div className="hidden lg:flex items-center gap-0.5">
+          {/* Desktop menu - centered */}
+          <div className="hidden lg:flex flex-1 items-center justify-center gap-0.5">
             {menuItems.map((item) => {
               if (item.children) {
                 return (
