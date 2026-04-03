@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 import {
   Menu,
   X,
@@ -42,51 +43,51 @@ interface MenuItem {
 const menuItems: MenuItem[] = [
   {
     label: 'Inicio',
-    href: '#inicio',
+    href: '/',
     icon: <Home className="w-4 h-4" />,
   },
   {
     label: 'O Conselho',
     icon: <Info className="w-4 h-4" />,
     children: [
-      { label: 'Mensagem do Presidente', href: '#sobre', desc: 'Palavras do lider', icon: <Users className="w-4 h-4" /> },
-      { label: 'Sobre o Conselho', href: '#sobre', desc: 'Quem somos', icon: <Building2 className="w-4 h-4" /> },
-      { label: 'Galeria de Diretores', href: '#galeria', desc: 'Nossos diretores', icon: <Users className="w-4 h-4" /> },
-      { label: 'Eventos', href: '#eventos', desc: 'Proximos eventos', icon: <Calendar className="w-4 h-4" /> },
+      { label: 'Mensagem do Presidente', href: '/paginas/6e83ee50-e486-44e8-b6d7-7a1c1102b0a9', desc: 'Palavras do lider', icon: <Users className="w-4 h-4" /> },
+      { label: 'Sobre o Conselho', href: '/paginas/f0e3ce27-6776-44c1-a043-354a74d40509', desc: 'Quem somos', icon: <Building2 className="w-4 h-4" /> },
+      { label: 'Galeria de Diretores', href: '/paginas/8547b93c-4d8d-4db0-9b5c-7d1d0ab89bed', desc: 'Nossos diretores', icon: <Users className="w-4 h-4" /> },
+      { label: 'Eventos', href: '/paginas/d465ae1c-6287-412b-9222-6b78ab5b083f', desc: 'Proximos eventos', icon: <Calendar className="w-4 h-4" /> },
     ],
   },
   {
     label: 'Servicos',
     icon: <Briefcase className="w-4 h-4" />,
     children: [
-      { label: 'Emissao de Licencas', href: '#servicos', desc: 'Licenca profissional PVC', icon: <CreditCard className="w-4 h-4" /> },
-      { label: 'Registo de Condutores', href: '#consultar', desc: 'Inscreva-se agora', icon: <UserPlus className="w-4 h-4" /> },
-      { label: 'Formacao Profissional', href: '#servicos', desc: 'Cursos e capacitacao', icon: <GraduationCap className="w-4 h-4" /> },
-      { label: 'Consultoria e Apoio Legal', href: '#servicos', desc: 'Assistencia juridica', icon: <Scale className="w-4 h-4" /> },
+      { label: 'Emissao de Licencas', href: '/servicos/641325e6-1e07-442f-9099-175f045dd068', desc: 'Licenca profissional PVC', icon: <CreditCard className="w-4 h-4" /> },
+      { label: 'Registo de Condutores', href: '/servicos/e0f2332a-93c1-4f43-9318-cea989b2a0ec', desc: 'Inscreva-se agora', icon: <UserPlus className="w-4 h-4" /> },
+      { label: 'Formacao Profissional', href: '/servicos/fbf2d960-178e-474a-a9f5-8ac2eb797cf2', desc: 'Cursos e capacitacao', icon: <GraduationCap className="w-4 h-4" /> },
+      { label: 'Consultoria e Apoio Legal', href: '/servicos/7bfad4bd-a923-4eef-a884-e1beaf5b5856', desc: 'Assistencia juridica', icon: <Scale className="w-4 h-4" /> },
     ],
   },
   {
     label: 'Recursos',
     icon: <FileText className="w-4 h-4" />,
     children: [
-      { label: 'Legislacao', href: '#documentos', desc: 'Leis e decretos', icon: <Scale className="w-4 h-4" /> },
-      { label: 'Documentos', href: '#documentos', desc: 'Formularios e guias', icon: <FileText className="w-4 h-4" /> },
-      { label: 'Perguntas Frequentes', href: '#faq', desc: 'Tire suas duvidas', icon: <HelpCircle className="w-4 h-4" /> },
+      { label: 'Legislacao', href: '/paginas/5ed2189d-9c81-4b6c-a6bc-d58bc5ada1d9', desc: 'Leis e decretos', icon: <Scale className="w-4 h-4" /> },
+      { label: 'Documentos', href: '/paginas/ae5d78e7-eba7-45dc-b7a2-c92e0671f302', desc: 'Formularios e guias', icon: <FileText className="w-4 h-4" /> },
+      { label: 'Perguntas Frequentes', href: '/paginas/4c2d8ce4-3473-4125-9366-142d54754025', desc: 'Tire suas duvidas', icon: <HelpCircle className="w-4 h-4" /> },
     ],
   },
   {
     label: 'Noticias',
-    href: '#noticias',
+    href: '/#noticias',
     icon: <Newspaper className="w-4 h-4" />,
   },
   {
     label: 'Consultar Ficha',
-    href: '#consultar',
+    href: '/#consultar',
     icon: <Search className="w-4 h-4" />,
   },
   {
     label: 'Contactos',
-    href: '#contactos',
+    href: '/#contactos',
     icon: <Phone className="w-4 h-4" />,
   },
 ];
@@ -94,7 +95,7 @@ const menuItems: MenuItem[] = [
 /* ==============================
    DROPDOWN ITEM (reutilizavel)
    ============================== */
-function DropdownItems({ items, onNavigate }: { items: SubMenuItem[]; onNavigate: (href: string) => void }) {
+function DropdownItems({ items }: { items: SubMenuItem[] }) {
   return (
     <>
       {/* Gold top accent */}
@@ -103,9 +104,9 @@ function DropdownItems({ items, onNavigate }: { items: SubMenuItem[]; onNavigate
         {items.map((sub, i) => {
           const Icon = sub.icon;
           return (
-            <button
+            <Link
               key={i}
-              onClick={() => onNavigate(sub.href)}
+              href={sub.href}
               className="w-full flex items-start gap-3 px-3 py-2.5 rounded-lg text-left hover:bg-[#1a5c2e]/[0.07] transition-colors group/item"
             >
               {Icon && (
@@ -123,7 +124,7 @@ function DropdownItems({ items, onNavigate }: { items: SubMenuItem[]; onNavigate
                   </div>
                 )}
               </div>
-            </button>
+            </Link>
           );
         })}
       </div>
@@ -134,7 +135,7 @@ function DropdownItems({ items, onNavigate }: { items: SubMenuItem[]; onNavigate
 /* ==============================
    DESKTOP DROPDOWN WRAPPER
    ============================== */
-function NavDropdown({ item, onNavigate }: { item: MenuItem; onNavigate: (href: string) => void }) {
+function NavDropdown({ item }: { item: MenuItem }) {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [visible, setVisible] = useState(false);
 
@@ -167,7 +168,7 @@ function NavDropdown({ item, onNavigate }: { item: MenuItem; onNavigate: (href: 
           transition-all duration-200 origin-top
           ${visible ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}
       >
-        <DropdownItems items={item.children!} onNavigate={onNavigate} />
+        <DropdownItems items={item.children!} />
       </div>
     </div>
   );
@@ -257,20 +258,19 @@ export default function Navbar() {
                   <NavDropdown
                     key={item.label}
                     item={item}
-                    onNavigate={handleNavClick}
                   />
                 );
               }
 
               return (
-                <button
+                <Link
                   key={item.label}
-                  onClick={() => handleNavClick(item.href!)}
+                  href={item.href!}
                   className="flex items-center gap-1.5 px-3 py-2 text-[13px] font-semibold text-white/90 hover:text-white rounded-md transition-colors hover:bg-white/10"
                 >
                   {item.icon}
                   <span>{item.label}</span>
-                </button>
+                </Link>
               );
             })}
           </div>
@@ -323,9 +323,10 @@ export default function Navbar() {
                       {item.children.map((sub, si) => {
                         const SubIcon = sub.icon;
                         return (
-                          <button
+                          <Link
                             key={si}
-                            onClick={() => handleNavClick(sub.href)}
+                            href={sub.href}
+                            onClick={() => { setOpen(false); setExpandedMobile(null); }}
                             className="w-full flex items-center gap-3 px-4 py-2.5 text-[13px] text-white/75 hover:text-white hover:bg-white/[0.07] rounded-md transition-colors"
                           >
                             {SubIcon && (
@@ -339,7 +340,7 @@ export default function Navbar() {
                                 </div>
                               )}
                             </div>
-                          </button>
+                          </Link>
                         );
                       })}
                     </div>
@@ -348,14 +349,15 @@ export default function Navbar() {
               }
 
               return (
-                <button
+                <Link
                   key={idx}
-                  onClick={() => handleNavClick(item.href!)}
+                  href={item.href!}
+                  onClick={() => { setOpen(false); }}
                   className="w-full flex items-center gap-2.5 px-4 py-3 text-sm font-semibold text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
                 >
                   {item.icon}
                   <span>{item.label}</span>
-                </button>
+                </Link>
               );
             })}
           </div>
