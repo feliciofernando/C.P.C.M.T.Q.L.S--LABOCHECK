@@ -6,6 +6,20 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// Detectar URL automaticamente para funcionar em localhost e Vercel
+const getAuthUrl = () => {
+  // Se NEXTAUTH_URL esta definido e nao e localhost, usar directamente
+  if (process.env.NEXTAUTH_URL && !process.env.NEXTAUTH_URL.includes('localhost')) {
+    return process.env.NEXTAUTH_URL;
+  }
+  // Em producao, inferir a partir de VERCEL_URL
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+  // Fallback para localhost
+  return process.env.NEXTAUTH_URL || 'http://localhost:3000';
+};
+
 const authOptions = {
   // URL detectada automaticamente para funcionar em localhost e Vercel
   __experimental: {},
@@ -66,6 +80,9 @@ const authOptions = {
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET || "cpcmtqls-secret-key-lunda-sul-2025",
+  // URL detectada automaticamente - VERCEL_URL e usado em producao
+  url: getAuthUrl(),
+  trustHost: true,
   session: {
     strategy: "jwt" as const,
     maxAge: 1 * 60 * 60,
@@ -75,6 +92,8 @@ const authOptions = {
     signIn: "/admin",
     newUser: "/admin",
   },
+  // Em producao (Vercel/HTTPS), NextAuth usa cookies __Secure- automaticamente
+  useSecureCookies: process.env.NODE_ENV === "production",
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
@@ -88,45 +107,6 @@ const authOptions = {
         (session.user as Record<string, unknown>).role = token.role;
       }
       return session;
-    },
-  },
-  cookies: {
-    sessionToken: {
-      name: `next-auth.session-token`,
-      options: {
-        httpOnly: true,
-        sameSite: "lax" as const,
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-      },
-    },
-    // Adicionar cookies necessarios para NextAuth
-    pkceCodeVerifier: {
-      name: "next-auth.pkce.code_verifier",
-      options: {
-        httpOnly: true,
-        sameSite: "lax" as const,
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-      },
-    },
-    callbackUrl: {
-      name: "next-auth.callback-url",
-      options: {
-        httpOnly: true,
-        sameSite: "lax" as const,
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-      },
-    },
-    csrfToken: {
-      name: "next-auth.csrf-token",
-      options: {
-        httpOnly: true,
-        sameSite: "lax" as const,
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-      },
     },
   },
 };
