@@ -168,22 +168,17 @@ export default function HeroSlideshow() {
           transform: isTransitioning ? 'translateY(12px)' : 'translateY(0)',
         }}
       >
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-wider drop-shadow-lg leading-tight">
+        <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-wider drop-shadow-lg leading-tight">
           {currentSlide?.titulo}
         </h2>
         <div className="flex items-center justify-center gap-3 my-4">
-          <div className="h-[1px] w-12 sm:w-20 bg-[#d4a017]/60" />
-          <div className="w-2 h-2 rounded-full bg-[#d4a017]" />
-          <div className="h-[1px] w-12 sm:w-20 bg-[#d4a017]/60" />
+          <div className="h-[1px] w-16 sm:w-24 bg-[#d4a017]/60" />
+          <div className="w-2.5 h-2.5 rounded-full bg-[#d4a017]" />
+          <div className="h-[1px] w-16 sm:w-24 bg-[#d4a017]/60" />
         </div>
-        <p className="text-sm sm:text-base lg:text-lg opacity-95 max-w-3xl mx-auto leading-relaxed font-medium">
+        <p className="text-base sm:text-lg lg:text-xl opacity-95 max-w-3xl mx-auto leading-relaxed font-medium">
           {currentSlide?.subtitulo}
         </p>
-        {currentSlide?.textoBotao && currentSlide.textoBotao.trim() && (
-          <p className="mt-8 text-sm sm:text-base lg:text-lg font-semibold tracking-widest uppercase text-[#d4a017] drop-shadow-[0_1px_3px_rgba(0,0,0,0.4)]">
-            {currentSlide.textoBotao}
-          </p>
-        )}
       </div>
 
       {/* Left/Right Arrow Buttons */}
