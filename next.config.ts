@@ -8,14 +8,6 @@ const nextConfig: NextConfig = {
   },
   reactStrictMode: false,
   allowedDevOrigins: ['preview-chat-f5324438-fb7a-4c38-9c9f-a7a6296c2cc4.space.z.ai'],
-  async rewrites() {
-    return [
-      {
-        source: '/admin',
-        destination: '/',
-      },
-    ];
-  },
 };
 
 export default nextConfig;
