@@ -71,6 +71,7 @@ export default function PainelVisualizar() {
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [downloadingFicha, setDownloadingFicha] = useState(false);
   const [downloadingQR, setDownloadingQR] = useState(false);
+  const [searchVersion, setSearchVersion] = useState(0);
 
   // Use ref for search to prevent auto-search on every keystroke
   const searchRef = useRef(search);
@@ -97,7 +98,7 @@ export default function PainelVisualizar() {
     } finally {
       setLoading(false);
     }
-  }, [pagination.page, pagination.limit, statusFilter]);
+  }, [pagination.page, pagination.limit, statusFilter, searchVersion]);
 
   useEffect(() => {
     fetchCondutores();
@@ -105,7 +106,7 @@ export default function PainelVisualizar() {
 
   const handleSearch = () => {
     setPagination((prev) => ({ ...prev, page: 1 }));
-    // useEffect will trigger fetchCondutores when pagination.page changes
+    setSearchVersion((v) => v + 1);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -219,7 +220,7 @@ export default function PainelVisualizar() {
             className="pl-9"
           />
         </div>
-        <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPagination((prev) => ({ ...prev, page: 1 })); }}>
+        <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPagination((prev) => ({ ...prev, page: 1 })); setSearchVersion((v) => v + 1); }}>
           <SelectTrigger className="w-40">
             <SelectValue />
           </SelectTrigger>
