@@ -285,16 +285,16 @@ function AdminDashboard() {
       {/* Admin Nav */}
       <nav className="bg-[#0f3d1d] text-white no-print sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center overflow-x-auto no-scrollbar gap-1 py-1">
-            <NavButton active={activeTab === 'slides'} onClick={() => setActiveTab('slides')} icon={<Play className="w-4 h-4" />} label="Slides" />
-            <NavButton active={activeTab === 'inscrever'} onClick={() => setActiveTab('inscrever')} icon={<UserPlus className="w-4 h-4" />} label="Inscrever" />
-            <NavButton active={activeTab === 'visualizar'} onClick={() => setActiveTab('visualizar')} icon={<FileText className="w-4 h-4" />} label="Base de Dados" />
-            <NavButton active={activeTab === 'alertas'} onClick={() => setActiveTab('alertas')} icon={<Bell className="w-4 h-4" />} label="Alertas" badge={alertCount.PENDENTE > 0 ? alertCount.PENDENTE : undefined} />
-            <NavButton active={activeTab === 'consultar'} onClick={() => setActiveTab('consultar')} icon={<Search className="w-4 h-4" />} label="Consultar" />
-            <NavButton active={activeTab === 'noticias'} onClick={() => setActiveTab('noticias')} icon={<Newspaper className="w-4 h-4" />} label="Noticias" />
-            <NavButton active={activeTab === 'servicos'} onClick={() => setActiveTab('servicos')} icon={<Briefcase className="w-4 h-4" />} label="Servicos" />
-            <NavButton active={activeTab === 'cards'} onClick={() => setActiveTab('cards')} icon={<LayoutGrid className="w-4 h-4" />} label="Cards" />
-            <NavButton active={activeTab === 'configuracoes'} onClick={() => setActiveTab('configuracoes')} icon={<Settings className="w-4 h-4" />} label="Config" />
+          <div className="flex items-center justify-center overflow-x-auto no-scrollbar gap-1 py-1">
+            <NavButton active={activeTab === 'slides'} onClick={() => setActiveTab('slides')} icon={<Play className="w-5 h-5" />} label="Slides" />
+            <NavButton active={activeTab === 'inscrever'} onClick={() => setActiveTab('inscrever')} icon={<UserPlus className="w-5 h-5" />} label="Inscrever" />
+            <NavButton active={activeTab === 'visualizar'} onClick={() => setActiveTab('visualizar')} icon={<FileText className="w-5 h-5" />} label="Base de Dados" />
+            <NavButton active={activeTab === 'alertas'} onClick={() => setActiveTab('alertas')} icon={<Bell className="w-5 h-5" />} label="Alertas" badge={alertCount.PENDENTE > 0 ? alertCount.PENDENTE : undefined} />
+            <NavButton active={activeTab === 'consultar'} onClick={() => setActiveTab('consultar')} icon={<Search className="w-5 h-5" />} label="Consultar" />
+            <NavButton active={activeTab === 'noticias'} onClick={() => setActiveTab('noticias')} icon={<Newspaper className="w-5 h-5" />} label="Noticias" />
+            <NavButton active={activeTab === 'servicos'} onClick={() => setActiveTab('servicos')} icon={<Briefcase className="w-5 h-5" />} label="Servicos" />
+            <NavButton active={activeTab === 'cards'} onClick={() => setActiveTab('cards')} icon={<LayoutGrid className="w-5 h-5" />} label="Cards" />
+            <NavButton active={activeTab === 'configuracoes'} onClick={() => setActiveTab('configuracoes')} icon={<Settings className="w-5 h-5" />} label="Config" />
           </div>
         </div>
       </nav>
@@ -417,7 +417,7 @@ function NavButton({ active, onClick, icon, label, badge }: {
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-colors ${
+      className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors ${
         active
           ? 'bg-[#1a5c2e] text-white'
           : 'text-white/70 hover:text-white hover:bg-white/10'
