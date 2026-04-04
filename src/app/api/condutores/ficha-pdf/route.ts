@@ -1,24 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-server';
 import { toCamelCase } from '@/lib/utils-supabase';
-import sharp from 'sharp';
 import { PDFDocument } from 'pdf-lib';
-import { readFileSync } from 'fs';
-import path from 'path';
 import { getFontFaceSVG, FONT_FAMILY, renderSVGtoPNG } from '@/lib/pdf-fonts';
+import { LOGOTIPO_BASE64 } from '@/lib/pdf-assets-data';
 
-// Cache logo
-let cachedLogoBase64: string | null = null;
+// Get logo from bundled base64 data (no filesystem)
 function getLogoBase64(): string {
-  if (cachedLogoBase64) return cachedLogoBase64;
-  try {
-    const imgPath = path.join(process.cwd(), 'public', 'logotipo.jpg');
-    const buf = readFileSync(imgPath);
-    cachedLogoBase64 = `data:image/jpeg;base64,${buf.toString('base64')}`;
-    return cachedLogoBase64;
-  } catch {
-    return '';
-  }
+  return LOGOTIPO_BASE64;
 }
 
 export async function POST(request: NextRequest) {

@@ -1,28 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-server';
 import { toCamelCase } from '@/lib/utils-supabase';
-import sharp from 'sharp';
-import { readFileSync } from 'fs';
-import path from 'path';
-
-let cachedLundaSulBuf: Buffer | null = null;
-let cachedAngolaFlagBuf: Buffer | null = null;
-
-async function getLundaSulImage(): Promise<Buffer> {
-  if (cachedLundaSulBuf) return cachedLundaSulBuf;
-  const imgPath = path.join(process.cwd(), 'public', 'lunda-sul-provincia.png');
-  const buf = readFileSync(imgPath);
-  cachedLundaSulBuf = await sharp(buf).resize(180, 120, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } }).png().toBuffer();
-  return cachedLundaSulBuf;
-}
-
-async function getAngolaFlagImage(): Promise<Buffer> {
-  if (cachedAngolaFlagBuf) return cachedAngolaFlagBuf;
-  const imgPath = path.join(process.cwd(), 'public', 'bandeira-angola.png');
-  const buf = readFileSync(imgPath);
-  cachedAngolaFlagBuf = await sharp(buf).resize(180, 120, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } }).png().toBuffer();
-  return cachedAngolaFlagBuf;
-}
+import { renderSVGToPNG } from '@/lib/svg-renderer';
+import { LUNDA_SUL_BASE64, ANGOLA_FLAG_BASE64 } from '@/lib/pdf-assets-data';
 
 async function getCondutorById(id: string) {
   const { data, error } = await supabase
@@ -82,14 +62,14 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function generateBackPNG(c: {
-  validadeLicenca: string; dataEmissaoLicenca: string; numeroOrdem: number;
-  numeroBI: string; nomeCompleto: string;
-}): Promise<Buffer> {
+async function generateBackPNG(c: Record<string, unknown>): Promise<Buffer> {
   const BW = 1200;
   const BH = 720;
 
-  const barcodeData = `CPCMTQLS-${String(c.numeroOrdem).padStart(6, '0')}-${c.numeroBI}`;
+  const numeroOrdem = Number(c.numeroOrdem) || 0;
+  const numeroBI = String(c.numeroBI || '');
+
+  const barcodeData = `CPCMTQLS-${String(numeroOrdem).padStart(6, '0')}-${numeroBI}`;
   let barcodeBars = '';
   const barStartX = 100;
   const barEndX = BW - 100;
@@ -114,6 +94,15 @@ async function generateBackPNG(c: {
     }
   }
 
+  // Embed Lunda Sul and Angola flag images directly as SVG <image> tags
+  const lundaSulImg = LUNDA_SUL_BASE64
+    ? `<image href="${LUNDA_SUL_BASE64}" x="70" y="495" width="180" height="120" preserveAspectRatio="xMidYMid meet"/>`
+    : `<text x="160" y="562" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="13">LUNDA SUL</text>`;
+
+  const angolaFlagImg = ANGOLA_FLAG_BASE64
+    ? `<image href="${ANGOLA_FLAG_BASE64}" x="950" y="495" width="180" height="120" preserveAspectRatio="xMidYMid meet"/>`
+    : `<text x="1040" y="562" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="13">ANGOLA</text>`;
+
   const backSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${BW}" height="${BH}" viewBox="0 0 ${BW} ${BH}">
   <defs>
     <style>text { font-family: Georgia, 'Times New Roman', serif; }</style>
@@ -125,10 +114,10 @@ async function generateBackPNG(c: {
   <rect x="0" y="0" width="${BW}" height="${BH}" rx="24" fill="white" stroke="#1a1a1a" stroke-width="4"/>
   <rect x="30" y="12" width="3" height="38" rx="1.5" fill="#1a5c2e"/>
   <text x="45" y="30" fill="#1a1a1a" font-size="18" font-weight="bold">Data de Emissao:</text>
-  <text x="45" y="48" fill="#1a5c2e" font-size="20" font-weight="bold">${escapeXml(c.dataEmissaoLicenca)}</text>
+  <text x="45" y="48" fill="#1a5c2e" font-size="20" font-weight="bold">${escapeXml(String(c.dataEmissaoLicenca))}</text>
   <rect x="800" y="12" width="3" height="38" rx="1.5" fill="#1a5c2e"/>
   <text x="815" y="30" fill="#1a1a1a" font-size="18" font-weight="bold">Validade:</text>
-  <text x="815" y="48" fill="#c0392b" font-size="20" font-weight="bold">${escapeXml(c.validadeLicenca)}</text>
+  <text x="815" y="48" fill="#c0392b" font-size="20" font-weight="bold">${escapeXml(String(c.validadeLicenca))}</text>
   <rect x="80" y="62" width="1040" height="55" rx="6" fill="#1a1a1a"/>
   ${barcodeBars}
   <text x="600" y="95" text-anchor="middle" fill="white" font-size="15" font-family="'Courier New', monospace" letter-spacing="2">${escapeXml(barcodeData)}</text>
@@ -151,19 +140,13 @@ async function generateBackPNG(c: {
   <text x="600" y="454" text-anchor="middle" fill="white" font-size="11" font-style="italic" opacity="0.7">"Mototaxistas organizados, transito mais seguro"</text>
   <line x1="30" y1="470" x2="1170" y2="470" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
   <rect x="60" y="490" width="200" height="130" rx="10" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
-  <text x="160" y="562" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="13">LUNDA SUL</text>
+  ${lundaSulImg}
   <rect x="940" y="490" width="200" height="130" rx="10" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
-  <text x="1040" y="562" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="13">ANGOLA</text>
+  ${angolaFlagImg}
   <line x1="400" y1="${BH - 35}" x2="800" y2="${BH - 35}" stroke="#d4a017" stroke-width="1" opacity="0.4"/>
 </svg>`;
 
-  let basePng = sharp(Buffer.from(backSvg)).png({ quality: 100 });
-  const lundaSulImage = await getLundaSulImage();
-  basePng = basePng.composite([{ input: lundaSulImage, left: 70, top: 495 }]);
-  const angolaFlagImage = await getAngolaFlagImage();
-  basePng = basePng.composite([{ input: angolaFlagImage, left: 950, top: 495 }]);
-
-  return await basePng.toBuffer();
+  return await renderSVGToPNG(backSvg, BW);
 }
 
 function escapeXml(str: string): string {

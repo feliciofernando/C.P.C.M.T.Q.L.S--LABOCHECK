@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-server';
 import { toCamelCase } from '@/lib/utils-supabase';
-import sharp from 'sharp';
 import { PDFDocument } from 'pdf-lib';
 import { getFontFaceSVG, FONT_FAMILY, renderSVGtoPNG } from '@/lib/pdf-fonts';
 

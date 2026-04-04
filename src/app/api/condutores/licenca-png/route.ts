@@ -1,22 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-server';
 import { toCamelCase } from '@/lib/utils-supabase';
-import sharp from 'sharp';
-import { readFileSync } from 'fs';
-import path from 'path';
-
-let cachedLogoBase64: string | null = null;
-function getLogoBase64(): string {
-  if (cachedLogoBase64) return cachedLogoBase64;
-  try {
-    const logoPath = path.join(process.cwd(), 'public', 'logo-pvc.png');
-    const buf = readFileSync(logoPath);
-    cachedLogoBase64 = `data:image/png;base64,${buf.toString('base64')}`;
-    return cachedLogoBase64;
-  } catch {
-    return '';
-  }
-}
+import { renderSVGToPNG } from '@/lib/svg-renderer';
+import { LOGO_PVC_BASE64 } from '@/lib/pdf-assets-data';
 
 async function getCondutorById(id: string) {
   const { data, error } = await supabase
@@ -78,17 +64,13 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function generateFrontPNG(c: {
-  nomeCompleto: string; sexo: string; numeroMembro: string; tipoVeiculo: string;
-  nacionalidade: string; provincia: string; dataEmissaoLicenca: string; validadeLicenca: string;
-  numeroOrdem: number; numeroBI: string; fotoBase64: string; qrCodeBase64: string;
-}): Promise<Buffer> {
+async function generateFrontPNG(c: Record<string, unknown>): Promise<Buffer> {
   const W = 1200;
   const H = 750;
 
-  let fotoBase64 = c.fotoBase64 || '';
-  let qrBase64 = c.qrCodeBase64 || '';
-  const logoBase64 = getLogoBase64();
+  let fotoBase64 = String(c.fotoBase64 || '');
+  let qrBase64 = String(c.qrCodeBase64 || '');
+  const logoBase64 = LOGO_PVC_BASE64;
 
   if (fotoBase64 && !fotoBase64.startsWith('data:')) fotoBase64 = `data:image/jpeg;base64,${fotoBase64}`;
   if (qrBase64 && !qrBase64.startsWith('data:')) qrBase64 = `data:image/jpeg;base64,${qrBase64}`;
@@ -137,21 +119,21 @@ async function generateFrontPNG(c: {
   <rect x="10" y="210" width="40" height="3" rx="1.5" fill="#d4a017" opacity="0.6"/>
   <rect x="1150" y="210" width="40" height="3" rx="1.5" fill="#d4a017" opacity="0.6"/>
   <text x="60" y="286" fill="#1a1a1a" font-size="26" font-weight="bold">Nome:</text>
-  <text x="220" y="286" fill="#1a1a1a" font-size="26">${escapeXml(c.nomeCompleto)}</text>
+  <text x="220" y="286" fill="#1a1a1a" font-size="26">${escapeXml(String(c.nomeCompleto))}</text>
   <text x="60" y="318" fill="#1a1a1a" font-size="24" font-weight="bold">Sexo:</text>
-  <text x="190" y="318" fill="#1a1a1a" font-size="24">${escapeXml(c.sexo)}</text>
+  <text x="190" y="318" fill="#1a1a1a" font-size="24">${escapeXml(String(c.sexo))}</text>
   <text x="60" y="350" fill="#1a1a1a" font-size="20" font-weight="bold">Membro n</text>
   <text x="280" y="340" fill="#1a1a1a" font-size="14" font-weight="bold">o</text>
   <text x="295" y="350" fill="#1a1a1a" font-size="20" font-weight="bold">: C.P.C.M.T.Q.L.S</text>
-  <text x="60" y="378" fill="#1a1a1a" font-size="16">${escapeXml(c.numeroMembro)}</text>
+  <text x="60" y="378" fill="#1a1a1a" font-size="16">${escapeXml(String(c.numeroMembro))}</text>
   <text x="60" y="416" fill="#1a1a1a" font-size="24" font-weight="bold">Categoria:</text>
-  <text x="270" y="416" fill="#1a1a1a" font-size="24">${escapeXml(c.tipoVeiculo)}</text>
+  <text x="270" y="416" fill="#1a1a1a" font-size="24">${escapeXml(String(c.tipoVeiculo))}</text>
   <text x="60" y="448" fill="#1a1a1a" font-size="24" font-weight="bold">Titulo:</text>
   <text x="230" y="448" fill="#1a1a1a" font-size="24">Condutor Profissional</text>
   <text x="60" y="480" fill="#1a1a1a" font-size="24" font-weight="bold">Nacionalidade:</text>
-  <text x="345" y="480" fill="#1a1a1a" font-size="24">${escapeXml(c.nacionalidade || 'Angolana')}</text>
+  <text x="345" y="480" fill="#1a1a1a" font-size="24">${escapeXml(String(c.nacionalidade || 'Angolana'))}</text>
   <text x="60" y="512" fill="#1a1a1a" font-size="24" font-weight="bold">Provincia:</text>
-  <text x="295" y="512" fill="#1a1a1a" font-size="24">${escapeXml(c.provincia || 'Lunda Sul')}</text>
+  <text x="295" y="512" fill="#1a1a1a" font-size="24">${escapeXml(String(c.provincia || 'Lunda Sul'))}</text>
   ${photoSvg}
   ${qrSvg}
   <line x1="40" y1="670" x2="1160" y2="670" stroke="#d1d1cc" stroke-width="0.5" opacity="0.5"/>
@@ -159,7 +141,7 @@ async function generateFrontPNG(c: {
   <line x1="480" y1="715" x2="720" y2="715" stroke="#1a1a1a" stroke-width="1.5"/>
 </svg>`;
 
-  return await sharp(Buffer.from(frontSvg)).png({ quality: 100 }).toBuffer();
+  return await renderSVGToPNG(frontSvg, W);
 }
 
 function escapeXml(str: string): string {
