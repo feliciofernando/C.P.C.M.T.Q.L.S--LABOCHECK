@@ -188,7 +188,7 @@ export default function HeroSection() {
 
       {/* Slide Content */}
       <div
-        className="relative z-10 text-center text-white px-4 py-16 sm:py-20 w-full max-w-4xl mx-auto transition-all duration-500"
+        className="relative z-10 text-center text-white px-4 py-16 sm:py-20 w-full max-w-4xl lg:max-w-6xl mx-auto transition-all duration-500"
         style={{
           opacity: isTransitioning ? 0 : 1,
           transform: isTransitioning ? 'translateY(10px)' : 'translateY(0)',
@@ -204,7 +204,7 @@ export default function HeroSection() {
         </div>
 
         {/* Title */}
-        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-wider drop-shadow-lg mb-3">
+        <h2 className="text-2xl sm:text-3xl lg:text-6xl xl:text-7xl font-extrabold tracking-wider drop-shadow-lg mb-3">
           {currentSlide?.titulo || ''}
         </h2>
 

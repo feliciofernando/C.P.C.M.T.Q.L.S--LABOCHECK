@@ -162,13 +162,13 @@ export default function HeroSlideshow() {
 
       {/* Content */}
       <div
-        className="relative z-10 text-center text-white px-4 py-16 sm:py-20 max-w-4xl mx-auto transition-all duration-500"
+        className="relative z-10 text-center text-white px-4 py-16 sm:py-20 lg:max-w-6xl max-w-4xl mx-auto transition-all duration-500"
         style={{
           opacity: isTransitioning ? 0 : 1,
           transform: isTransitioning ? 'translateY(12px)' : 'translateY(0)',
         }}
       >
-        <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-wider drop-shadow-lg leading-tight">
+        <h2 className="text-4xl sm:text-5xl lg:text-7xl xl:text-8xl font-extrabold tracking-wider drop-shadow-lg leading-tight">
           {currentSlide?.titulo}
         </h2>
         <div className="flex items-center justify-center gap-3 my-4">
@@ -176,7 +176,7 @@ export default function HeroSlideshow() {
           <div className="w-2.5 h-2.5 rounded-full bg-[#d4a017]" />
           <div className="h-[1px] w-16 sm:w-24 bg-[#d4a017]/60" />
         </div>
-        <p className="text-base sm:text-lg lg:text-xl opacity-95 max-w-3xl mx-auto leading-relaxed font-medium">
+        <p className="text-base sm:text-lg lg:text-2xl xl:text-3xl opacity-95 max-w-3xl lg:max-w-5xl mx-auto leading-relaxed font-medium">
           {currentSlide?.subtitulo}
         </p>
       </div>
