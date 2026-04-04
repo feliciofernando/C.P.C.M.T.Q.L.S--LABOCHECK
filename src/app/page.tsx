@@ -74,11 +74,11 @@ function PublicPage() {
         </Card>
       </section>
 
-      {/* Cards Section with blur overlay */}
-      <CardsSection />
-
       {/* Noticias Section */}
       <NoticiasSection />
+
+      {/* Cards Section with blur overlay */}
+      <CardsSection />
 
       {/* Public Footer */}
       <footer id="contactos" className="bg-[#0f3d1d] text-white mt-auto">
