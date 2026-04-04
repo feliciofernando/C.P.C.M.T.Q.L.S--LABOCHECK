@@ -141,11 +141,11 @@ export default function CardsSection() {
 
       {/* Gradient fallback if no background image */}
       {!hasBgImage && (
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0f3d1d] to-[#1a5c2e]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a]" />
       )}
 
       {/* Dark overlay for text and card readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-[#0f3d1d]/60 to-black/60" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/50" />
 
       {/* Decorative top edge */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#d4a017]/60 to-transparent" />
@@ -153,7 +153,7 @@ export default function CardsSection() {
       {/* Decorative elements */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-[#d4a017]/[0.03] blur-3xl" />
-        <div className="absolute -bottom-20 -left-20 w-96 h-96 rounded-full bg-[#1a5c2e]/[0.08] blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 w-96 h-96 rounded-full bg-white/[0.04] blur-3xl" />
       </div>
 
       {/* Content */}

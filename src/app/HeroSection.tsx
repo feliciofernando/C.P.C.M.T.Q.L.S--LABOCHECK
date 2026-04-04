@@ -107,7 +107,7 @@ export default function HeroSection() {
   // Loading state
   if (!ready) {
     return (
-      <section className="relative w-full min-h-[420px] sm:min-h-[480px] flex items-center justify-center overflow-hidden bg-[#0f3d1d]">
+      <section className="relative w-full min-h-[420px] sm:min-h-[480px] flex items-center justify-center overflow-hidden bg-[#1a1a1a]">
         <div className="relative z-10 text-center text-white px-4 py-16 sm:py-20 opacity-0">
           <div className="mb-6 inline-block">
             <img src="/logotipo.jpg" alt="" className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-[#d4a017]" />
@@ -129,7 +129,7 @@ export default function HeroSection() {
           />
         )}
         <div className="absolute inset-0 backdrop-blur-[1px]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0f3d1d]/55 via-[#1a5c2e]/45 to-[#0f3d1d]/65" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/50" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.35)_100%)]" />
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#d4a017] to-transparent opacity-60" />
         <div className="relative z-10 text-center text-white px-4 py-16 sm:py-20">
@@ -177,8 +177,8 @@ export default function HeroSection() {
       {/* Blur layer */}
       <div className="absolute inset-0 backdrop-blur-[1px]" />
 
-      {/* Green gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0f3d1d]/60 via-[#1a5c2e]/45 to-[#0f3d1d]/70" />
+      {/* Dark gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-black/55" />
 
       {/* Dark vignette */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.35)_100%)]" />
