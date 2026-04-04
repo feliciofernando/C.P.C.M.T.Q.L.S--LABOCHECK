@@ -28,6 +28,7 @@ import {
   ShieldCheck,
   Image as ImageIcon,
   Play,
+  CircleDot,
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -265,10 +266,21 @@ function AdminDashboard() {
               </Badge>
             </div>
             <Separator orientation="vertical" className="h-6 bg-white/30 hidden sm:block" />
-            <Badge className="bg-[#d4a017]/20 text-[#d4a017] border border-[#d4a017]/40 text-xs px-2 py-0.5">
-              <Shield className="w-3 h-3 mr-1" />
-              Admin
-            </Badge>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 bg-white/10 rounded-full px-2.5 py-1">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-400"></span>
+                </span>
+                <span className="text-xs font-medium text-white/90 hidden sm:inline">
+                  {session?.user?.name || 'Admin'}
+                </span>
+              </div>
+              <Badge className="bg-[#d4a017]/20 text-[#d4a017] border border-[#d4a017]/40 text-xs px-2 py-0.5">
+                <Shield className="w-3 h-3 mr-1" />
+                Admin
+              </Badge>
+            </div>
             <Button
               variant="ghost"
               size="sm"
