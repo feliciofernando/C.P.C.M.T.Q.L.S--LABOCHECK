@@ -1,47 +1,52 @@
 // Helper for font handling in SVG-to-PDF rendering.
 // Works on both local dev and Vercel serverless.
 //
-// Strategy:
-// 1. Copy DejaVu Sans fonts to /tmp/labocheck-fonts/ on first use
-// 2. Write SVG to a temp file (librsvg resolves file:// URIs from files, not buffers)
-// 3. Use sharp to render the SVG file to PNG
+// Strategy (Vercel-compatible):
+// 1. Fonts are pre-encoded as base64 strings in pdf-fonts-data.ts (build-time)
+// 2. At first use, decode base64 and write font files to /tmp/labocheck-fonts/
+// 3. Reference fonts via file:// URIs in SVG @font-face declarations
+// 4. Write SVG to a temp file (librsvg resolves file:// URIs from files)
+// 5. Use sharp to render the SVG file to PNG
+// 6. pdf-lib embeds the PNG into the PDF
 //
-// This is necessary because:
-// - sharp's SVG rendering (librsvg) ignores data: URI fonts when rendering from buffer
-// - System fonts (Helvetica, Arial) may not exist on Vercel
-// - file:// URIs only work when sharp reads SVG from a file path, not from a Buffer
-import { readFileSync, existsSync, mkdirSync, copyFileSync, writeFileSync, unlinkSync } from 'fs';
-import path from 'path';
+// This works on Vercel because the font data is bundled into the JS code,
+// eliminating the dependency on public/fonts/ (which is CDN-served, not
+// available in the serverless filesystem).
+import { existsSync, mkdirSync, writeFileSync, unlinkSync } from 'fs';
 import sharp from 'sharp';
 import crypto from 'crypto';
+import { DEJAVU_SANS_REGULAR_BASE64, DEJAVU_SANS_BOLD_BASE64 } from './pdf-fonts-data';
 
 const TMP_FONT_DIR = '/tmp/labocheck-fonts';
 
-let fontsCopied = false;
+let fontsReady = false;
 
-function ensureFontsCopied(): boolean {
-  if (fontsCopied) return true;
+/**
+ * Write bundled base64 font data to /tmp/ so librsvg can access them via file:// URIs.
+ * This only runs once per cold start (subsequent calls are no-ops).
+ */
+function ensureFontsReady(): boolean {
+  if (fontsReady) return true;
 
   try {
     if (!existsSync(TMP_FONT_DIR)) {
       mkdirSync(TMP_FONT_DIR, { recursive: true });
     }
 
-    const srcRegular = path.join(process.cwd(), 'public', 'fonts', 'DejaVuSans.ttf');
-    const srcBold = path.join(process.cwd(), 'public', 'fonts', 'DejaVuSans-Bold.ttf');
-    const dstRegular = path.join(TMP_FONT_DIR, 'DejaVuSans.ttf');
-    const dstBold = path.join(TMP_FONT_DIR, 'DejaVuSans-Bold.ttf');
+    const regularPath = `${TMP_FONT_DIR}/DejaVuSans.ttf`;
+    const boldPath = `${TMP_FONT_DIR}/DejaVuSans-Bold.ttf`;
 
-    if (existsSync(srcRegular) && !existsSync(dstRegular)) {
-      copyFileSync(srcRegular, dstRegular);
+    if (!existsSync(regularPath)) {
+      writeFileSync(regularPath, Buffer.from(DEJAVU_SANS_REGULAR_BASE64, 'base64'));
     }
-    if (existsSync(srcBold) && !existsSync(dstBold)) {
-      copyFileSync(srcBold, dstBold);
+    if (!existsSync(boldPath)) {
+      writeFileSync(boldPath, Buffer.from(DEJAVU_SANS_BOLD_BASE64, 'base64'));
     }
 
-    fontsCopied = existsSync(dstRegular);
-    return fontsCopied;
-  } catch {
+    fontsReady = existsSync(regularPath) && existsSync(boldPath);
+    return fontsReady;
+  } catch (err) {
+    console.error('Failed to prepare fonts:', err);
     return false;
   }
 }
@@ -51,7 +56,7 @@ function ensureFontsCopied(): boolean {
  * Fonts are referenced via file:// URIs to /tmp/labocheck-fonts/.
  */
 export function getFontFaceSVG(): string {
-  ensureFontsCopied();
+  ensureFontsReady();
 
   const regularUri = `file://${TMP_FONT_DIR}/DejaVuSans.ttf`;
   const boldUri = `file://${TMP_FONT_DIR}/DejaVuSans-Bold.ttf`;
@@ -83,6 +88,7 @@ export const FONT_FAMILY = 'DJS,sans-serif';
  * Writes the SVG to a temp file first so librsvg can resolve file:// font URIs.
  */
 export async function renderSVGtoPNG(svgContent: string, width: number, height: number): Promise<Buffer> {
+  ensureFontsReady();
   const tmpFile = `/tmp/svg-${crypto.randomBytes(8).toString('hex')}.svg`;
 
   try {
