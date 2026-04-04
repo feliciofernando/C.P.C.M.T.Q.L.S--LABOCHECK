@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Calendar, ArrowRight, Newspaper, ImageIcon, X } from 'lucide-react';
+import Link from 'next/link';
 
 interface Noticia {
   id: string;
@@ -180,6 +181,17 @@ export default function NoticiasSection() {
               </Card>
             ))}
           </div>
+        </div>
+
+        {/* Ver todas as noticias */}
+        <div className="mt-8 text-center">
+          <Link
+            href="/noticias"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[#1a5c2e] text-white font-semibold text-sm lg:text-base hover:bg-[#0f3d1d] transition-colors"
+          >
+            Ver Todas as Noticias
+            <ArrowRight className="w-4 h-4 lg:w-5 lg:h-5" />
+          </Link>
         </div>
       </div>
 
