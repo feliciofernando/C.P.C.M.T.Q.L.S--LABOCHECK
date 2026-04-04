@@ -80,11 +80,6 @@ export default function NoticiasSection() {
     );
   }
 
-  // Featured noticia - first one with destaque=true or first one
-  const featuredIndex = noticias.findIndex((n) => n.destaque);
-  const featured = featuredIndex >= 0 ? noticias[featuredIndex] : noticias[0];
-  const others = noticias.filter((n) => n.id !== featured.id).slice(0, 3);
-
   return (
     <section id="noticias" className="py-12 lg:py-16 px-4 bg-white">
       <div className="max-w-6xl mx-auto">
@@ -101,86 +96,48 @@ export default function NoticiasSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Featured noticia */}
-          <Card
-            className="border-[#d1d1cc] overflow-hidden cursor-pointer hover:shadow-lg transition-shadow group"
-            onClick={() => setSelectedNoticia(featured)}
-          >
-            <div className="relative h-56 lg:h-64 overflow-hidden">
-              {featured.imagemBase64 ? (
-                <img
-                  src={`data:${featured.imagemTipo || 'image/jpeg'};base64,${featured.imagemBase64}`}
-                  alt={featured.titulo}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-              ) : (
-                <div className="w-full h-full bg-gradient-to-br from-[#1a5c2e] to-[#0f3d1d] flex items-center justify-center">
-                  <ImageIcon className="w-16 h-16 text-white/20" />
-                </div>
-              )}
-              {featured.destaque && (
-                <Badge className="absolute top-3 left-3 bg-[#d4a017] text-white text-xs font-semibold">
-                  Destaque
-                </Badge>
-              )}
-            </div>
-            <CardContent className="p-5 lg:p-6">
-              <div className="flex items-center gap-1.5 text-xs lg:text-sm text-[#6b6b6b] mb-2">
-                <Calendar className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                <span>{formatDate(featured.dataPublicacao)}</span>
-              </div>
-              <h3 className="text-lg lg:text-xl font-bold text-[#1a1a1a] mb-2 group-hover:text-[#1a5c2e] transition-colors line-clamp-2">
-                {featured.titulo}
-              </h3>
-              <p className="text-sm lg:text-base text-[#6b6b6b] leading-relaxed line-clamp-3">
-                {featured.resumo}
-              </p>
-              <div className="mt-4 flex items-center gap-1.5 text-sm lg:text-base font-semibold text-[#1a5c2e]">
-                Ler mais <ArrowRight className="w-4 h-4 lg:w-5 lg:h-5" />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Other noticias */}
-          <div className="flex flex-col gap-4">
-            {others.map((noticia) => (
-              <Card
-                key={noticia.id}
-                className="border-[#d1d1cc] overflow-hidden cursor-pointer hover:shadow-md transition-shadow group flex flex-col sm:flex-row"
-                onClick={() => setSelectedNoticia(noticia)}
-              >
-                <div className="relative w-full sm:w-40 h-36 sm:h-auto flex-shrink-0 overflow-hidden">
-                  {noticia.imagemBase64 ? (
-                    <img
-                      src={`data:${noticia.imagemTipo || 'image/jpeg'};base64,${noticia.imagemBase64}`}
-                      alt={noticia.titulo}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-[#1a5c2e] to-[#0f3d1d] flex items-center justify-center">
-                      <ImageIcon className="w-10 h-10 text-white/20" />
-                    </div>
-                  )}
-                </div>
-                <CardContent className="p-4 lg:p-5 flex-1 flex flex-col justify-center">
-                  <div className="flex items-center gap-1.5 text-xs lg:text-sm text-[#6b6b6b] mb-1.5">
-                    <Calendar className="w-3 h-3 lg:w-3.5 lg:h-3.5" />
-                    <span>{formatDate(noticia.dataPublicacao)}</span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {noticias.map((noticia) => (
+            <Card
+              key={noticia.id}
+              className="border-[#d1d1cc] overflow-hidden cursor-pointer hover:shadow-lg transition-shadow group"
+              onClick={() => setSelectedNoticia(noticia)}
+            >
+              <div className="relative h-44 overflow-hidden">
+                {noticia.imagemBase64 ? (
+                  <img
+                    src={`data:${noticia.imagemTipo || 'image/jpeg'};base64,${noticia.imagemBase64}`}
+                    alt={noticia.titulo}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-[#1a5c2e] to-[#0f3d1d] flex items-center justify-center">
+                    <ImageIcon className="w-12 h-12 text-white/20" />
                   </div>
-                  <h3 className="text-sm lg:text-base font-bold text-[#1a1a1a] mb-1 group-hover:text-[#1a5c2e] transition-colors line-clamp-2">
-                    {noticia.titulo}
-                  </h3>
-                  <p className="text-xs lg:text-sm text-[#6b6b6b] leading-relaxed line-clamp-2">
-                    {noticia.resumo}
-                  </p>
-                  <div className="mt-2 flex items-center gap-1 text-xs lg:text-sm font-semibold text-[#1a5c2e]">
-                    Ler mais <ArrowRight className="w-3 h-3 lg:w-4 lg:h-4" />
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                )}
+                {noticia.destaque && (
+                  <Badge className="absolute top-3 left-3 bg-[#d4a017] text-white text-xs font-semibold">
+                    Destaque
+                  </Badge>
+                )}
+              </div>
+              <CardContent className="p-4 lg:p-5">
+                <div className="flex items-center gap-1.5 text-xs lg:text-sm text-[#6b6b6b] mb-2">
+                  <Calendar className="w-3.5 h-3.5" />
+                  <span>{formatDate(noticia.dataPublicacao)}</span>
+                </div>
+                <h3 className="text-sm lg:text-base font-bold text-[#1a1a1a] mb-2 group-hover:text-[#1a5c2e] transition-colors line-clamp-2">
+                  {noticia.titulo}
+                </h3>
+                <p className="text-xs lg:text-sm text-[#6b6b6b] leading-relaxed line-clamp-3">
+                  {noticia.resumo}
+                </p>
+                <div className="mt-3 flex items-center gap-1.5 text-xs lg:text-sm font-semibold text-[#1a5c2e]">
+                  Ler mais <ArrowRight className="w-3.5 h-3.5" />
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
         {/* Ver todas as noticias */}
