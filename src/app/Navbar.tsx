@@ -44,11 +44,11 @@ const menuItems: MenuItem[] = [
   {
     label: 'Inicio',
     href: '/',
-    icon: <Home className="w-4 h-4" />,
+    icon: <Home className="w-4 h-4 lg:w-5 lg:h-5" />,
   },
   {
     label: 'O Conselho',
-    icon: <Info className="w-4 h-4" />,
+    icon: <Info className="w-4 h-4 lg:w-5 lg:h-5" />,
     children: [
       { label: 'Mensagem do Presidente', href: '/paginas/6e83ee50-e486-44e8-b6d7-7a1c1102b0a9', desc: 'Palavras do lider', icon: <Users className="w-4 h-4" /> },
       { label: 'Sobre o Conselho', href: '/paginas/f0e3ce27-6776-44c1-a043-354a74d40509', desc: 'Quem somos', icon: <Building2 className="w-4 h-4" /> },
@@ -58,7 +58,7 @@ const menuItems: MenuItem[] = [
   },
   {
     label: 'Servicos',
-    icon: <Briefcase className="w-4 h-4" />,
+    icon: <Briefcase className="w-4 h-4 lg:w-5 lg:h-5" />,
     children: [
       { label: 'Emissao de Licencas', href: '/servicos/641325e6-1e07-442f-9099-175f045dd068', desc: 'Licenca profissional PVC', icon: <CreditCard className="w-4 h-4" /> },
       { label: 'Registo de Condutores', href: '/servicos/e0f2332a-93c1-4f43-9318-cea989b2a0ec', desc: 'Inscreva-se agora', icon: <UserPlus className="w-4 h-4" /> },
@@ -68,7 +68,7 @@ const menuItems: MenuItem[] = [
   },
   {
     label: 'Recursos',
-    icon: <FileText className="w-4 h-4" />,
+    icon: <FileText className="w-4 h-4 lg:w-5 lg:h-5" />,
     children: [
       { label: 'Legislacao', href: '/paginas/5ed2189d-9c81-4b6c-a6bc-d58bc5ada1d9', desc: 'Leis e decretos', icon: <Scale className="w-4 h-4" /> },
       { label: 'Documentos', href: '/paginas/ae5d78e7-eba7-45dc-b7a2-c92e0671f302', desc: 'Formularios e guias', icon: <FileText className="w-4 h-4" /> },
@@ -78,17 +78,17 @@ const menuItems: MenuItem[] = [
   {
     label: 'Noticias',
     href: '/#noticias',
-    icon: <Newspaper className="w-4 h-4" />,
+    icon: <Newspaper className="w-4 h-4 lg:w-5 lg:h-5" />,
   },
   {
     label: 'Consultar Ficha',
     href: '/#consultar',
-    icon: <Search className="w-4 h-4" />,
+    icon: <Search className="w-4 h-4 lg:w-5 lg:h-5" />,
   },
   {
     label: 'Contactos',
     href: '/#contactos',
-    icon: <Phone className="w-4 h-4" />,
+    icon: <Phone className="w-4 h-4 lg:w-5 lg:h-5" />,
   },
 ];
 
@@ -107,19 +107,19 @@ function DropdownItems({ items }: { items: SubMenuItem[] }) {
             <Link
               key={i}
               href={sub.href}
-              className="w-full flex items-start gap-3 px-3 py-2.5 rounded-lg text-left hover:bg-[#1a5c2e]/[0.07] transition-colors group/item"
+              className="w-full flex items-start gap-3 px-3 py-3 rounded-lg text-left hover:bg-[#1a5c2e]/[0.07] transition-colors group/item"
             >
               {Icon && (
-                <div className="w-9 h-9 rounded-lg bg-[#1a5c2e]/[0.08] group-hover/item:bg-[#1a5c2e]/[0.15] flex items-center justify-center flex-shrink-0 text-[#1a5c2e] group-hover/item:text-[#d4a017] transition-colors mt-0.5">
+                <div className="w-10 h-10 rounded-lg bg-[#1a5c2e]/[0.08] group-hover/item:bg-[#1a5c2e]/[0.15] flex items-center justify-center flex-shrink-0 text-[#1a5c2e] group-hover/item:text-[#d4a017] transition-colors mt-0.5">
                   {Icon}
                 </div>
               )}
               <div className="min-w-0">
-                <div className="text-sm font-semibold text-[#1a1a1a] group-hover/item:text-[#1a5c2e] transition-colors leading-tight">
+                <div className="text-[15px] font-semibold text-[#1a1a1a] group-hover/item:text-[#1a5c2e] transition-colors leading-tight">
                   {sub.label}
                 </div>
                 {sub.desc && (
-                  <div className="text-xs text-[#6b6b6b] mt-0.5 leading-snug">
+                  <div className="text-[13px] text-[#6b6b6b] mt-0.5 leading-snug">
                     {sub.desc}
                   </div>
                 )}
@@ -166,12 +166,12 @@ function NavDropdown({ item }: { item: MenuItem }) {
       {/* Trigger button - click only */}
       <button
         onClick={() => setVisible(!visible)}
-        className="flex items-center gap-1.5 px-3 py-2 text-[13px] font-semibold text-white/90 hover:text-white rounded-md transition-colors hover:bg-white/10"
+        className="flex items-center gap-2 px-4 py-2 text-[15px] font-semibold text-white/90 hover:text-white rounded-md transition-colors hover:bg-white/10"
       >
-        {item.icon}
+        <span className="w-5 h-5 flex items-center justify-center">{item.icon}</span>
         <span>{item.label}</span>
         <ChevronDown
-          className={`w-3.5 h-3.5 transition-all duration-300 ${visible ? 'rotate-180 opacity-100' : 'opacity-60'}`}
+          className={`w-4 h-4 transition-all duration-300 ${visible ? 'rotate-180 opacity-100' : 'opacity-60'}`}
         />
       </button>
 
@@ -239,7 +239,7 @@ export default function Navbar() {
       <div className="h-[2px] bg-gradient-to-r from-transparent via-[#d4a017] to-transparent" />
 
       <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center justify-between h-14 md:h-[60px]">
+        <div className="flex items-center justify-between h-14 md:h-[60px] lg:h-[72px]">
           {/* Logo */}
           <button
             onClick={() => handleNavClick('#inicio')}
@@ -249,7 +249,7 @@ export default function Navbar() {
               <img
                 src="/logotipo.jpg"
                 alt="C.P.C.M.T.Q.L.S"
-                className="w-9 h-9 md:w-10 md:h-10 rounded-full border-2 border-[#d4a017] group-hover:border-[#f0c040] transition-all duration-300 group-hover:shadow-[0_0_12px_rgba(212,160,23,0.4)]"
+                className="w-9 h-9 md:w-10 md:h-10 lg:w-12 lg:h-12 rounded-full border-2 border-[#d4a017] group-hover:border-[#f0c040] transition-all duration-300 group-hover:shadow-[0_0_12px_rgba(212,160,23,0.4)]"
               />
               <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-[#d4a017] rounded-full border-2 border-[#1a5c2e]" />
             </div>
@@ -257,7 +257,7 @@ export default function Navbar() {
           </button>
 
           {/* Desktop menu - centered */}
-          <div className="hidden lg:flex flex-1 items-center justify-center gap-0.5">
+          <div className="hidden lg:flex flex-1 items-center justify-center gap-1">
             {menuItems.map((item) => {
               if (item.children) {
                 return (
@@ -272,9 +272,9 @@ export default function Navbar() {
                 <Link
                   key={item.label}
                   href={item.href!}
-                  className="flex items-center gap-1.5 px-3 py-2 text-[13px] font-semibold text-white/90 hover:text-white rounded-md transition-colors hover:bg-white/10"
+                  className="flex items-center gap-2 px-4 py-2 text-[15px] font-semibold text-white/90 hover:text-white rounded-md transition-colors hover:bg-white/10"
                 >
-                  {item.icon}
+                  <span className="w-5 h-5 flex items-center justify-center">{item.icon}</span>
                   <span>{item.label}</span>
                 </Link>
               );
