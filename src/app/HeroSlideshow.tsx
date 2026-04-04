@@ -141,6 +141,9 @@ export default function HeroSlideshow() {
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
+      {/* Gold accent line at top */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#d4a017] to-transparent opacity-60 z-20" />
+
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-500"
@@ -213,6 +216,9 @@ export default function HeroSlideshow() {
           ))}
         </div>
       )}
+
+      {/* Gold accent line at bottom */}
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#d4a017] to-transparent opacity-60 z-20" />
     </section>
   );
 }
