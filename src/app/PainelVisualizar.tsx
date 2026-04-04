@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -72,6 +72,10 @@ export default function PainelVisualizar() {
   const [downloadingFicha, setDownloadingFicha] = useState(false);
   const [downloadingQR, setDownloadingQR] = useState(false);
 
+  // Use ref for search to prevent auto-search on every keystroke
+  const searchRef = useRef(search);
+  useEffect(() => { searchRef.current = search; }, [search]);
+
   const fetchCondutores = useCallback(async () => {
     setLoading(true);
     try {
@@ -79,8 +83,9 @@ export default function PainelVisualizar() {
         page: pagination.page.toString(),
         limit: pagination.limit.toString(),
       });
-      if (search) params.set('search', search);
-      if (statusFilter) params.set('status', statusFilter);
+      const currentSearch = searchRef.current;
+      if (currentSearch) params.set('search', currentSearch);
+      if (statusFilter && statusFilter !== 'TODOS') params.set('status', statusFilter);
 
       const res = await fetch(`/api/condutores/registo?${params}`);
       if (!res.ok) throw new Error('Erro ao carregar');
@@ -92,7 +97,7 @@ export default function PainelVisualizar() {
     } finally {
       setLoading(false);
     }
-  }, [pagination.page, pagination.limit, search, statusFilter]);
+  }, [pagination.page, pagination.limit, statusFilter]);
 
   useEffect(() => {
     fetchCondutores();
@@ -100,7 +105,7 @@ export default function PainelVisualizar() {
 
   const handleSearch = () => {
     setPagination((prev) => ({ ...prev, page: 1 }));
-    fetchCondutores();
+    // useEffect will trigger fetchCondutores when pagination.page changes
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -108,7 +113,7 @@ export default function PainelVisualizar() {
   };
 
   const toggleStatus = async (id: string, currentStatus: string) => {
-    const newStatus = currentStatus === 'ATIVA' ? 'INATIVO' : 'ATIVA';
+    const newStatus = currentStatus === 'ATIVA' ? 'INATIVA' : 'ATIVA';
     try {
       const res = await fetch('/api/condutores/status', {
         method: 'PUT',
@@ -116,7 +121,7 @@ export default function PainelVisualizar() {
         body: JSON.stringify({ id, status: newStatus }),
       });
       if (!res.ok) throw new Error('Erro ao actualizar');
-      toast.success(`Ficha ${newStatus === 'ATIVA' ? 'activada' : 'desactivada'} com sucesso`);
+      toast.success(`Ficha ${newStatus === 'ATIVA' ? 'activada' : 'desactivada'} com sucesso!`);
       fetchCondutores();
     } catch {
       toast.error('Erro ao actualizar status');
@@ -221,7 +226,7 @@ export default function PainelVisualizar() {
           <SelectContent>
             <SelectItem value="TODOS">Todos</SelectItem>
             <SelectItem value="ATIVA">Activa</SelectItem>
-            <SelectItem value="INATIVO">Inactivo</SelectItem>
+            <SelectItem value="INATIVA">Inactiva</SelectItem>
           </SelectContent>
         </Select>
         <Button

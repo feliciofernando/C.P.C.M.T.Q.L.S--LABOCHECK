@@ -15,7 +15,7 @@ export async function GET() {
     const { count: inativas } = await supabase
       .from('condutores')
       .select('*', { count: 'exact', head: true })
-      .eq('status', 'INATIVO');
+      .eq('status', 'INATIVA');
 
     return NextResponse.json({
       total: total || 0,

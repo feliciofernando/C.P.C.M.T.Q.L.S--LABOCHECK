@@ -3,22 +3,7 @@ import { supabase } from '@/lib/supabase-server';
 import { toCamelCase } from '@/lib/utils-supabase';
 import sharp from 'sharp';
 import { PDFDocument } from 'pdf-lib';
-import { readFileSync } from 'fs';
-import path from 'path';
-
-// Cache logo
-let cachedLogoBase64: string | null = null;
-function getLogoBase64(): string {
-  if (cachedLogoBase64) return cachedLogoBase64;
-  try {
-    const imgPath = path.join(process.cwd(), 'public', 'logotipo.jpg');
-    const buf = readFileSync(imgPath);
-    cachedLogoBase64 = `data:image/jpeg;base64,${buf.toString('base64')}`;
-    return cachedLogoBase64;
-  } catch {
-    return '';
-  }
-}
+import { getFontFaceSVG, FONT_FAMILY } from '@/lib/pdf-fonts';
 
 export async function POST(request: NextRequest) {
   try {
@@ -56,6 +41,8 @@ function esc(str: string): string {
   return String(str || '-').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+const FF = FONT_FAMILY;
+
 function buildFrontSVG(c: Record<string, unknown>): string {
   const W = 595;
   const H = 421;
@@ -65,7 +52,10 @@ function buildFrontSVG(c: Record<string, unknown>): string {
   const WHITE = '#ffffff';
   const LGRAY = '#f0f0eb';
 
+  const fontDefs = getFontFaceSVG();
+
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">`;
+  svg += fontDefs;
   svg += `<rect x="0" y="0" width="${W}" height="${H}" fill="${WHITE}"/>`;
 
   // Green header
@@ -73,9 +63,9 @@ function buildFrontSVG(c: Record<string, unknown>): string {
   svg += `<line x1="0" y1="68" x2="${W}" y2="68" stroke="${GOLD}" stroke-width="2"/>`;
 
   // Header text
-  svg += `<text x="${W / 2}" y="22" text-anchor="middle" fill="${GOLD}" font-size="15" font-weight="bold" font-family="Helvetica,Arial,sans-serif" letter-spacing="3">C.P.C.M.T.Q.L.S</text>`;
-  svg += `<text x="${W / 2}" y="38" text-anchor="middle" fill="${GOLD}" font-size="5.5" font-family="Helvetica,Arial,sans-serif">CONSELHO PROVINCIAL DOS CONDUTORES DE MOTOCICLOS, TRICICLOS E QUADRICICLOS DA LUNDA SUL</text>`;
-  svg += `<text x="${W / 2}" y="56" text-anchor="middle" fill="${GOLD}" font-size="14" font-weight="bold" font-family="Helvetica,Arial,sans-serif" letter-spacing="1">LICEN\u00CA PROFISSIONAL DE CONDUTOR</text>`;
+  svg += `<text x="${W / 2}" y="22" text-anchor="middle" fill="${GOLD}" font-size="15" font-weight="bold" font-family="${FF}" letter-spacing="3">C.P.C.M.T.Q.L.S</text>`;
+  svg += `<text x="${W / 2}" y="38" text-anchor="middle" fill="${GOLD}" font-size="5.5" font-family="${FF}">CONSELHO PROVINCIAL DOS CONDUTORES DE MOTOCICLOS, TRICICLOS E QUADRICICLOS DA LUNDA SUL</text>`;
+  svg += `<text x="${W / 2}" y="56" text-anchor="middle" fill="${GOLD}" font-size="14" font-weight="bold" font-family="${FF}" letter-spacing="1">LICEN\u00CA PROFISSIONAL DE CONDUTOR</text>`;
 
   // Fields
   const LX = 30;
@@ -85,14 +75,14 @@ function buildFrontSVG(c: Record<string, unknown>): string {
   const gap = 18;
 
   const leftField = (label: string, value: string) => {
-    let s = `<text x="${LX}" y="${ly}" fill="${GREEN}" font-size="8" font-weight="bold" font-family="Helvetica,Arial,sans-serif">${esc(label)}:</text>`;
-    s += `<text x="${LX}" y="${ly + 13}" fill="${DARK}" font-size="11" font-weight="bold" font-family="Helvetica,Arial,sans-serif">${esc(value || '-')}</text>`;
+    let s = `<text x="${LX}" y="${ly}" fill="${GREEN}" font-size="8" font-weight="bold" font-family="${FF}">${esc(label)}:</text>`;
+    s += `<text x="${LX}" y="${ly + 13}" fill="${DARK}" font-size="11" font-weight="bold" font-family="${FF}">${esc(value || '-')}</text>`;
     return s;
   };
 
   const rightField = (label: string, value: string) => {
-    let s = `<text x="${RX}" y="${ry}" fill="${GREEN}" font-size="8" font-weight="bold" font-family="Helvetica,Arial,sans-serif">${esc(label)}:</text>`;
-    s += `<text x="${RX}" y="${ry + 13}" fill="${DARK}" font-size="11" font-weight="bold" font-family="Helvetica,Arial,sans-serif">${esc(value || '-')}</text>`;
+    let s = `<text x="${RX}" y="${ry}" fill="${GREEN}" font-size="8" font-weight="bold" font-family="${FF}">${esc(label)}:</text>`;
+    s += `<text x="${RX}" y="${ry + 13}" fill="${DARK}" font-size="11" font-weight="bold" font-family="${FF}">${esc(value || '-')}</text>`;
     return s;
   };
 
@@ -121,7 +111,7 @@ function buildFrontSVG(c: Record<string, unknown>): string {
   // Signature area
   const sigY = bcY + bcH + 30;
   svg += `<line x1="${W / 2 - 65}" y1="${sigY}" x2="${W / 2 + 65}" y2="${sigY}" stroke="${DARK}" stroke-width="0.5"/>`;
-  svg += `<text x="${W / 2}" y="${sigY + 14}" text-anchor="middle" fill="${DARK}" font-size="9" font-weight="bold" font-family="Helvetica,Arial,sans-serif">O DIRECTOR EXECUTIVO</text>`;
+  svg += `<text x="${W / 2}" y="${sigY + 14}" text-anchor="middle" fill="${DARK}" font-size="9" font-weight="bold" font-family="${FF}">O DIRECTOR EXECUTIVO</text>`;
 
   // Footer line
   svg += `<line x1="30" y1="${H - 50}" x2="${W - 30}" y2="${H - 50}" stroke="${DARK}" stroke-width="0.5"/>`;
@@ -139,13 +129,16 @@ function buildBackSVG(c: Record<string, unknown>): string {
   const WHITE = '#ffffff';
   const GRAY = '#6b6b6b';
 
+  const fontDefs = getFontFaceSVG();
+
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">`;
+  svg += fontDefs;
   svg += `<rect x="0" y="0" width="${W}" height="${H}" fill="${WHITE}"/>`;
 
   // Top info bar
   svg += `<rect x="0" y="0" width="${W}" height="36" fill="${WHITE}"/>`;
-  svg += `<text x="30" y="24" fill="${GREEN}" font-size="10" font-weight="bold" font-family="Helvetica,Arial,sans-serif">Data de Emiss\u00E3o: ${esc(String(c.dataEmissaoLicenca || '-'))}</text>`;
-  svg += `<text x="${W - 30}" y="24" text-anchor="end" fill="${GREEN}" font-size="10" font-weight="bold" font-family="Helvetica,Arial,sans-serif">Validade: ${esc(String(c.validadeLicenca || '-'))}</text>`;
+  svg += `<text x="30" y="24" fill="${GREEN}" font-size="10" font-weight="bold" font-family="${FF}">Data de Emiss\u00E3o: ${esc(String(c.dataEmissaoLicenca || '-'))}</text>`;
+  svg += `<text x="${W - 30}" y="24" text-anchor="end" fill="${GREEN}" font-size="10" font-weight="bold" font-family="${FF}">Validade: ${esc(String(c.validadeLicenca || '-'))}</text>`;
 
   // Green section with declaration
   const greenTop = 50;
@@ -160,11 +153,11 @@ function buildBackSVG(c: Record<string, unknown>): string {
   ];
   let ly = greenTop + 25;
   for (const line of lines) {
-    svg += `<text x="30" y="${ly}" fill="${WHITE}" font-size="9" font-family="Helvetica,Arial,sans-serif">${esc(line)}</text>`;
+    svg += `<text x="30" y="${ly}" fill="${WHITE}" font-size="9" font-family="${FF}">${esc(line)}</text>`;
     ly += 14;
   }
-  svg += `<text x="${W / 2}" y="${ly + 8}" text-anchor="middle" fill="${GOLD}" font-size="9" font-weight="bold" font-family="Helvetica,Arial,sans-serif">Contactos: 941-000-517 / 924-591-350</text>`;
-  svg += `<text x="${W / 2}" y="${ly + 22}" text-anchor="middle" fill="${WHITE}" font-size="8" font-family="Helvetica,Arial,sans-serif">Decreto Presidencial N\u00BA 245/15</text>`;
+  svg += `<text x="${W / 2}" y="${ly + 8}" text-anchor="middle" fill="${GOLD}" font-size="9" font-weight="bold" font-family="${FF}">Contactos: 941-000-517 / 924-591-350</text>`;
+  svg += `<text x="${W / 2}" y="${ly + 22}" text-anchor="middle" fill="${WHITE}" font-size="8" font-family="${FF}">Decreto Presidencial N\u00BA 245/15</text>`;
 
   // Bottom section
   const bottomY = greenTop + greenH + 20;
@@ -180,8 +173,8 @@ function buildBackSVG(c: Record<string, unknown>): string {
   svg += `<rect x="${flagX}" y="${flagY + (flagH / 3) * 2}" width="${flagW}" height="${flagH / 3}" fill="#F0C808"/>`;
 
   // Motto
-  svg += `<text x="${W / 2}" y="${H - 38}" text-anchor="middle" fill="${DARK}" font-size="9" font-family="Helvetica,Arial,sans-serif">\u201CMototaxistas organizados, tr\u00E2nsito mais seguro\u201D</text>`;
-  svg += `<text x="${W - 30}" y="${H - 38}" text-anchor="end" fill="${DARK}" font-size="10" font-weight="bold" font-family="Helvetica,Arial,sans-serif">Lunda Sul</text>`;
+  svg += `<text x="${W / 2}" y="${H - 38}" text-anchor="middle" fill="${DARK}" font-size="9" font-family="${FF}">\u201CMototaxistas organizados, tr\u00E2nsito mais seguro\u201D</text>`;
+  svg += `<text x="${W - 30}" y="${H - 38}" text-anchor="end" fill="${DARK}" font-size="10" font-weight="bold" font-family="${FF}">Lunda Sul</text>`;
 
   svg += '</svg>';
   return svg;

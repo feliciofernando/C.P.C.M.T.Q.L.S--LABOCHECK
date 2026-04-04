@@ -9,8 +9,8 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'ID e status sao obrigatorios' }, { status: 400 });
     }
 
-    if (!['ATIVA', 'INATIVO'].includes(status)) {
-      return NextResponse.json({ error: 'Status invalido. Use ATIVA ou INATIVO' }, { status: 400 });
+    if (!['ATIVA', 'INATIVA'].includes(status)) {
+      return NextResponse.json({ error: 'Status invalido. Use ATIVA ou INATIVA' }, { status: 400 });
     }
 
     const { data, error } = await supabase

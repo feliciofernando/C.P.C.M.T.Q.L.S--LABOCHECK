@@ -5,6 +5,7 @@ import sharp from 'sharp';
 import { PDFDocument } from 'pdf-lib';
 import { readFileSync } from 'fs';
 import path from 'path';
+import { getFontFaceSVG, FONT_FAMILY } from '@/lib/pdf-fonts';
 
 // Cache logo
 let cachedLogoBase64: string | null = null;
@@ -62,6 +63,8 @@ function truncate(str: string, maxLen: number): string {
   return s.substring(0, maxLen - 3) + '...';
 }
 
+const FF = FONT_FAMILY;
+
 function buildFichaSVG(c: Record<string, unknown>): string {
   const W = 595;
   const H = 842;
@@ -70,6 +73,7 @@ function buildFichaSVG(c: Record<string, unknown>): string {
   const CW = MR - ML;
 
   const logoBase64 = getLogoBase64();
+  const fontDefs = getFontFaceSVG();
 
   const GREEN = '#1a5c2e';
   const DARK = '#1a1a1a';
@@ -84,7 +88,7 @@ function buildFichaSVG(c: Record<string, unknown>): string {
 
   const sectionHeader = (num: string, title: string): string => {
     let s = '';
-    s += `<text x="${ML}" y="${y}" fill="${GREEN}" font-size="13" font-weight="bold" font-family="Helvetica,Arial,sans-serif">${num}. ${title}</text>\n`;
+    s += `<text x="${ML}" y="${y}" fill="${GREEN}" font-size="13" font-weight="bold" font-family="${FF}">${num}. ${title}</text>\n`;
     addY(5);
     s += `<line x1="${ML}" y1="${y}" x2="${MR}" y2="${y}" stroke="${DGRAY}" stroke-width="0.5"/>\n`;
     addY(9);
@@ -92,11 +96,12 @@ function buildFichaSVG(c: Record<string, unknown>): string {
   };
 
   const fieldRow = (label: string, value: string, valueMaxLen = 36): string => {
-    return `<text x="${ML}" y="${y}" fill="${DARK}" font-size="10" font-weight="bold" font-family="Helvetica,Arial,sans-serif">${esc(label)}:</text>` +
-      `<text x="${ML + 178}" y="${y}" fill="${DARK}" font-size="10" font-family="Helvetica,Arial,sans-serif">${esc(truncate(String(value || '-'), valueMaxLen))}</text>\n`;
+    return `<text x="${ML}" y="${y}" fill="${DARK}" font-size="10" font-weight="bold" font-family="${FF}">${esc(label)}:</text>` +
+      `<text x="${ML + 178}" y="${y}" fill="${DARK}" font-size="10" font-family="${FF}">${esc(truncate(String(value || '-'), valueMaxLen))}</text>\n`;
   };
 
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">`;
+  svg += fontDefs;
   svg += `<rect x="0" y="0" width="${W}" height="${H}" fill="${WHITE}"/>`;
 
   if (logoBase64) {
@@ -106,10 +111,10 @@ function buildFichaSVG(c: Record<string, unknown>): string {
 
   svg += `<rect x="0" y="0" width="${W}" height="34" fill="${GREEN}"/>`;
   svg += `<line x1="0" y1="34" x2="${W}" y2="34" stroke="${GOLD}" stroke-width="1.5"/>`;
-  svg += `<text x="${W / 2}" y="15" text-anchor="middle" fill="${GOLD}" font-size="16" font-weight="bold" font-family="Helvetica,Arial,sans-serif" letter-spacing="2">C.P.C.M.T.Q.L.S</text>`;
-  svg += `<text x="${W / 2}" y="28" text-anchor="middle" fill="${WHITE}" font-size="7.5" font-family="Helvetica,Arial,sans-serif" letter-spacing="0.5">Conselho Provincial dos Condutores de Motociclos, Triciclos e Quadriciclos da Lunda Sul</text>`;
+  svg += `<text x="${W / 2}" y="15" text-anchor="middle" fill="${GOLD}" font-size="16" font-weight="bold" font-family="${FF}" letter-spacing="2">C.P.C.M.T.Q.L.S</text>`;
+  svg += `<text x="${W / 2}" y="28" text-anchor="middle" fill="${WHITE}" font-size="7.5" font-family="${FF}" letter-spacing="0.5">Conselho Provincial dos Condutores de Motociclos, Triciclos e Quadriciclos da Lunda Sul</text>`;
 
-  svg += `<text x="${W / 2}" y="${y + 10}" text-anchor="middle" fill="${GREEN}" font-size="16" font-weight="bold" font-family="Helvetica,Arial,sans-serif" letter-spacing="1.5">FICHA DE REGISTO DO CONDUTOR</text>`;
+  svg += `<text x="${W / 2}" y="${y + 10}" text-anchor="middle" fill="${GREEN}" font-size="16" font-weight="bold" font-family="${FF}" letter-spacing="1.5">FICHA DE REGISTO DO CONDUTOR</text>`;
   addY(16);
   svg += `<line x1="${ML}" y1="${y}" x2="${MR}" y2="${y}" stroke="${GREEN}" stroke-width="1"/>`;
   addY(12);
@@ -140,8 +145,8 @@ function buildFichaSVG(c: Record<string, unknown>): string {
   const chkM = tipo === 'Motociclo' ? 'X' : ' ';
   const chkT = tipo === 'Triciclo' ? 'X' : ' ';
   const chkQ = tipo === 'Quadriciclo' ? 'X' : ' ';
-  svg += `<text x="${ML}" y="${y}" fill="${DARK}" font-size="10" font-weight="bold" font-family="Helvetica,Arial,sans-serif">Tipo de Veiculo:</text>`;
-  svg += `<text x="${ML + 178}" y="${y}" fill="${DARK}" font-size="10" font-family="Helvetica,Arial,sans-serif">[${chkM}] Motociclo  [${chkT}] Triciclo  [${chkQ}] Quadriciclo</text>\n`;
+  svg += `<text x="${ML}" y="${y}" fill="${DARK}" font-size="10" font-weight="bold" font-family="${FF}">Tipo de Veiculo:</text>`;
+  svg += `<text x="${ML + 178}" y="${y}" fill="${DARK}" font-size="10" font-family="${FF}">[${chkM}] Motociclo  [${chkT}] Triciclo  [${chkQ}] Quadriciclo</text>\n`;
   addY(16);
 
   const rows2: [string, unknown][] = [
@@ -169,7 +174,7 @@ function buildFichaSVG(c: Record<string, unknown>): string {
 
   // 4. DOCUMENTACAO
   svg += sectionHeader('4', 'DOCUMENTACAO E EQUIPAMENTOS');
-  svg += `<text x="${ML}" y="${y}" fill="${GRAY}" font-size="9" font-style="italic" font-family="Helvetica,Arial,sans-serif">Assinale os documentos e equipamentos que possui:</text>\n`;
+  svg += `<text x="${ML}" y="${y}" fill="${GRAY}" font-size="9" font-style="italic" font-family="${FF}">Assinale os documentos e equipamentos que possui:</text>\n`;
   addY(15);
 
   const docs: [string, string][] = [
@@ -184,11 +189,11 @@ function buildFichaSVG(c: Record<string, unknown>): string {
   for (let i = 0; i < docs.length; i += 2) {
     const [key1, label1] = docs[i];
     const checked1 = c[key1] ? 'X' : ' ';
-    let line = `<text x="${ML + 14}" y="${y}" fill="${DARK}" font-size="10" font-family="Helvetica,Arial,sans-serif">[${checked1}]  ${esc(label1)}</text>`;
+    let line = `<text x="${ML + 14}" y="${y}" fill="${DARK}" font-size="10" font-family="${FF}">[${checked1}]  ${esc(label1)}</text>`;
     if (i + 1 < docs.length) {
       const [key2, label2] = docs[i + 1];
       const checked2 = c[key2] ? 'X' : ' ';
-      line += `<text x="${ML + CW / 2 + 14}" y="${y}" fill="${DARK}" font-size="10" font-family="Helvetica,Arial,sans-serif">[${checked2}]  ${esc(label2)}</text>`;
+      line += `<text x="${ML + CW / 2 + 14}" y="${y}" fill="${DARK}" font-size="10" font-family="${FF}">[${checked2}]  ${esc(label2)}</text>`;
     }
     svg += line + '\n';
     addY(15);
@@ -197,11 +202,11 @@ function buildFichaSVG(c: Record<string, unknown>): string {
 
   // 5. FORMACAO
   svg += sectionHeader('5', 'FORMACAO');
-  svg += `<text x="${ML}" y="${y}" fill="${DARK}" font-size="10" font-family="Helvetica,Arial,sans-serif">Ja participou em formacao sobre seguranca rodoviaria?</text>\n`;
+  svg += `<text x="${ML}" y="${y}" fill="${DARK}" font-size="10" font-family="${FF}">Ja participou em formacao sobre seguranca rodoviaria?</text>\n`;
   addY(15);
   const formSim = c.participouFormacao ? 'X' : ' ';
   const formNao = !c.participouFormacao ? 'X' : ' ';
-  svg += `<text x="${ML + 14}" y="${y}" fill="${DARK}" font-size="10" font-family="Helvetica,Arial,sans-serif">[${formSim}] Sim            [${formNao}] Nao</text>\n`;
+  svg += `<text x="${ML + 14}" y="${y}" fill="${DARK}" font-size="10" font-family="${FF}">[${formSim}] Sim            [${formNao}] Nao</text>\n`;
   addY(16);
   if (c.participouFormacao && c.instituicaoFormacao) {
     svg += fieldRow('Instituicao', String(c.instituicaoFormacao));
@@ -222,7 +227,7 @@ function buildFichaSVG(c: Record<string, unknown>): string {
   ];
   let dy = declBoxY + 14;
   for (const dl of declLines) {
-    svg += `<text x="${ML + 8}" y="${dy}" fill="${DARK}" font-size="9" font-family="Helvetica,Arial,sans-serif">${esc(dl)}</text>\n`;
+    svg += `<text x="${ML + 8}" y="${dy}" fill="${DARK}" font-size="9" font-family="${FF}">${esc(dl)}</text>\n`;
     dy += 11;
   }
   addY(declBoxH + 14);
@@ -241,12 +246,12 @@ function buildFichaSVG(c: Record<string, unknown>): string {
 
   for (let i = 0; i < rowsLicenca.length; i += 2) {
     const [label1, value1] = rowsLicenca[i];
-    let line = `<text x="${ML}" y="${y}" fill="${DARK}" font-size="10" font-weight="bold" font-family="Helvetica,Arial,sans-serif">${esc(label1)}:</text>`;
-    line += `<text x="${ML + 95}" y="${y}" fill="${DARK}" font-size="10" font-family="Helvetica,Arial,sans-serif">${esc(truncate(value1, 26))}</text>`;
+    let line = `<text x="${ML}" y="${y}" fill="${DARK}" font-size="10" font-weight="bold" font-family="${FF}">${esc(label1)}:</text>`;
+    line += `<text x="${ML + 95}" y="${y}" fill="${DARK}" font-size="10" font-family="${FF}">${esc(truncate(value1, 26))}</text>`;
     if (i + 1 < rowsLicenca.length) {
       const [label2, value2] = rowsLicenca[i + 1];
-      line += `<text x="${ML + CW / 2}" y="${y}" fill="${DARK}" font-size="10" font-weight="bold" font-family="Helvetica,Arial,sans-serif">${esc(label2)}:</text>`;
-      line += `<text x="${ML + CW / 2 + 95}" y="${y}" fill="${DARK}" font-size="10" font-family="Helvetica,Arial,sans-serif">${esc(truncate(value2, 26))}</text>`;
+      line += `<text x="${ML + CW / 2}" y="${y}" fill="${DARK}" font-size="10" font-weight="bold" font-family="${FF}">${esc(label2)}:</text>`;
+      line += `<text x="${ML + CW / 2 + 95}" y="${y}" fill="${DARK}" font-size="10" font-family="${FF}">${esc(truncate(value2, 26))}</text>`;
     }
     svg += line + '\n';
     addY(15);
@@ -263,21 +268,21 @@ function buildFichaSVG(c: Record<string, unknown>): string {
     ? new Date(String(c.dataRegisto)).toLocaleDateString('pt-AO')
     : '-';
 
-  svg += `<text x="${sigLeftX}" y="${y}" text-anchor="middle" fill="${DARK}" font-size="9.5" font-family="Helvetica,Arial,sans-serif">Data: ____/____/________</text>\n`;
+  svg += `<text x="${sigLeftX}" y="${y}" text-anchor="middle" fill="${DARK}" font-size="9.5" font-family="${FF}">Data: ____/____/________</text>\n`;
   addY(14);
-  svg += `<text x="${sigLeftX}" y="${y}" text-anchor="middle" fill="${GRAY}" font-size="8.5" font-style="italic" font-family="Helvetica,Arial,sans-serif">Assinatura do Condutor</text>\n`;
+  svg += `<text x="${sigLeftX}" y="${y}" text-anchor="middle" fill="${GRAY}" font-size="8.5" font-style="italic" font-family="${FF}">Assinatura do Condutor</text>\n`;
   addY(5);
   svg += `<line x1="${sigLeftX - 70}" y1="${y}" x2="${sigLeftX + 70}" y2="${y}" stroke="${DARK}" stroke-width="0.5"/>\n`;
 
   const sigBaseY = y - 19;
-  svg += `<text x="${sigRightX}" y="${sigBaseY}" text-anchor="middle" fill="${DARK}" font-size="9.5" font-family="Helvetica,Arial,sans-serif">Data de Registo: ${esc(regDate)}</text>\n`;
-  svg += `<text x="${sigRightX}" y="${sigBaseY + 14}" text-anchor="middle" fill="${GRAY}" font-size="8.5" font-style="italic" font-family="Helvetica,Arial,sans-serif">O Responsavel pelo Registo</text>\n`;
+  svg += `<text x="${sigRightX}" y="${sigBaseY}" text-anchor="middle" fill="${DARK}" font-size="9.5" font-family="${FF}">Data de Registo: ${esc(regDate)}</text>\n`;
+  svg += `<text x="${sigRightX}" y="${sigBaseY + 14}" text-anchor="middle" fill="${GRAY}" font-size="8.5" font-style="italic" font-family="${FF}">O Responsavel pelo Registo</text>\n`;
   svg += `<line x1="${sigRightX - 70}" y1="${sigBaseY + 19}" x2="${sigRightX + 70}" y2="${sigBaseY + 19}" stroke="${DARK}" stroke-width="0.5"/>\n`;
 
   // FOOTER
   svg += `<rect x="0" y="${H - 30}" width="${W}" height="30" fill="${GREEN}"/>`;
-  svg += `<text x="${W / 2}" y="${H - 19}" text-anchor="middle" fill="${WHITE}" font-size="8.5" font-family="Helvetica,Arial,sans-serif">Condutores organizados, transito mais seguro</text>`;
-  svg += `<text x="${W / 2}" y="${H - 8}" text-anchor="middle" fill="${GOLD}" font-size="7" font-family="Helvetica,Arial,sans-serif">C.P.C.M.T.Q.L.S | Contactos: 941-000-517 / 924-591-350</text>`;
+  svg += `<text x="${W / 2}" y="${H - 19}" text-anchor="middle" fill="${WHITE}" font-size="8.5" font-family="${FF}">Condutores organizados, transito mais seguro</text>`;
+  svg += `<text x="${W / 2}" y="${H - 8}" text-anchor="middle" fill="${GOLD}" font-size="7" font-family="${FF}">C.P.C.M.T.Q.L.S | Contactos: 941-000-517 / 924-591-350</text>`;
 
   svg += '</svg>';
   return svg;
