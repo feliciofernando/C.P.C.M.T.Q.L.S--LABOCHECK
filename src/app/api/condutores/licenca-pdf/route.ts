@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase-server';
 import { toCamelCase } from '@/lib/utils-supabase';
 import sharp from 'sharp';
 import { PDFDocument } from 'pdf-lib';
-import { getFontFaceSVG, FONT_FAMILY } from '@/lib/pdf-fonts';
+import { getFontFaceSVG, FONT_FAMILY, renderSVGtoPNG } from '@/lib/pdf-fonts';
 
 export async function POST(request: NextRequest) {
   try {
@@ -188,15 +188,8 @@ async function generateLicensePDF(c: Record<string, unknown>): Promise<Buffer> {
   const cardH = 421;
   const scale = 3;
 
-  const frontPng = await sharp(Buffer.from(frontSVG))
-    .resize(cardW * scale, cardH * scale, { fit: 'fill' })
-    .png({ compressionLevel: 6 })
-    .toBuffer();
-
-  const backPng = await sharp(Buffer.from(backSVG))
-    .resize(cardW * scale, cardH * scale, { fit: 'fill' })
-    .png({ compressionLevel: 6 })
-    .toBuffer();
+  const frontPng = await renderSVGtoPNG(frontSVG, cardW * scale, cardH * scale);
+  const backPng = await renderSVGtoPNG(backSVG, cardW * scale, cardH * scale);
 
   const pdfDoc = await PDFDocument.create();
 

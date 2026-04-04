@@ -5,7 +5,7 @@ import sharp from 'sharp';
 import { PDFDocument } from 'pdf-lib';
 import { readFileSync } from 'fs';
 import path from 'path';
-import { getFontFaceSVG, FONT_FAMILY } from '@/lib/pdf-fonts';
+import { getFontFaceSVG, FONT_FAMILY, renderSVGtoPNG } from '@/lib/pdf-fonts';
 
 // Cache logo
 let cachedLogoBase64: string | null = null;
@@ -291,10 +291,7 @@ function buildFichaSVG(c: Record<string, unknown>): string {
 async function generateFichaPDF(c: Record<string, unknown>): Promise<Buffer> {
   const svgContent = buildFichaSVG(c);
   const scale = 3;
-  const pngBuffer = await sharp(Buffer.from(svgContent))
-    .resize(595 * scale, 842 * scale, { fit: 'fill' })
-    .png({ compressionLevel: 6 })
-    .toBuffer();
+  const pngBuffer = await renderSVGtoPNG(svgContent, 595 * scale, 842 * scale);
 
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage([595, 842]);
