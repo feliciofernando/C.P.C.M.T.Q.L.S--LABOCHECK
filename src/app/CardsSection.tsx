@@ -141,9 +141,6 @@ export default function CardsSection() {
       {/* Dark overlay for text and card readability */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/50" />
 
-      {/* Decorative top edge */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#d4a017]/60 to-transparent" />
-
       {/* Decorative elements */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-[#d4a017]/[0.03] blur-3xl" />
