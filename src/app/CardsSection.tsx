@@ -43,39 +43,33 @@ interface CardsSectionData {
   imagem_fundo_tipo: string;
 }
 
-function CardBox({ card, index }: { card: CardItem; index: number }) {
+function CardBox({ card }: { card: CardItem }) {
   const IconComponent = iconMap[card.icone] || MessageSquare;
-
-  // Staggered animation delay for each card
-  const animDelay = `${index * 100}ms`;
 
   return (
     <Link
       href={'/paginas/' + card.id}
-      className="group block rounded-xl bg-white/[0.08] backdrop-blur-md border border-white/[0.15] p-6 hover:bg-white/[0.15] hover:border-white/[0.3] hover:scale-[1.04] hover:shadow-xl hover:shadow-black/20 transition-all duration-300 text-center"
-      style={{ animationDelay: animDelay }}
+      className="group block rounded-xl bg-white/[0.08] border border-white/[0.15] p-6 hover:bg-white/[0.15] hover:border-[#d4a017]/50 transition-colors duration-150 text-center"
     >
-      {/* Icon with glow effect */}
-      <div className="relative w-14 h-14 mx-auto mb-4">
-        {/* Glow ring on hover */}
-        <div className="absolute inset-0 rounded-full bg-[#d4a017]/0 group-hover:bg-[#d4a017]/20 group-hover:scale-125 blur-md transition-all duration-500" />
-        <div className="relative w-14 h-14 rounded-full bg-white/[0.12] backdrop-blur-sm border border-white/[0.2] flex items-center justify-center group-hover:bg-[#d4a017]/25 group-hover:border-[#d4a017]/40 transition-all duration-300">
-          <IconComponent className="w-6 h-6 text-white group-hover:text-[#d4a017] transition-colors duration-300" />
+      {/* Icon */}
+      <div className="w-14 h-14 mx-auto mb-4">
+        <div className="w-14 h-14 rounded-full bg-white/[0.12] border border-white/[0.2] flex items-center justify-center group-hover:bg-[#d4a017]/20 group-hover:border-[#d4a017]/50 transition-colors duration-150">
+          <IconComponent className="w-6 h-6 text-white group-hover:text-[#d4a017] transition-colors duration-150" />
         </div>
       </div>
 
       {/* Title */}
-      <h3 className="text-white font-bold text-sm sm:text-base lg:text-lg mb-2 leading-snug group-hover:text-[#d4a017] transition-colors duration-300">
+      <h3 className="text-white font-bold text-sm sm:text-base lg:text-lg mb-2 leading-snug group-hover:text-[#d4a017] transition-colors duration-150">
         {card.titulo}
       </h3>
 
       {/* Description */}
-      <p className="text-white/70 text-xs sm:text-sm lg:text-base leading-relaxed line-clamp-3 group-hover:text-white/90 transition-colors duration-300">
+      <p className="text-white/70 text-xs sm:text-sm lg:text-base leading-relaxed line-clamp-3 group-hover:text-white/90 transition-colors duration-150">
         {card.descricao}
       </p>
 
       {/* Bottom gold accent line */}
-      <div className="mt-4 mx-auto w-0 group-hover:w-10 h-[2px] bg-[#d4a017] transition-all duration-500" />
+      <div className="mt-4 mx-auto w-0 group-hover:w-10 h-[2px] bg-[#d4a017] transition-all duration-150" />
     </Link>
   );
 }
@@ -195,7 +189,7 @@ export default function CardsSection() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
             {cards.map((card, index) => (
-              <CardBox key={card.id} card={card} index={index} />
+              <CardBox key={card.id} card={card} />
             ))}
           </div>
         )}
