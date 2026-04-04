@@ -143,8 +143,8 @@ export default function ServicosSection() {
                 {/* Content */}
                 <div className="relative z-10 flex flex-col items-center justify-center h-full text-white p-5 text-center">
                   {/* Icon circle */}
-                  <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-[#d4a017]/30 transition-all duration-300">
-                    <IconComponent className="w-7 h-7 lg:w-8 lg:h-8" />
+                  <div className="w-20 h-20 lg:w-24 lg:h-24 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center mb-4 group-hover:bg-[#d4a017]/30 transition-colors duration-300">
+                    <IconComponent className="w-10 h-10 lg:w-12 lg:h-12" />
                   </div>
 
                   {/* Gold accent line */}
