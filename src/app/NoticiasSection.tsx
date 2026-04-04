@@ -48,9 +48,9 @@ export default function NoticiasSection() {
 
   if (loading) {
     return (
-      <section id="noticias" className="py-12 px-4">
+      <section id="noticias" className="py-12 lg:py-16 px-4">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl font-bold text-[#1a1a1a] text-center mb-8">Noticias</h2>
+          <h2 className="text-2xl lg:text-3xl font-bold text-[#1a1a1a] text-center mb-8">Noticias</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[1, 2, 3, 4].map((i) => (
               <Card key={i} className="border-[#d1d1cc] overflow-hidden">
@@ -73,7 +73,7 @@ export default function NoticiasSection() {
       <section id="noticias" className="py-12 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="text-2xl font-bold text-[#1a1a1a] mb-2">Noticias</h2>
-          <p className="text-[#6b6b6b] text-sm">Nenhuma noticia disponivel no momento.</p>
+          <p className="text-[#6b6b6b] text-sm lg:text-base">Nenhuma noticia disponivel no momento.</p>
         </div>
       </section>
     );
@@ -85,17 +85,17 @@ export default function NoticiasSection() {
   const others = noticias.filter((n) => n.id !== featured.id).slice(0, 3);
 
   return (
-    <section id="noticias" className="py-12 px-4 bg-white">
+    <section id="noticias" className="py-12 lg:py-16 px-4 bg-white">
       <div className="max-w-6xl mx-auto">
         {/* Section header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 lg:mb-10">
           <div className="flex items-center justify-center gap-3 mb-2">
-            <div className="h-[1px] w-12 bg-[#d4a017]/60" />
-            <Newspaper className="w-5 h-5 text-[#1a5c2e]" />
-            <div className="h-[1px] w-12 bg-[#d4a017]/60" />
+            <div className="h-[1px] w-12 lg:w-16 bg-[#d4a017]/60" />
+            <Newspaper className="w-5 h-5 lg:w-6 lg:h-6 text-[#1a5c2e]" />
+            <div className="h-[1px] w-12 lg:w-16 bg-[#d4a017]/60" />
           </div>
-          <h2 className="text-2xl font-bold text-[#1a1a1a]">Noticias</h2>
-          <p className="text-sm text-[#6b6b6b] mt-1">
+          <h2 className="text-2xl lg:text-3xl font-bold text-[#1a1a1a]">Noticias</h2>
+          <p className="text-sm lg:text-base text-[#6b6b6b] mt-1">
             Mantenha-se informado sobre as ultimas novidades
           </p>
         </div>
@@ -124,19 +124,19 @@ export default function NoticiasSection() {
                 </Badge>
               )}
             </div>
-            <CardContent className="p-5">
-              <div className="flex items-center gap-1.5 text-xs text-[#6b6b6b] mb-2">
-                <Calendar className="w-3.5 h-3.5" />
+            <CardContent className="p-5 lg:p-6">
+              <div className="flex items-center gap-1.5 text-xs lg:text-sm text-[#6b6b6b] mb-2">
+                <Calendar className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                 <span>{formatDate(featured.dataPublicacao)}</span>
               </div>
-              <h3 className="text-lg font-bold text-[#1a1a1a] mb-2 group-hover:text-[#1a5c2e] transition-colors line-clamp-2">
+              <h3 className="text-lg lg:text-xl font-bold text-[#1a1a1a] mb-2 group-hover:text-[#1a5c2e] transition-colors line-clamp-2">
                 {featured.titulo}
               </h3>
-              <p className="text-sm text-[#6b6b6b] leading-relaxed line-clamp-3">
+              <p className="text-sm lg:text-base text-[#6b6b6b] leading-relaxed line-clamp-3">
                 {featured.resumo}
               </p>
-              <div className="mt-4 flex items-center gap-1.5 text-sm font-semibold text-[#1a5c2e]">
-                Ler mais <ArrowRight className="w-4 h-4" />
+              <div className="mt-4 flex items-center gap-1.5 text-sm lg:text-base font-semibold text-[#1a5c2e]">
+                Ler mais <ArrowRight className="w-4 h-4 lg:w-5 lg:h-5" />
               </div>
             </CardContent>
           </Card>
@@ -162,19 +162,19 @@ export default function NoticiasSection() {
                     </div>
                   )}
                 </div>
-                <CardContent className="p-4 flex-1 flex flex-col justify-center">
-                  <div className="flex items-center gap-1.5 text-xs text-[#6b6b6b] mb-1.5">
-                    <Calendar className="w-3 h-3" />
+                <CardContent className="p-4 lg:p-5 flex-1 flex flex-col justify-center">
+                  <div className="flex items-center gap-1.5 text-xs lg:text-sm text-[#6b6b6b] mb-1.5">
+                    <Calendar className="w-3 h-3 lg:w-3.5 lg:h-3.5" />
                     <span>{formatDate(noticia.dataPublicacao)}</span>
                   </div>
-                  <h3 className="text-sm font-bold text-[#1a1a1a] mb-1 group-hover:text-[#1a5c2e] transition-colors line-clamp-2">
+                  <h3 className="text-sm lg:text-base font-bold text-[#1a1a1a] mb-1 group-hover:text-[#1a5c2e] transition-colors line-clamp-2">
                     {noticia.titulo}
                   </h3>
-                  <p className="text-xs text-[#6b6b6b] leading-relaxed line-clamp-2">
+                  <p className="text-xs lg:text-sm text-[#6b6b6b] leading-relaxed line-clamp-2">
                     {noticia.resumo}
                   </p>
-                  <div className="mt-2 flex items-center gap-1 text-xs font-semibold text-[#1a5c2e]">
-                    Ler mais <ArrowRight className="w-3 h-3" />
+                  <div className="mt-2 flex items-center gap-1 text-xs lg:text-sm font-semibold text-[#1a5c2e]">
+                    Ler mais <ArrowRight className="w-3 h-3 lg:w-4 lg:h-4" />
                   </div>
                 </CardContent>
               </Card>
@@ -215,26 +215,26 @@ export default function NoticiasSection() {
             </div>
 
             {/* Modal content */}
-            <div className="p-6">
+            <div className="p-6 lg:p-8">
               <div className="flex items-center gap-2 mb-3">
-                <Calendar className="w-4 h-4 text-[#6b6b6b]" />
-                <span className="text-sm text-[#6b6b6b]">
+                <Calendar className="w-4 h-4 lg:w-5 lg:h-5 text-[#6b6b6b]" />
+                <span className="text-sm lg:text-base text-[#6b6b6b]">
                   {formatDate(selectedNoticia.dataPublicacao)}
                 </span>
                 {selectedNoticia.destaque && (
                   <Badge className="bg-[#d4a017] text-white text-xs">Destaque</Badge>
                 )}
               </div>
-              <h2 className="text-xl font-bold text-[#1a1a1a] mb-4">
+              <h2 className="text-xl lg:text-2xl font-bold text-[#1a1a1a] mb-4">
                 {selectedNoticia.titulo}
               </h2>
               {selectedNoticia.resumo && (
-                <p className="text-sm font-medium text-[#1a1a1a] mb-4 leading-relaxed bg-[#f5f5f0] p-4 rounded-lg">
+                <p className="text-sm lg:text-base font-medium text-[#1a1a1a] mb-4 leading-relaxed bg-[#f5f5f0] p-4 rounded-lg">
                   {selectedNoticia.resumo}
                 </p>
               )}
               {selectedNoticia.conteudo && (
-                <div className="text-sm text-[#6b6b6b] leading-relaxed whitespace-pre-line">
+                <div className="text-sm lg:text-base text-[#6b6b6b] leading-relaxed whitespace-pre-line">
                   {selectedNoticia.conteudo}
                 </div>
               )}

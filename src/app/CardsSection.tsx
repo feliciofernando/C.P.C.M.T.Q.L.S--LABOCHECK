@@ -65,12 +65,12 @@ function CardBox({ card, index }: { card: CardItem; index: number }) {
       </div>
 
       {/* Title */}
-      <h3 className="text-white font-bold text-sm sm:text-base mb-2 leading-snug group-hover:text-[#d4a017] transition-colors duration-300">
+      <h3 className="text-white font-bold text-sm sm:text-base lg:text-lg mb-2 leading-snug group-hover:text-[#d4a017] transition-colors duration-300">
         {card.titulo}
       </h3>
 
       {/* Description */}
-      <p className="text-white/70 text-xs sm:text-sm leading-relaxed line-clamp-3 group-hover:text-white/90 transition-colors duration-300">
+      <p className="text-white/70 text-xs sm:text-sm lg:text-base leading-relaxed line-clamp-3 group-hover:text-white/90 transition-colors duration-300">
         {card.descricao}
       </p>
 
@@ -167,12 +167,12 @@ export default function CardsSection() {
             <span className="block w-16 h-[1px] bg-gradient-to-l from-transparent to-[#d4a017]/70" />
           </div>
 
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 drop-shadow-lg">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-white mb-3 drop-shadow-lg">
             {section.titulo || 'Explore Nosso Conselho'}
           </h2>
 
           {section.subtitulo && (
-            <p className="text-white/70 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+            <p className="text-white/70 text-sm sm:text-base lg:text-lg max-w-2xl mx-auto leading-relaxed">
               {section.subtitulo}
             </p>
           )}

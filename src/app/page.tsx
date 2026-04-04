@@ -37,19 +37,19 @@ function PublicPage() {
 
       {/* Info Cards */}
       <section id="sobre" className="max-w-6xl mx-auto px-4 -mt-6 relative z-10">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6">
           <InfoCard
-            icon={<Phone className="w-5 h-5" />}
+            icon={<Phone className="w-5 h-5 lg:w-6 lg:h-6" />}
             title="Contactos"
             lines={['941-000-517', '924-591-350', 'WhatsApp: 941-000-517']}
           />
           <InfoCard
-            icon={<MapPin className="w-5 h-5" />}
+            icon={<MapPin className="w-5 h-5 lg:w-6 lg:h-6" />}
             title="Localizacao"
             lines={['Lunda Sul', 'Cassengo, Bairro Social da Juventude', '1o Andar, Centro Comercial do Emporio']}
           />
           <InfoCard
-            icon={<Clock className="w-5 h-5" />}
+            icon={<Clock className="w-5 h-5 lg:w-6 lg:h-6" />}
             title="Horario de Atendimento"
             lines={['Segunda a Sexta', '08:00 - 16:00', 'Decreto Presidencial No 245/15']}
           />
@@ -60,15 +60,15 @@ function PublicPage() {
       <ServicosSection />
 
       {/* Consultar Section */}
-      <section id="consultar" className="max-w-4xl mx-auto px-4 py-12">
+      <section id="consultar" className="max-w-4xl mx-auto px-4 py-12 lg:py-16">
         <Card className="border-[#d1d1cc] shadow-md">
-          <CardHeader className="bg-[#1a5c2e] text-white py-5 px-6">
-            <CardTitle className="text-lg flex items-center gap-2 justify-center">
-              <Search className="w-5 h-5" />
+          <CardHeader className="bg-[#1a5c2e] text-white py-5 px-6 lg:py-6">
+            <CardTitle className="text-lg lg:text-xl flex items-center gap-2 justify-center">
+              <Search className="w-5 h-5 lg:w-6 lg:h-6" />
               Consultar a Minha Ficha
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-6">
+          <CardContent className="p-6 lg:p-8">
             <PainelConsultar autoSearch={consultaBI} />
           </CardContent>
         </Card>
@@ -82,19 +82,19 @@ function PublicPage() {
 
       {/* Public Footer */}
       <footer id="contactos" className="bg-[#0f3d1d] text-white mt-auto">
-        <div className="max-w-6xl mx-auto px-4 py-6 text-center">
-          <p className="font-semibold text-sm">C.P.C.M.T.Q.L.S</p>
-          <p className="opacity-80 text-xs mt-1">
+        <div className="max-w-6xl mx-auto px-4 py-6 lg:py-8 text-center">
+          <p className="font-semibold text-sm lg:text-base">C.P.C.M.T.Q.L.S</p>
+          <p className="opacity-80 text-xs lg:text-sm mt-1">
             Conselho Provincial dos Condutores de Motociclos, Triciclos e Quadriciclos da Lunda Sul
           </p>
           <Separator className="bg-white/20 my-3 max-w-xs mx-auto" />
-          <p className="opacity-70 text-xs">
+          <p className="opacity-70 text-xs lg:text-sm">
             Contactos: 941-000-517 / 924-591-350 | WhatsApp: 941-000-517
           </p>
-          <p className="opacity-60 text-xs mt-1">
+          <p className="opacity-60 text-xs lg:text-sm mt-1">
             Lunda Sul (Cassengo, Bairro Social da Juventude, 1o Andar do Centro Comercial do Emporio, vulgo Janota)
           </p>
-          <p className="opacity-50 text-xs mt-2">
+          <p className="opacity-50 text-xs lg:text-sm mt-2">
             Condutores organizados, transito mais seguro | Decreto Presidencial No 245/15
           </p>
         </div>
@@ -117,13 +117,13 @@ function InfoCard({
 }) {
   return (
     <Card className="border-[#d1d1cc] shadow-md bg-white">
-      <CardContent className="p-5 text-center">
-        <div className="w-10 h-10 bg-[#1a5c2e]/10 rounded-full flex items-center justify-center mx-auto mb-3 text-[#1a5c2e]">
+      <CardContent className="p-5 lg:p-6 text-center">
+        <div className="w-10 h-10 lg:w-12 lg:h-12 bg-[#1a5c2e]/10 rounded-full flex items-center justify-center mx-auto mb-3 text-[#1a5c2e]">
           {icon}
         </div>
-        <h3 className="font-bold text-sm text-[#1a1a1a] mb-2">{title}</h3>
+        <h3 className="font-bold text-sm lg:text-lg text-[#1a1a1a] mb-2">{title}</h3>
         {lines.map((line, i) => (
-          <p key={i} className="text-xs text-[#6b6b6b] leading-relaxed">
+          <p key={i} className="text-xs lg:text-sm text-[#6b6b6b] leading-relaxed">
             {line}
           </p>
         ))}
