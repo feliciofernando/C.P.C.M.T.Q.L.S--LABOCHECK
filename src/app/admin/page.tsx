@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState, useCallback, useRef } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -302,87 +302,6 @@ function AdminDashboard() {
       {/* Admin Content */}
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="w-full grid grid-cols-4 sm:grid-cols-9 mb-6 bg-white border border-[#d1d1cc] h-auto p-1">
-            <TabsTrigger
-              value="slides"
-              className="text-xs sm:text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
-            >
-              <Play className="w-4 h-4 mr-1 hidden sm:inline" />
-              <span className="sm:hidden"><Play className="w-4 h-4" /></span>
-              <span className="hidden sm:inline">Slides</span>
-            </TabsTrigger>
-            <TabsTrigger
-              value="inscrever"
-              className="text-xs sm:text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
-            >
-              <UserPlus className="w-4 h-4 mr-1 hidden sm:inline" />
-              <span className="sm:hidden"><UserPlus className="w-4 h-4" /></span>
-              <span className="hidden sm:inline">Inscrever</span>
-            </TabsTrigger>
-            <TabsTrigger
-              value="visualizar"
-              className="text-xs sm:text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
-            >
-              <FileText className="w-4 h-4 mr-1 hidden sm:inline" />
-              <span className="sm:hidden"><FileText className="w-4 h-4" /></span>
-              <span className="hidden sm:inline">Base Dados</span>
-            </TabsTrigger>
-
-            <TabsTrigger
-              value="alertas"
-              className="text-xs sm:text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none relative"
-            >
-              <Bell className="w-4 h-4 mr-1 hidden sm:inline" />
-              <span className="sm:hidden"><Bell className="w-4 h-4" /></span>
-              <span className="hidden sm:inline">Alertas</span>
-              {alertCount.PENDENTE > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                  {alertCount.PENDENTE > 99 ? '99+' : alertCount.PENDENTE}
-                </span>
-              )}
-            </TabsTrigger>
-            <TabsTrigger
-              value="consultar"
-              className="text-xs sm:text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
-            >
-              <Search className="w-4 h-4 mr-1 hidden sm:inline" />
-              <span className="sm:hidden"><Search className="w-4 h-4" /></span>
-              <span className="hidden sm:inline">Consultar</span>
-            </TabsTrigger>
-            <TabsTrigger
-              value="noticias"
-              className="text-xs sm:text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
-            >
-              <Newspaper className="w-4 h-4 mr-1 hidden sm:inline" />
-              <span className="sm:hidden"><Newspaper className="w-4 h-4" /></span>
-              <span className="hidden sm:inline">Noticias</span>
-            </TabsTrigger>
-            <TabsTrigger
-              value="servicos"
-              className="text-xs sm:text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
-            >
-              <Briefcase className="w-4 h-4 mr-1 hidden sm:inline" />
-              <span className="sm:hidden"><Briefcase className="w-4 h-4" /></span>
-              <span className="hidden sm:inline">Servicos</span>
-            </TabsTrigger>
-            <TabsTrigger
-              value="cards"
-              className="text-xs sm:text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
-            >
-              <LayoutGrid className="w-4 h-4 mr-1 hidden sm:inline" />
-              <span className="sm:hidden"><LayoutGrid className="w-4 h-4" /></span>
-              <span className="hidden sm:inline">Cards</span>
-            </TabsTrigger>
-            <TabsTrigger
-              value="configuracoes"
-              className="text-xs sm:text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
-            >
-              <Settings className="w-4 h-4 mr-1 hidden sm:inline" />
-              <span className="sm:hidden"><Settings className="w-4 h-4" /></span>
-              <span className="hidden sm:inline">Config</span>
-            </TabsTrigger>
-          </TabsList>
-
           <TabsContent value="slides">
             <PainelHeroSlides />
           </TabsContent>

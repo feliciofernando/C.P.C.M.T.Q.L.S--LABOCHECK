@@ -78,32 +78,32 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
 
   // ── GREEN HEADER BAR ──
   doc.setFillColor(GREEN);
-  doc.rect(0, 0, W, 12, 'F');
+  doc.rect(0, 0, W, 17, 'F');
   doc.setDrawColor(GOLD);
   doc.setLineWidth(0.5);
-  doc.line(0, 12, W, 12);
+  doc.line(0, 17, W, 17);
 
   // Header text
   doc.setTextColor(GOLD);
-  doc.setFontSize(12);
+  doc.setFontSize(15);
   doc.setFont('helvetica', 'bold');
-  doc.text('C.P.C.M.T.Q.L.S', W / 2, 6.5, { align: 'center' });
+  doc.text('C.P.C.M.T.Q.L.S', W / 2, 7, { align: 'center' });
 
-  doc.setFontSize(5.5);
+  doc.setFontSize(8);
   doc.setTextColor(WHITE);
-  doc.text('Conselho Provincial dos Condutores de Motociclos, Triciclos e Quadriciclos da Lunda Sul', W / 2, 10, { align: 'center' });
+  doc.text('Conselho Provincial dos Condutores de Motociclos, Triciclos e Quadriciclos da Lunda Sul', W / 2, 13.5, { align: 'center' });
 
   // ── TITLE ──
-  y = 22;
+  y = 27;
   doc.setTextColor(GREEN);
-  doc.setFontSize(13);
+  doc.setFontSize(14);
   doc.setFont('helvetica', 'bold');
   doc.text('FICHA DE REGISTO DO CONDUTOR', W / 2, y, { align: 'center' });
-  y += 3;
+  y += 4;
   doc.setDrawColor(GREEN);
   doc.setLineWidth(0.3);
   doc.line(ML, y, MR, y);
-  y += 6;
+  y += 7;
 
   // ── SECTION 1: DADOS PESSOAIS ──
   y = sectionHeader(doc, y, '1', 'DADOS PESSOAIS');
@@ -130,7 +130,7 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
 
   const tipo = str(c.tipoVeiculo);
   doc.setTextColor(DARK);
-  doc.setFontSize(8.5);
+  doc.setFontSize(9.5);
   doc.setFont('helvetica', 'bold');
   doc.text('Tipo de Veiculo:', ML, y);
   doc.setFont('helvetica', 'normal');
@@ -138,7 +138,7 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
   const chkT = tipo === 'Triciclo' ? '[X]' : '[ ]';
   const chkQ = tipo === 'Quadriciclo' ? '[X]' : '[ ]';
   doc.text(`${chkM} Motociclo  ${chkT} Triciclo  ${chkQ} Quadriciclo`, ML + 42, y);
-  y += 5;
+  y += 5.5;
 
   const rows2: [string, unknown][] = [
     ['Marca do Veiculo', c.marcaVeiculo],
@@ -164,10 +164,10 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
   y = sectionHeader(doc, y, '4', 'DOCUMENTACAO E EQUIPAMENTOS');
 
   doc.setTextColor(GRAY);
-  doc.setFontSize(7);
+  doc.setFontSize(8);
   doc.setFont('helvetica', 'italic');
   doc.text('Assinale os documentos e equipamentos que possui:', ML, y);
-  y += 4;
+  y += 5;
 
   const docs: [string, string][] = [
     ['temBI', 'Bilhete de Identidade'],
@@ -179,7 +179,7 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
   ];
 
   doc.setTextColor(DARK);
-  doc.setFontSize(8.5);
+  doc.setFontSize(9.5);
   doc.setFont('helvetica', 'normal');
   for (let i = 0; i < docs.length; i += 2) {
     const [key1, label1] = docs[i];
@@ -190,7 +190,7 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
       const checked2 = c[key2] ? 'X' : ' ';
       doc.text(`[${checked2}]  ${t(label2)}`, ML + CW / 2 + 4, y);
     }
-    y += 4;
+    y += 5;
   }
   y += 2;
 
@@ -198,15 +198,15 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
   y = sectionHeader(doc, y, '5', 'FORMACAO');
 
   doc.setTextColor(DARK);
-  doc.setFontSize(8.5);
+  doc.setFontSize(9.5);
   doc.setFont('helvetica', 'normal');
   doc.text('Ja participou em formacao sobre seguranca rodoviaria?', ML, y);
-  y += 4;
+  y += 5;
 
   const formSim = c.participouFormacao ? 'X' : ' ';
   const formNao = !c.participouFormacao ? 'X' : ' ';
   doc.text(`[${formSim}] Sim            [${formNao}] Nao`, ML + 4, y);
-  y += 5;
+  y += 6;
 
   if (c.participouFormacao && c.instituicaoFormacao) {
     y = fieldRow(doc, y, 'Instituicao', String(c.instituicaoFormacao));
@@ -216,7 +216,7 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
   // ── SECTION 6: DECLARACAO ──
   y = sectionHeader(doc, y, '6', 'DECLARACAO');
 
-  const declBoxH = 18;
+  const declBoxH = 23;
   doc.setFillColor(LGRAY);
   doc.setDrawColor(DGRAY);
   doc.setLineWidth(0.2);
@@ -229,14 +229,14 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
     'seguranca rodoviaria.',
   ];
   doc.setTextColor(DARK);
-  doc.setFontSize(7.5);
+  doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
-  let dy = y + 4;
+  let dy = y + 5;
   for (const dl of declLines) {
     doc.text(t(dl), ML + 3, dy);
-    dy += 3.5;
+    dy += 4.5;
   }
-  y += declBoxH + 4;
+  y += declBoxH + 5;
 
   // ── SECTION 7: DADOS DA LICENCA ──
   y = sectionHeader(doc, y, '7', 'DADOS DA LICENCA');
@@ -254,71 +254,71 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
   for (let i = 0; i < rowsLicenca.length; i += 2) {
     const [label1, value1] = rowsLicenca[i];
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(8);
+    doc.setFontSize(9.5);
     doc.setTextColor(DARK);
     doc.text(`${t(label1)}:`, ML, y);
     doc.setFont('helvetica', 'normal');
-    doc.text(t(truncate(value1, 24)), ML + 26, y);
+    doc.text(t(truncate(value1, 22)), ML + 26, y);
 
     if (i + 1 < rowsLicenca.length) {
       const [label2, value2] = rowsLicenca[i + 1];
       doc.setFont('helvetica', 'bold');
       doc.text(`${t(label2)}:`, ML + CW / 2, y);
       doc.setFont('helvetica', 'normal');
-      doc.text(t(truncate(value2, 24)), ML + CW / 2 + 26, y);
+      doc.text(t(truncate(value2, 22)), ML + CW / 2 + 26, y);
     }
-    y += 4.5;
+    y += 5.5;
   }
-  y += 4;
+  y += 5;
 
   // ── SIGNATURES ──
   doc.setDrawColor(DGRAY);
   doc.setLineWidth(0.2);
   doc.line(ML, y, MR, y);
-  y += 8;
+  y += 10;
 
   const sigLeftX = ML + CW / 4;
   const sigRightX = ML + CW * 3 / 4;
 
   doc.setTextColor(DARK);
-  doc.setFontSize(8);
+  doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
   doc.text('Data: ____/____/________', sigLeftX, y, { align: 'center' });
-  y += 4;
+  y += 5;
   doc.setTextColor(GRAY);
-  doc.setFontSize(7);
+  doc.setFontSize(8);
   doc.setFont('helvetica', 'italic');
   doc.text('Assinatura do Condutor', sigLeftX, y, { align: 'center' });
-  y += 1.5;
+  y += 2;
   doc.setDrawColor(DARK);
   doc.setLineWidth(0.3);
   doc.line(sigLeftX - 25, y, sigLeftX + 25, y);
 
-  const sigBaseY = y - 7;
+  const sigBaseY = y - 9;
   doc.setTextColor(DARK);
-  doc.setFontSize(8);
+  doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
   const regDate = c.dataRegisto
     ? new Date(String(c.dataRegisto)).toLocaleDateString('pt-AO')
     : '-';
   doc.text(`Data de Registo: ${t(regDate)}`, sigRightX, sigBaseY, { align: 'center' });
   doc.setTextColor(GRAY);
-  doc.setFontSize(7);
+  doc.setFontSize(8);
   doc.setFont('helvetica', 'italic');
-  doc.text('O Responsavel pelo Registo', sigRightX, sigBaseY + 4, { align: 'center' });
+  doc.text('O Responsavel pelo Registo', sigRightX, sigBaseY + 5, { align: 'center' });
   doc.setDrawColor(DARK);
   doc.setLineWidth(0.3);
-  doc.line(sigRightX - 25, sigBaseY + 5.5, sigRightX + 25, sigBaseY + 5.5);
+  doc.line(sigRightX - 25, sigBaseY + 6.5, sigRightX + 25, sigBaseY + 6.5);
 
   // ── FOOTER ──
   doc.setFillColor(GREEN);
-  doc.rect(0, H - 10, W, 10, 'F');
+  doc.rect(0, H - 11, W, 11, 'F');
   doc.setTextColor(WHITE);
-  doc.setFontSize(7);
+  doc.setFontSize(8);
   doc.setFont('helvetica', 'normal');
-  doc.text('Condutores organizados, transito mais seguro', W / 2, H - 6, { align: 'center' });
+  doc.text('Condutores organizados, transito mais seguro', W / 2, H - 7, { align: 'center' });
   doc.setTextColor(GOLD);
-  doc.setFontSize(5.5);
+  doc.setFontSize(6.5);
   doc.text('C.P.C.M.T.Q.L.S | Contactos: 941-000-517 / 924-591-350', W / 2, H - 3, { align: 'center' });
 
   // ── METADATA ──
@@ -335,23 +335,23 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
 
 function sectionHeader(doc: jsPDF, y: number, num: string, title: string): number {
   doc.setTextColor(GREEN);
-  doc.setFontSize(10);
+  doc.setFontSize(11);
   doc.setFont('helvetica', 'bold');
   doc.text(`${num}. ${t(title)}`, ML, y);
-  y += 1.5;
+  y += 2;
   doc.setDrawColor(DGRAY);
   doc.setLineWidth(0.2);
   doc.line(ML, y, MR, y);
-  y += 3;
+  y += 3.5;
   return y;
 }
 
 function fieldRow(doc: jsPDF, y: number, label: string, value: string, maxLen = 36): number {
   doc.setTextColor(DARK);
-  doc.setFontSize(8.5);
+  doc.setFontSize(9.5);
   doc.setFont('helvetica', 'bold');
   doc.text(`${t(label)}:`, ML, y);
   doc.setFont('helvetica', 'normal');
   doc.text(t(truncate(str(value), maxLen)), ML + 48, y);
-  return y + 4.2;
+  return y + 5;
 }
