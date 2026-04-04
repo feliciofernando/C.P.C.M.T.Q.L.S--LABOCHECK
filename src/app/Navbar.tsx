@@ -133,28 +133,41 @@ function DropdownItems({ items }: { items: SubMenuItem[] }) {
 }
 
 /* ==============================
-   DESKTOP DROPDOWN WRAPPER
+   DESKTOP DROPDOWN WRAPPER (click-to-open)
    ============================== */
 function NavDropdown({ item }: { item: MenuItem }) {
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
-  const show = () => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setVisible(true);
-  };
-  const hide = () => {
-    timeoutRef.current = setTimeout(() => setVisible(false), 200);
-  };
+  // Close when clicking outside
+  useEffect(() => {
+    if (!visible) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setVisible(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [visible]);
+
+  // Close on Escape key
+  useEffect(() => {
+    if (!visible) return;
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setVisible(false);
+    };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [visible]);
 
   return (
-    <div
-      className="relative"
-      onMouseEnter={show}
-      onMouseLeave={hide}
-    >
-      {/* Trigger button */}
-      <button className="flex items-center gap-1.5 px-3 py-2 text-[13px] font-semibold text-white/90 hover:text-white rounded-md transition-colors hover:bg-white/10">
+    <div className="relative" ref={ref}>
+      {/* Trigger button - click only */}
+      <button
+        onClick={() => setVisible(!visible)}
+        className="flex items-center gap-1.5 px-3 py-2 text-[13px] font-semibold text-white/90 hover:text-white rounded-md transition-colors hover:bg-white/10"
+      >
         {item.icon}
         <span>{item.label}</span>
         <ChevronDown
