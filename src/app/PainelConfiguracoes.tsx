@@ -3,34 +3,48 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import {
-  Loader2, Upload, Image as ImageIcon, Trash2, CheckCircle2, Info,
-  Save
+  Loader2, ImageIcon, Upload, Pencil, Info, Save,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
+interface SectionSettings {
+  titulo: string;
+  subtitulo: string;
+  imagem_fundo_base64: string;
+  imagem_fundo_tipo: string;
+}
+
 export default function PainelConfiguracoes() {
-  const [settings, setSettings] = useState<Record<string, string>>({});
+  const [section, setSection] = useState<SectionSettings>({
+    titulo: '',
+    subtitulo: '',
+    imagem_fundo_base64: '',
+    imagem_fundo_tipo: '',
+  });
+  const [sectionForm, setSectionForm] = useState<SectionSettings>({
+    titulo: '',
+    subtitulo: '',
+    imagem_fundo_base64: '',
+    imagem_fundo_tipo: '',
+  });
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [preview, setPreview] = useState<string | null>(null);
+  const [editingSection, setEditingSection] = useState(false);
+  const [savingSection, setSavingSection] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const loadSettings = useCallback(async () => {
+
+  const loadSection = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/site-settings');
+      const res = await fetch('/api/cards');
       if (!res.ok) throw new Error('Erro ao carregar');
       const data = await res.json();
-      setSettings(data);
-      if (data.hero_imagem_base64) {
-        setPreview(data.hero_imagem_tipo === 'image/jpeg'
-          ? `data:image/jpeg;base64,${data.hero_imagem_base64}`
-          : `data:image/png;base64,${data.hero_imagem_base64}`);
-      } else {
-        setPreview(null);
-      }
+      const sec = data.section || {};
+      setSection(sec);
+      setSectionForm(sec);
     } catch {
       toast.error('Erro ao carregar configuracoes');
     } finally {
@@ -39,63 +53,51 @@ export default function PainelConfiguracoes() {
   }, []);
 
   useEffect(() => {
-    loadSettings();
-  }, [loadSettings]);
+    loadSection();
+  }, [loadSection]);
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!file.type.startsWith('image/')) {
-      toast.error('Por favor seleccione um ficheiro de imagem (PNG ou JPG)');
-      return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error('A imagem nao pode exceder 5MB');
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error('A imagem deve ter menos de 2MB');
       return;
     }
 
     const reader = new FileReader();
     reader.onload = () => {
-      const dataUrl = reader.result as string;
-      setPreview(dataUrl);
-      const base64 = dataUrl.split(',')[1];
-      setSettings(prev => ({
-        ...prev,
-        hero_imagem_base64: base64 || '',
-        hero_imagem_tipo: file.type,
-        hero_imagem_nome: file.name,
-      }));
+      const base64 = (reader.result as string).split(',')[1];
+      setSectionForm({
+        ...sectionForm,
+        imagem_fundo_base64: base64,
+        imagem_fundo_tipo: file.type,
+      });
     };
     reader.readAsDataURL(file);
     e.target.value = '';
   };
 
-  const handleRemoveImage = () => {
-    setPreview(null);
-    setSettings(prev => ({
-      ...prev,
-      hero_imagem_base64: '',
-      hero_imagem_tipo: 'image/png',
-      hero_imagem_nome: '',
-    }));
-  };
-
-  const handleSave = async () => {
-    setSaving(true);
+  const handleSaveSection = async () => {
+    setSavingSection(true);
     try {
-      const res = await fetch('/api/site-settings', {
+      const res = await fetch('/api/cards', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(settings),
+        body: JSON.stringify(sectionForm),
       });
-      if (!res.ok) throw new Error('Erro ao guardar');
-      toast.success('Configuracoes guardadas com sucesso!');
+      if (res.ok) {
+        toast.success('Seccao actualizada com sucesso');
+        setEditingSection(false);
+        loadSection();
+      } else {
+        const data = await res.json();
+        toast.error(data.error || 'Erro ao actualizar seccao');
+      }
     } catch {
-      toast.error('Erro ao guardar configuracoes');
+      toast.error('Erro de ligacao ao servidor');
     } finally {
-      setSaving(false);
+      setSavingSection(false);
     }
   };
 
@@ -109,108 +111,166 @@ export default function PainelConfiguracoes() {
 
   return (
     <div className="space-y-6">
-      {/* Hero Image Section */}
+      {/* Cards Section Settings */}
       <Card className="border-[#d1d1cc]">
         <CardHeader className="bg-[#1a5c2e] text-white py-4 px-6">
-          <CardTitle className="text-lg flex items-center gap-2">
-            <ImageIcon className="w-5 h-5" />
-            Imagem de Fundo do Hero
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-6 space-y-5">
-          <div className="space-y-3">
-            <Label className="text-sm font-medium text-[#1a1a1a]">Pre-visualizacao</Label>
-            <div className="relative w-full h-56 sm:h-72 rounded-lg overflow-hidden border-2 border-[#d1d1cc] bg-[#0f3d1d]">
-              {preview ? (
-                <>
-                  <img src={preview} alt="Preview Hero" className="w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-b from-[#0f3d1d]/55 via-[#1a5c2e]/45 to-[#0f3d1d]/65 pointer-events-none" />
-                </>
-              ) : (
-                <div className="flex flex-col items-center justify-center h-full text-white/70">
-                  <ImageIcon className="w-12 h-12 mb-2 opacity-40" />
-                  <p className="text-sm">Nenhuma imagem definida</p>
-                  <p className="text-xs opacity-60 mt-1">A imagem padrao sera usada</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {settings.hero_imagem_nome && (
-            <div className="flex items-center justify-between bg-[#f0f0eb] rounded-lg px-4 py-3 border border-[#d1d1cc]">
-              <div className="flex items-center gap-2 text-sm">
-                <CheckCircle2 className="w-4 h-4 text-[#1a5c2e]" />
-                <span className="font-medium text-[#1a1a1a]">{settings.hero_imagem_nome}</span>
-                <span className="text-[#6b6b6b] text-xs">
-                  ({(Math.round((settings.hero_imagem_base64?.length || 0) * 0.75 / 1024))} KB)
-                </span>
-              </div>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-lg flex items-center gap-2">
+              <ImageIcon className="w-5 h-5" />
+              Seccao de Cards
+            </CardTitle>
+            {!editingSection ? (
               <Button
-                variant="ghost"
+                onClick={() => setEditingSection(true)}
                 size="sm"
-                onClick={handleRemoveImage}
-                className="text-red-600 hover:text-red-700 hover:bg-red-50 h-8 gap-1"
+                variant="outline"
+                className="bg-white/10 text-white border-white/30 hover:bg-white/20"
               >
-                <Trash2 className="w-3.5 h-3.5" />
-                Remover
+                <Pencil className="w-4 h-4 mr-1.5" />
+                Editar Seccao
               </Button>
+            ) : (
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => {
+                    setEditingSection(false);
+                    setSectionForm(section);
+                  }}
+                  size="sm"
+                  variant="outline"
+                  className="bg-white/10 text-white border-white/30 hover:bg-white/20"
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  onClick={handleSaveSection}
+                  size="sm"
+                  disabled={savingSection}
+                  className="bg-white text-[#1a5c2e] hover:bg-gray-100"
+                >
+                  {savingSection && <Loader2 className="w-4 h-4 mr-1.5 animate-spin" />}
+                  Guardar
+                </Button>
+              </div>
+            )}
+          </div>
+        </CardHeader>
+        <CardContent className="p-6">
+          {/* Display Mode */}
+          {!editingSection && (
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                {section.imagem_fundo_base64 ? (
+                  <div className="relative w-24 h-16 rounded overflow-hidden border border-[#d1d1cc]">
+                    <img
+                      src={`data:${section.imagem_fundo_tipo};base64,${section.imagem_fundo_base64}`}
+                      alt="Imagem de fundo"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div className="w-24 h-16 rounded bg-[#f5f5f0] border border-[#d1d1cc] flex items-center justify-center">
+                    <ImageIcon className="w-5 h-5 text-[#d1d1cc]" />
+                  </div>
+                )}
+                <div>
+                  <p className="font-semibold text-sm text-[#1a1a1a]">{section.titulo || 'Sem titulo'}</p>
+                  <p className="text-xs text-[#6b6b6b]">{section.subtitulo || 'Sem subtitulo'}</p>
+                </div>
+              </div>
             </div>
           )}
 
-          <div>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/png,image/jpeg,image/jpg,image/webp"
-              onChange={handleFileSelect}
-              className="hidden"
-            />
-            <Button
-              variant="outline"
-              onClick={() => fileInputRef.current?.click()}
-              className="border-[#1a5c2e] text-[#1a5c2e] hover:bg-[#1a5c2e]/10 gap-2"
-            >
-              <Upload className="w-4 h-4" />
-              Selecionar Nova Imagem
-            </Button>
-          </div>
+          {/* Edit Mode */}
+          {editingSection && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="sec-titulo">Titulo da Seccao</Label>
+                  <Input
+                    id="sec-titulo"
+                    value={sectionForm.titulo}
+                    onChange={(e) => setSectionForm({ ...sectionForm, titulo: e.target.value })}
+                    placeholder="Ex: Explore Nosso Conselho"
+                    className="border-[#d1d1cc]"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="sec-subtitulo">Subtitulo</Label>
+                  <Input
+                    id="sec-subtitulo"
+                    value={sectionForm.subtitulo}
+                    onChange={(e) => setSectionForm({ ...sectionForm, subtitulo: e.target.value })}
+                    placeholder="Subtitulo opcional"
+                    className="border-[#d1d1cc]"
+                  />
+                </div>
+              </div>
 
-          <Separator />
+              <div className="space-y-2">
+                <Label>Imagem de Fundo</Label>
+                <div className="flex items-center gap-4">
+                  {sectionForm.imagem_fundo_base64 ? (
+                    <div className="relative w-32 h-20 rounded overflow-hidden border border-[#d1d1cc]">
+                      <img
+                        src={`data:${sectionForm.imagem_fundo_tipo};base64,${sectionForm.imagem_fundo_base64}`}
+                        alt="Imagem de fundo"
+                        className="w-full h-full object-cover"
+                      />
+                      <button
+                        onClick={() => setSectionForm({ ...sectionForm, imagem_fundo_base64: '', imagem_fundo_tipo: '' })}
+                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600"
+                      >
+                        x
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="w-32 h-20 rounded bg-[#f5f5f0] border-2 border-dashed border-[#d1d1cc] flex items-center justify-center">
+                      <ImageIcon className="w-5 h-5 text-[#d1d1cc]" />
+                    </div>
+                  )}
+                  <div>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleImageUpload}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="border-[#d1d1cc]"
+                    >
+                      <Upload className="w-4 h-4 mr-1.5" />
+                      Carregar Imagem
+                    </Button>
+                    <p className="text-xs text-[#6b6b6b] mt-1">Max: 2MB</p>
+                  </div>
+                </div>
+              </div>
 
-          <div className="bg-[#f8f8f5] rounded-lg p-4 border border-[#d1d1cc]">
-            <div className="flex items-start gap-2">
-              <Info className="w-4 h-4 text-[#1a5c2e] mt-0.5 flex-shrink-0" />
-              <div className="text-xs text-[#6b6b6b] space-y-1.5">
-                <p className="font-semibold text-[#1a1a1a]">Recomendacoes para a imagem:</p>
-                <ul className="list-disc list-inside space-y-0.5">
-                  <li><strong>Dimensao minima:</strong> 1920 x 600 pixels (ideal)</li>
-                  <li><strong>Formatos aceites:</strong> PNG, JPG, WebP</li>
-                  <li><strong>Tamanho maximo:</strong> 5 MB</li>
-                  <li><strong>Orientacao:</strong> Horizontal (paisagem)</li>
-                  <li><strong>Conteudo:</strong> Imagem institucional, paisagem urbana ou related a motociclos/transporte</li>
-                  <li><strong>Nota:</strong> A imagem sera coberta por um overlay verde semi-transparente</li>
-                </ul>
+              <Separator />
+
+              <div className="bg-[#f8f8f5] rounded-lg p-4 border border-[#d1d1cc]">
+                <div className="flex items-start gap-2">
+                  <Info className="w-4 h-4 text-[#1a5c2e] mt-0.5 flex-shrink-0" />
+                  <div className="text-xs text-[#6b6b6b] space-y-1.5">
+                    <p className="font-semibold text-[#1a1a1a]">Informacoes:</p>
+                    <ul className="list-disc list-inside space-y-0.5">
+                      <li>Os cards individuais sao geridos na aba &quot;Cards&quot; do menu</li>
+                      <li>A imagem de fundo sera usada como plano de fundo da seccao</li>
+                      <li>Formatos aceites: PNG, JPG, WebP (max 2MB)</li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </CardContent>
       </Card>
-
-      {/* Save button */}
-      <div className="flex justify-end">
-        <Button
-          onClick={handleSave}
-          disabled={saving}
-          className="bg-[#1a5c2e] hover:bg-[#0f3d1d] text-white px-8 gap-2"
-        >
-          {saving ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
-            <Save className="w-4 h-4" />
-          )}
-          {saving ? 'A guardar...' : 'Guardar Configuracoes'}
-        </Button>
-      </div>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -49,9 +49,7 @@ import {
   ArrowUp,
   ArrowDown,
   Loader2,
-  ImageIcon,
   LayoutGrid,
-  Upload,
 } from 'lucide-react';
 
 const AVAILABLE_ICONS = [
@@ -75,13 +73,6 @@ interface CardItem {
   activo: boolean;
 }
 
-interface SectionSettings {
-  titulo: string;
-  subtitulo: string;
-  imagem_fundo_base64: string;
-  imagem_fundo_tipo: string;
-}
-
 interface CardFormData {
   titulo: string;
   descricao: string;
@@ -102,12 +93,6 @@ const emptyCardForm: CardFormData = {
 
 export default function AdminCards() {
   const [cards, setCards] = useState<CardItem[]>([]);
-  const [section, setSection] = useState<SectionSettings>({
-    titulo: '',
-    subtitulo: '',
-    imagem_fundo_base64: '',
-    imagem_fundo_tipo: '',
-  });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -120,18 +105,6 @@ export default function AdminCards() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
 
-  // Section editing
-  const [editingSection, setEditingSection] = useState(false);
-  const [sectionForm, setSectionForm] = useState<SectionSettings>({
-    titulo: '',
-    subtitulo: '',
-    imagem_fundo_base64: '',
-    imagem_fundo_tipo: '',
-  });
-  const [savingSection, setSavingSection] = useState(false);
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
   const fetchCards = useCallback(async () => {
     setLoading(true);
     try {
@@ -139,8 +112,6 @@ export default function AdminCards() {
       if (res.ok) {
         const data = await res.json();
         setCards(data.cards || []);
-        setSection(data.section || {});
-        setSectionForm(data.section || {});
       } else {
         toast.error('Erro ao carregar cards');
       }
@@ -154,52 +125,6 @@ export default function AdminCards() {
   useEffect(() => {
     fetchCards();
   }, [fetchCards]);
-
-  // ---- Section Settings ----
-
-  const handleSaveSection = async () => {
-    setSavingSection(true);
-    try {
-      const res = await fetch('/api/cards', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(sectionForm),
-      });
-      if (res.ok) {
-        toast.success('Seccao actualizada com sucesso');
-        setEditingSection(false);
-        fetchCards();
-      } else {
-        const data = await res.json();
-        toast.error(data.error || 'Erro ao actualizar seccao');
-      }
-    } catch {
-      toast.error('Erro de ligacao ao servidor');
-    } finally {
-      setSavingSection(false);
-    }
-  };
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (file.size > 2 * 1024 * 1024) {
-      toast.error('A imagem deve ter menos de 2MB');
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      const base64 = (reader.result as string).split(',')[1];
-      setSectionForm({
-        ...sectionForm,
-        imagem_fundo_base64: base64,
-        imagem_fundo_tipo: file.type,
-      });
-    };
-    reader.readAsDataURL(file);
-  };
 
   // ---- Card CRUD ----
 
@@ -342,151 +267,6 @@ export default function AdminCards() {
 
   return (
     <div className="space-y-6">
-      {/* Section Settings */}
-      <Card className="border-[#d1d1cc] shadow-sm">
-        <CardHeader className="bg-[#1a5c2e] text-white py-4 px-6">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <ImageIcon className="w-5 h-5" />
-              Seccao de Cards
-            </CardTitle>
-            {!editingSection ? (
-              <Button
-                onClick={() => setEditingSection(true)}
-                size="sm"
-                variant="outline"
-                className="bg-white/10 text-white border-white/30 hover:bg-white/20"
-              >
-                <Pencil className="w-4 h-4 mr-1.5" />
-                Editar Seccao
-              </Button>
-            ) : (
-              <div className="flex gap-2">
-                <Button
-                  onClick={() => {
-                    setEditingSection(false);
-                    setSectionForm(section);
-                  }}
-                  size="sm"
-                  variant="outline"
-                  className="bg-white/10 text-white border-white/30 hover:bg-white/20"
-                >
-                  Cancelar
-                </Button>
-                <Button
-                  onClick={handleSaveSection}
-                  size="sm"
-                  disabled={savingSection}
-                  className="bg-white text-[#1a5c2e] hover:bg-gray-100"
-                >
-                  {savingSection && <Loader2 className="w-4 h-4 mr-1.5 animate-spin" />}
-                  Guardar
-                </Button>
-              </div>
-            )}
-          </div>
-        </CardHeader>
-        <CardContent className="p-6">
-          {/* Display Mode */}
-          {!editingSection && (
-            <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                {section.imagem_fundo_base64 ? (
-                  <div className="relative w-24 h-16 rounded overflow-hidden border border-[#d1d1cc]">
-                    <img
-                      src={`data:${section.imagem_fundo_tipo};base64,${section.imagem_fundo_base64}`}
-                      alt="Imagem de fundo"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ) : (
-                  <div className="w-24 h-16 rounded bg-[#f5f5f0] border border-[#d1d1cc] flex items-center justify-center">
-                    <ImageIcon className="w-5 h-5 text-[#d1d1cc]" />
-                  </div>
-                )}
-                <div>
-                  <p className="font-semibold text-sm text-[#1a1a1a]">{section.titulo || 'Sem titulo'}</p>
-                  <p className="text-xs text-[#6b6b6b]">{section.subtitulo || 'Sem subtitulo'}</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Edit Mode */}
-          {editingSection && (
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="sec-titulo">Titulo da Seccao</Label>
-                  <Input
-                    id="sec-titulo"
-                    value={sectionForm.titulo}
-                    onChange={(e) => setSectionForm({ ...sectionForm, titulo: e.target.value })}
-                    placeholder="Ex: Explore Nosso Conselho"
-                    className="border-[#d1d1cc]"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="sec-subtitulo">Subtitulo</Label>
-                  <Input
-                    id="sec-subtitulo"
-                    value={sectionForm.subtitulo}
-                    onChange={(e) => setSectionForm({ ...sectionForm, subtitulo: e.target.value })}
-                    placeholder="Subtitulo opcional"
-                    className="border-[#d1d1cc]"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Imagem de Fundo</Label>
-                <div className="flex items-center gap-4">
-                  {sectionForm.imagem_fundo_base64 ? (
-                    <div className="relative w-32 h-20 rounded overflow-hidden border border-[#d1d1cc]">
-                      <img
-                        src={`data:${sectionForm.imagem_fundo_tipo};base64,${sectionForm.imagem_fundo_base64}`}
-                        alt="Imagem de fundo"
-                        className="w-full h-full object-cover"
-                      />
-                      <button
-                        onClick={() => setSectionForm({ ...sectionForm, imagem_fundo_base64: '', imagem_fundo_tipo: '' })}
-                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600"
-                      >
-                        x
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="w-32 h-20 rounded bg-[#f5f5f0] border-2 border-dashed border-[#d1d1cc] flex items-center justify-center">
-                      <ImageIcon className="w-5 h-5 text-[#d1d1cc]" />
-                    </div>
-                  )}
-                  <div>
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handleImageUpload}
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => fileInputRef.current?.click()}
-                      className="border-[#d1d1cc]"
-                    >
-                      <Upload className="w-4 h-4 mr-1.5" />
-                      Carregar Imagem
-                    </Button>
-                    <p className="text-xs text-[#6b6b6b] mt-1">Max: 2MB</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
       {/* Cards List */}
       <Card className="border-[#d1d1cc] shadow-sm">
         <CardHeader className="bg-[#1a5c2e] text-white py-4 px-6">
