@@ -19,7 +19,6 @@ import {
   Search,
   UserPlus,
   FileText,
-  CreditCard,
   Bell,
   Settings,
   Newspaper,
@@ -36,7 +35,6 @@ import { Label } from '@/components/ui/label';
 import PainelConsultar from '../PainelConsultar';
 import FormularioRegisto from '../FormularioRegisto';
 import PainelVisualizar from '../PainelVisualizar';
-import LicencaPVC from '../LicencaPVC';
 import PainelAlertas from '../PainelAlertas';
 import PainelConfiguracoes from '../PainelConfiguracoes';
 import PainelNoticias from '../PainelNoticias';
@@ -291,7 +289,6 @@ function AdminDashboard() {
             <NavButton active={activeTab === 'slides'} onClick={() => setActiveTab('slides')} icon={<Play className="w-4 h-4" />} label="Slides" />
             <NavButton active={activeTab === 'inscrever'} onClick={() => setActiveTab('inscrever')} icon={<UserPlus className="w-4 h-4" />} label="Inscrever" />
             <NavButton active={activeTab === 'visualizar'} onClick={() => setActiveTab('visualizar')} icon={<FileText className="w-4 h-4" />} label="Base de Dados" />
-            <NavButton active={activeTab === 'licenca'} onClick={() => setActiveTab('licenca')} icon={<CreditCard className="w-4 h-4" />} label="Licenca" />
             <NavButton active={activeTab === 'alertas'} onClick={() => setActiveTab('alertas')} icon={<Bell className="w-4 h-4" />} label="Alertas" badge={alertCount.PENDENTE > 0 ? alertCount.PENDENTE : undefined} />
             <NavButton active={activeTab === 'consultar'} onClick={() => setActiveTab('consultar')} icon={<Search className="w-4 h-4" />} label="Consultar" />
             <NavButton active={activeTab === 'noticias'} onClick={() => setActiveTab('noticias')} icon={<Newspaper className="w-4 h-4" />} label="Noticias" />
@@ -305,7 +302,7 @@ function AdminDashboard() {
       {/* Admin Content */}
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="w-full grid grid-cols-5 sm:grid-cols-10 mb-6 bg-white border border-[#d1d1cc] h-auto p-1">
+          <TabsList className="w-full grid grid-cols-4 sm:grid-cols-9 mb-6 bg-white border border-[#d1d1cc] h-auto p-1">
             <TabsTrigger
               value="slides"
               className="text-xs sm:text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
@@ -330,14 +327,7 @@ function AdminDashboard() {
               <span className="sm:hidden"><FileText className="w-4 h-4" /></span>
               <span className="hidden sm:inline">Base Dados</span>
             </TabsTrigger>
-            <TabsTrigger
-              value="licenca"
-              className="text-xs sm:text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none"
-            >
-              <CreditCard className="w-4 h-4 mr-1 hidden sm:inline" />
-              <span className="sm:hidden"><CreditCard className="w-4 h-4" /></span>
-              <span className="hidden sm:inline">Licenca</span>
-            </TabsTrigger>
+
             <TabsTrigger
               value="alertas"
               className="text-xs sm:text-sm py-2.5 data-[state=active]:bg-[#1a5c2e] data-[state=active]:text-white data-[state=active]:shadow-none relative"
@@ -429,17 +419,6 @@ function AdminDashboard() {
               </CardHeader>
               <CardContent className="p-6">
                 <PainelAlertas onUpdate={handleAlertCountUpdate} />
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="licenca">
-            <Card className="border-[#d1d1cc] shadow-sm">
-              <CardHeader className="bg-[#1a5c2e] text-white py-4 px-6">
-                <CardTitle className="text-lg">Licenca Profissional - Cartao PVC</CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <LicencaPVC />
               </CardContent>
             </Card>
           </TabsContent>
