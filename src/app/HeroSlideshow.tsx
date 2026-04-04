@@ -216,9 +216,6 @@ export default function HeroSlideshow() {
           ))}
         </div>
       )}
-
-      {/* Gold accent line at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#d4a017] to-transparent opacity-60 z-20" />
     </section>
   );
 }
