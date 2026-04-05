@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const SPLASH_MIN_DURATION = 2200;
 const SPLASH_MAX_DURATION = 3000;
@@ -13,27 +13,27 @@ export default function SplashScreen({ children }: { children: React.ReactNode }
     return sessionStorage.getItem(SESSION_KEY) === 'true' ? 'done' : 'visible';
   });
 
-  const timersRef = useRef<NodeJS.Timeout[]>([]);
+  /* ---- run once on mount only ---- */
+  const initRef = useRef(false);
 
-  const cleanup = useCallback(() => {
-    timersRef.current.forEach(clearTimeout);
-    timersRef.current = [];
-  }, []);
-
-  /* ---- on mount, schedule splash dismissal ---- */
   useEffect(() => {
+    if (initRef.current) return;
+    initRef.current = true;
+
     if (phase !== 'visible') return;
+
+    const timers: ReturnType<typeof setTimeout>[] = [];
 
     const onReady = () => {
       const elapsed = performance.now() - (window as any).__splashStart;
       const remaining = Math.max(0, SPLASH_MIN_DURATION - elapsed);
 
       /* fade out after remaining time */
-      timersRef.current.push(
+      timers.push(
         setTimeout(() => setPhase('fading'), remaining)
       );
-      /* fully hidden after fade */
-      timersRef.current.push(
+      /* fully hidden after fade animation (500ms) */
+      timers.push(
         setTimeout(() => {
           sessionStorage.setItem(SESSION_KEY, 'true');
           setPhase('done');
@@ -48,18 +48,19 @@ export default function SplashScreen({ children }: { children: React.ReactNode }
     }
 
     /* safety: never exceed max duration */
-    timersRef.current.push(
+    timers.push(
       setTimeout(() => {
         sessionStorage.setItem(SESSION_KEY, 'true');
         setPhase('done');
       }, SPLASH_MAX_DURATION)
     );
 
+    /* cleanup: only remove event listener, NOT the timers */
     return () => {
       window.removeEventListener('load', onReady);
-      cleanup();
     };
-  }, [phase, cleanup]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /* when done, render children normally */
   if (phase === 'done') return <>{children}</>;
