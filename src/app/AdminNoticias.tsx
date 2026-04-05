@@ -584,7 +584,7 @@ export default function AdminNoticias() {
                 content={form.conteudo}
                 onChange={(html) => setForm({ ...form, conteudo: html })}
                 placeholder="Escreva o conteudo completo da noticia..."
-                minHeight="300px"
+                minHeight="500px"
               />
             </div>
 

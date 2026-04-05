@@ -117,7 +117,7 @@ export default function TipTapEditor({
     editorProps: {
       attributes: {
         class:
-          'prose prose-sm sm:prose max-w-none focus:outline-none min-h-[200px] px-4 py-3',
+          'prose prose-sm sm:prose max-w-none focus:outline-none px-4 py-3',
       },
     },
     immediatelyRender: false,
@@ -164,7 +164,7 @@ export default function TipTapEditor({
   return (
     <div className="border border-[#d1d1cc] rounded-lg overflow-hidden bg-white">
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-0.5 p-2 border-b border-[#d1d1cc] bg-[#f5f5f0]/80 sticky top-0 z-10">
+      <div className="flex flex-wrap items-center gap-0.5 p-2 border-b border-[#d1d1cc] bg-[#f5f5f0]/80">
         {/* Undo / Redo */}
         <ToolbarButton onClick={() => editor.chain().focus().undo().run()} disabled={!editor.can().undo()} title="Desfazer (Ctrl+Z)">
           <Undo className="w-4 h-4" />
