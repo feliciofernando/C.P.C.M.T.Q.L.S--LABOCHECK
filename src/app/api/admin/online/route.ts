@@ -42,26 +42,36 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'adminUsername obrigatorio' }, { status: 400 });
     }
 
-    // Upsert: update if exists, insert if not
-    const { error } = await supabase
+    // Verificar se ja existe um registo para este admin
+    const { data: existing } = await supabase
       .from('admin_online_status')
-      .upsert({
-        admin_id: adminId || null,
-        admin_username: adminUsername,
-        admin_nome: adminNome || adminUsername,
-        sessao_id: sessaoId || '',
-        ip_address: ipAddress || '',
-        last_heartbeat: new Date().toISOString(),
-        login_at: new Date().toISOString(), // sera actualizado no INSERT mas nao no UPDATE se usarmos onConflict
-      }, {
-        onConflict: 'admin_username',
-      });
+      .select('id')
+      .eq('admin_username', adminUsername)
+      .maybeSingle();
 
-    if (error) {
-      if (error.message.includes('does not exist') || error.code === '42P01') {
-        return NextResponse.json({ updated: false, setup: false });
-      }
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    if (existing) {
+      // Actualizar heartbeat
+      await supabase
+        .from('admin_online_status')
+        .update({
+          last_heartbeat: new Date().toISOString(),
+          admin_nome: adminNome || adminUsername,
+          sessao_id: sessaoId || '',
+        })
+        .eq('id', existing.id);
+    } else {
+      // Inserir novo registo
+      await supabase
+        .from('admin_online_status')
+        .insert({
+          admin_id: adminId || null,
+          admin_username: adminUsername,
+          admin_nome: adminNome || adminUsername,
+          sessao_id: sessaoId || '',
+          ip_address: ipAddress || '',
+          last_heartbeat: new Date().toISOString(),
+          login_at: new Date().toISOString(),
+        });
     }
 
     return NextResponse.json({ updated: true });
