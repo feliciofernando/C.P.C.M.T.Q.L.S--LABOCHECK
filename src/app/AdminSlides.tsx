@@ -125,7 +125,7 @@ export default function AdminSlides() {
         toast.error('Erro ao carregar slides');
       }
     } catch {
-      toast.error('Erro de ligacao ao servidor');
+      toast.error('Erro de ligação ao servidor');
     } finally {
       setLoading(false);
     }
@@ -163,7 +163,7 @@ export default function AdminSlides() {
     if (!file) return;
 
     if (file.size > MAX_IMAGE_SIZE) {
-      toast.error('Imagem demasiado grande. Maximo 2MB.');
+      toast.error('Imagem demasiado grande. Máximo 2MB.');
       return;
     }
 
@@ -185,7 +185,7 @@ export default function AdminSlides() {
 
   const handleSave = async () => {
     if (!form.titulo.trim()) {
-      toast.error('Preencha o campo titulo');
+      toast.error('Preencha o campo título');
       return;
     }
 
@@ -208,7 +208,7 @@ export default function AdminSlides() {
         toast.error(data.error || 'Erro ao guardar slide');
       }
     } catch {
-      toast.error('Erro de ligacao ao servidor');
+      toast.error('Erro de ligação ao servidor');
     } finally {
       setSaving(false);
     }
@@ -226,7 +226,7 @@ export default function AdminSlides() {
         toast.error('Erro ao eliminar slide');
       }
     } catch {
-      toast.error('Erro de ligacao ao servidor');
+      toast.error('Erro de ligação ao servidor');
     } finally {
       setDeleting(false);
       setDeleteId(null);
@@ -247,7 +247,7 @@ export default function AdminSlides() {
         toast.error('Erro ao alterar estado');
       }
     } catch {
-      toast.error('Erro de ligacao ao servidor');
+      toast.error('Erro de ligação ao servidor');
     }
   };
 
@@ -311,7 +311,7 @@ export default function AdminSlides() {
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg flex items-center gap-2">
             <ImageIcon className="w-5 h-5" />
-            Gestao de Slides
+            Gestão de Slides
           </CardTitle>
           <Button
             onClick={openCreateForm}
@@ -375,7 +375,7 @@ export default function AdminSlides() {
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
                       <h3 className="font-semibold text-sm text-[#1a1a1a] truncate">{slide.titulo}</h3>
-                      <p className="text-xs text-[#6b6b6b] mt-1 line-clamp-2">{slide.subtitulo || 'Sem subtitulo'}</p>
+                      <p className="text-xs text-[#6b6b6b] mt-1 line-clamp-2">{slide.subtitulo || 'Sem subtítulo'}</p>
                     </div>
                     <Badge
                       variant={slide.activo ? 'default' : 'secondary'}
@@ -395,7 +395,7 @@ export default function AdminSlides() {
                     {slide.textoBotao && (
                       <>
                         <span>•</span>
-                        <span>Botao: {slide.textoBotao}</span>
+                        <span>Botão: {slide.textoBotao}</span>
                       </>
                     )}
                   </div>
@@ -526,7 +526,7 @@ export default function AdminSlides() {
                       Remover Imagem
                     </Button>
                   )}
-                  <p className="text-[10px] text-[#999]">Maximo 2MB. PNG ou JPEG.</p>
+                  <p className="text-[10px] text-[#999]">Máximo 2MB. PNG ou JPEG.</p>
                 </div>
               </div>
               <input
@@ -539,30 +539,30 @@ export default function AdminSlides() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="titulo">Titulo *</Label>
+              <Label htmlFor="titulo">Título *</Label>
               <Input
                 id="titulo"
                 value={form.titulo}
                 onChange={(e) => setForm({ ...form, titulo: e.target.value })}
-                placeholder="Titulo do slide"
+                placeholder="Título do slide"
                 className="border-[#d1d1cc]"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="subtitulo">Subtitulo</Label>
+              <Label htmlFor="subtitulo">Subtítulo</Label>
               <Input
                 id="subtitulo"
                 value={form.subtitulo}
                 onChange={(e) => setForm({ ...form, subtitulo: e.target.value })}
-                placeholder="Subtitulo ou descricao do slide"
+                placeholder="Subtítulo ou descrição do slide"
                 className="border-[#d1d1cc]"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="textoBotao">Texto do Botao</Label>
+                <Label htmlFor="textoBotao">Texto do Botão</Label>
                 <Input
                   id="textoBotao"
                   value={form.textoBotao}
@@ -573,7 +573,7 @@ export default function AdminSlides() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="linkBotao">Link do Botao</Label>
+                <Label htmlFor="linkBotao">Link do Botão</Label>
                 <Input
                   id="linkBotao"
                   value={form.linkBotao}
@@ -597,7 +597,7 @@ export default function AdminSlides() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="tempoTransicao">Transicao (ms)</Label>
+                <Label htmlFor="tempoTransicao">Transição (ms)</Label>
                 <Input
                   id="tempoTransicao"
                   type="number"
@@ -649,7 +649,7 @@ export default function AdminSlides() {
           <AlertDialogHeader>
             <AlertDialogTitle>Eliminar Slide</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem a certeza que deseja eliminar este slide? Esta accao e irreversivel.
+              Tem a certeza que deseja eliminar este slide? Esta acção é irreversível.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -709,7 +709,7 @@ export default function AdminSlides() {
             <div className="text-xs text-[#6b6b6b]">
               <span>Ordem: {previewSlide?.ordem}</span>
               <span className="mx-2">•</span>
-              <span>Transicao: {previewSlide ? (previewSlide.tempoTransicao / 1000) : 0}s</span>
+              <span>Transição: {previewSlide ? (previewSlide.tempoTransicao / 1000) : 0}s</span>
               <span className="mx-2">•</span>
               <Badge variant={previewSlide?.activo ? 'default' : 'secondary'} className={previewSlide?.activo ? 'bg-[#1a5c2e] text-white text-[10px]' : 'bg-gray-200 text-gray-600 text-[10px]'}>
                 {previewSlide?.activo ? 'Activo' : 'Inactivo'}

@@ -61,7 +61,7 @@ const AVAILABLE_ICONS = [
   { value: 'FileText', label: 'Documento' },
   { value: 'Users', label: 'Utilizadores' },
   { value: 'Building2', label: 'Edifício' },
-  { value: 'Newspaper', label: 'Noticias' },
+  { value: 'Newspaper', label: 'Notícias' },
 ];
 
 interface CardItem {
@@ -453,7 +453,7 @@ export default function AdminCards() {
               <TipTapEditor
                 content={form.conteudo}
                 onChange={(html) => setForm({ ...form, conteudo: html })}
-                placeholder="Escreva o conteudo completo da pagina do card..."
+                placeholder="Escreva o conteúdo completo da página do card..."
                 minHeight="200px"
               />
             </div>
@@ -484,7 +484,7 @@ export default function AdminCards() {
                   id="card-link"
                   value={form.link}
                   onChange={(e) => setForm({ ...form, link: e.target.value })}
-                  placeholder="https://... ou #seccao"
+                  placeholder="https://... ou #secção"
                   className="border-[#d1d1cc]"
                 />
               </div>

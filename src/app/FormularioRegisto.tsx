@@ -417,7 +417,7 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
             </RadioGroup>
           </div>
           <div>
-            <Label htmlFor="numeroBI">No do Bilhete de Identidade *</Label>
+            <Label htmlFor="numeroBI">Nº do Bilhete de Identidade *</Label>
             <Input
               id="numeroBI"
               value={form.numeroBI}

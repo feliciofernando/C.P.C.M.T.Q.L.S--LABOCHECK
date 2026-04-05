@@ -541,7 +541,7 @@ export default function PainelAlertas({ onUpdate }: PainelAlertasProps) {
                       <strong>B.I.:</strong> {alerta.condutor.numeroBI}
                     </span>
                     <span>
-                      <strong>Veiculo:</strong> {alerta.condutor.tipoVeiculo}
+                      <strong>Veículo:</strong> {alerta.condutor.tipoVeiculo}
                     </span>
                     <span>
                       <strong>Telefone:</strong> {alerta.condutor.telefone1}

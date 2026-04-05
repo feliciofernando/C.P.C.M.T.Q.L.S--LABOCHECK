@@ -123,10 +123,10 @@ export default function AdminNoticias() {
         const data = await res.json();
         setNoticias(data.data || []);
       } else {
-        toast.error('Erro ao carregar noticias');
+        toast.error('Erro ao carregar notícias');
       }
     } catch {
-      toast.error('Erro de ligacao ao servidor');
+      toast.error('Erro de ligação ao servidor');
     } finally {
       setLoading(false);
     }
@@ -169,13 +169,13 @@ export default function AdminNoticias() {
       if (!file) return;
 
       if (file.size > 2 * 1024 * 1024) {
-        toast.error('Imagem demasiado grande. Maximo 2MB.');
+        toast.error('Imagem demasiado grande. Máximo 2MB.');
         e.target.value = '';
         return;
       }
 
       if (!file.type.startsWith('image/')) {
-        toast.error('Ficheiro invalido. Apenas imagens sao aceites.');
+        toast.error('Ficheiro inválido. Apenas imagens são aceites.');
         e.target.value = '';
         return;
       }
@@ -207,11 +207,11 @@ export default function AdminNoticias() {
 
   const handleSave = async () => {
     if (!form.titulo.trim()) {
-      toast.error('Preencha o campo titulo');
+      toast.error('Preencha o campo título');
       return;
     }
     if (!form.conteudo.trim() || form.conteudo === '<p></p>') {
-      toast.error('Escreva o conteudo da noticia');
+      toast.error('Escreva o conteúdo da notícia');
       return;
     }
 
@@ -238,17 +238,17 @@ export default function AdminNoticias() {
 
       if (res.ok) {
         toast.success(
-          editingId ? 'Noticia actualizada com sucesso' : 'Noticia criada com sucesso'
+          editingId ? 'Notícia actualizada com sucesso' : 'Notícia criada com sucesso'
         );
         setFormOpen(false);
         setImagePreview(null);
         fetchNoticias();
       } else {
         const data = await res.json();
-        toast.error(data.error || 'Erro ao guardar noticia');
+        toast.error(data.error || 'Erro ao guardar notícia');
       }
     } catch {
-      toast.error('Erro de ligacao ao servidor');
+      toast.error('Erro de ligação ao servidor');
     } finally {
       setSaving(false);
     }
@@ -260,13 +260,13 @@ export default function AdminNoticias() {
     try {
       const res = await fetch(`/api/noticias/${deleteId}`, { method: 'DELETE' });
       if (res.ok) {
-        toast.success('Noticia eliminada com sucesso');
+        toast.success('Notícia eliminada com sucesso');
         fetchNoticias();
       } else {
-        toast.error('Erro ao eliminar noticia');
+        toast.error('Erro ao eliminar notícia');
       }
     } catch {
-      toast.error('Erro de ligacao ao servidor');
+      toast.error('Erro de ligação ao servidor');
     } finally {
       setDeleting(false);
       setDeleteId(null);
@@ -281,13 +281,13 @@ export default function AdminNoticias() {
         body: JSON.stringify({ activo: !noticia.activo }),
       });
       if (res.ok) {
-        toast.success(noticia.activo ? 'Noticia desactivada' : 'Noticia activada');
+        toast.success(noticia.activo ? 'Notícia desactivada' : 'Notícia activada');
         fetchNoticias();
       } else {
         toast.error('Erro ao alterar estado');
       }
     } catch {
-      toast.error('Erro de ligacao ao servidor');
+      toast.error('Erro de ligação ao servidor');
     }
   };
 
@@ -300,14 +300,14 @@ export default function AdminNoticias() {
       });
       if (res.ok) {
         toast.success(
-          noticia.destaque ? 'Destaque removido' : 'Noticia destacada'
+          noticia.destaque ? 'Destaque removido' : 'Notícia destacada'
         );
         fetchNoticias();
       } else {
         toast.error('Erro ao alterar destaque');
       }
     } catch {
-      toast.error('Erro de ligacao ao servidor');
+      toast.error('Erro de ligação ao servidor');
     }
   };
 
@@ -317,7 +317,7 @@ export default function AdminNoticias() {
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg flex items-center gap-2">
             <Newspaper className="w-5 h-5" />
-            Gestao de Noticias
+            Gestão de Notícias
           </CardTitle>
           <Button
             onClick={openCreateForm}
@@ -325,7 +325,7 @@ export default function AdminNoticias() {
             className="bg-white text-[#1a5c2e] hover:bg-gray-100"
           >
             <Plus className="w-4 h-4 mr-1.5" />
-            Nova Noticia
+            Nova Notícia
           </Button>
         </div>
       </CardHeader>
@@ -335,7 +335,7 @@ export default function AdminNoticias() {
           <div className="flex items-center justify-center py-10">
             <Loader2 className="w-6 h-6 animate-spin text-[#1a5c2e]" />
             <span className="ml-2 text-sm text-[#6b6b6b]">
-              A carregar noticias...
+              A carregar notícias...
             </span>
           </div>
         )}
@@ -345,7 +345,7 @@ export default function AdminNoticias() {
           <div className="text-center py-10">
             <Newspaper className="w-10 h-10 mx-auto text-[#d1d1cc] mb-3" />
             <p className="text-[#6b6b6b] text-sm">
-              Nenhuma noticia encontrada.
+              Nenhuma notícia encontrada.
             </p>
             <Button
               onClick={openCreateForm}
@@ -353,7 +353,7 @@ export default function AdminNoticias() {
               className="mt-4 bg-[#1a5c2e] text-white hover:bg-[#0f3d1d]"
             >
               <Plus className="w-4 h-4 mr-1.5" />
-              Criar primeira noticia
+              Criar primeira notícia
             </Button>
           </div>
         )}
@@ -364,7 +364,7 @@ export default function AdminNoticias() {
             <Table>
               <TableHeader>
                 <TableRow className="bg-[#f5f5f0]">
-                  <TableHead className="font-semibold text-xs">Titulo</TableHead>
+                  <TableHead className="font-semibold text-xs">Título</TableHead>
                   <TableHead className="font-semibold text-xs hidden sm:table-cell">
                     Data
                   </TableHead>
@@ -375,7 +375,7 @@ export default function AdminNoticias() {
                     Estado
                   </TableHead>
                   <TableHead className="font-semibold text-xs text-right">
-                    Accoes
+                    Acções
                   </TableHead>
                 </TableRow>
               </TableHeader>
@@ -438,7 +438,7 @@ export default function AdminNoticias() {
                           title={
                             noticia.destaque
                               ? 'Remover destaque'
-                              : 'Destacar noticia'
+                              : 'Destacar notícia'
                           }
                           className="h-8 w-8 p-0"
                         >
@@ -496,12 +496,12 @@ export default function AdminNoticias() {
         <DialogContent className="max-w-4xl max-h-[92vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-[#1a1a1a]">
-              {editingId ? 'Editar Noticia' : 'Nova Noticia'}
+              {editingId ? 'Editar Notícia' : 'Nova Notícia'}
             </DialogTitle>
             <DialogDescription>
               {editingId
-                ? 'Actualize os campos da noticia.'
-                : 'Preencha os campos para criar uma nova noticia.'}
+                ? 'Actualize os campos da notícia.'
+                : 'Preencha os campos para criar uma nova notícia.'}
             </DialogDescription>
           </DialogHeader>
 
@@ -509,13 +509,13 @@ export default function AdminNoticias() {
             {/* Titulo */}
             <div className="space-y-2">
               <Label htmlFor="titulo">
-                Titulo <span className="text-red-500">*</span>
+                Título <span className="text-red-500">*</span>
               </Label>
               <Input
                 id="titulo"
                 value={form.titulo}
                 onChange={(e) => setForm({ ...form, titulo: e.target.value })}
-                placeholder="Titulo da noticia"
+                placeholder="Título da notícia"
                 className="border-[#d1d1cc] text-base"
               />
             </div>
@@ -527,7 +527,7 @@ export default function AdminNoticias() {
                 id="resumo"
                 value={form.resumo}
                 onChange={(e) => setForm({ ...form, resumo: e.target.value })}
-                placeholder="Breve resumo da noticia (aparece no card de preview)"
+                placeholder="Breve resumo da notícia (aparece no card de preview)"
                 className="border-[#d1d1cc] resize-none"
                 rows={3}
               />
@@ -565,7 +565,7 @@ export default function AdminNoticias() {
                     className="block w-full text-sm text-[#6b6b6b] file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-medium file:bg-[#1a5c2e]/10 file:text-[#1a5c2e] hover:file:bg-[#1a5c2e]/20 cursor-pointer"
                   />
                   <p className="text-[10px] text-[#6b6b6b]">
-                    Formatos: JPG, PNG, WebP. Maximo 2MB.
+                    Formatos: JPG, PNG, WebP. Máximo 2MB.
                   </p>
                 </div>
               </div>
@@ -574,16 +574,16 @@ export default function AdminNoticias() {
             {/* Conteudo - Rich Text Editor */}
             <div className="space-y-2">
               <Label>
-                Conteudo <span className="text-red-500">*</span>
+                Conteúdo <span className="text-red-500">*</span>
               </Label>
               <p className="text-xs text-[#6b6b6b]">
-                Utilize o editor para formatar o texto com negrito, italico,
-                titulos, listas, imagens, links e mais.
+                Utilize o editor para formatar o texto com negrito, itálico,
+                títulos, listas, imagens, links e mais.
               </p>
               <TipTapEditor
                 content={form.conteudo}
                 onChange={(html) => setForm({ ...form, conteudo: html })}
-                placeholder="Escreva o conteudo completo da noticia..."
+                placeholder="Escreva o conteúdo completo da notícia..."
                 minHeight="500px"
               />
             </div>
@@ -612,7 +612,7 @@ export default function AdminNoticias() {
                   }
                 />
                 <Label htmlFor="activo" className="cursor-pointer">
-                  Noticia activa
+                  Notícia activa
                 </Label>
               </div>
 
@@ -646,7 +646,7 @@ export default function AdminNoticias() {
               className="bg-[#1a5c2e] text-white hover:bg-[#0f3d1d]"
             >
               {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              {editingId ? 'Actualizar' : 'Criar Noticia'}
+              {editingId ? 'Actualizar' : 'Criar Notícia'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -661,10 +661,10 @@ export default function AdminNoticias() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Eliminar Noticia</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar Notícia</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem a certeza que deseja eliminar esta noticia? Esta accao e
-              irreversivel.
+              Tem a certeza que deseja eliminar esta notícia? Esta acção é
+              irreversível.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

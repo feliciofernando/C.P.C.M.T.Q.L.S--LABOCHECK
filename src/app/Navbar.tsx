@@ -50,7 +50,7 @@ const menuItems: MenuItem[] = [
     label: 'O Conselho',
     icon: <Info className="w-4 h-4 lg:w-5 lg:h-5" />,
     children: [
-      { label: 'Mensagem do Presidente', href: '/paginas/6e83ee50-e486-44e8-b6d7-7a1c1102b0a9', desc: 'Palavras do lider', icon: <Users className="w-4 h-4" /> },
+      { label: 'Mensagem do Presidente', href: '/paginas/6e83ee50-e486-44e8-b6d7-7a1c1102b0a9', desc: 'Palavras do líder', icon: <Users className="w-4 h-4" /> },
       { label: 'Sobre o Conselho', href: '/paginas/f0e3ce27-6776-44c1-a043-354a74d40509', desc: 'Quem somos', icon: <Building2 className="w-4 h-4" /> },
       { label: 'Galeria de Diretores', href: '/paginas/8547b93c-4d8d-4db0-9b5c-7d1d0ab89bed', desc: 'Nossos diretores', icon: <Users className="w-4 h-4" /> },
       { label: 'Eventos', href: '/paginas/d465ae1c-6287-412b-9222-6b78ab5b083f', desc: 'Próximos eventos', icon: <Calendar className="w-4 h-4" /> },

@@ -188,7 +188,7 @@ export default function PainelVisualizar() {
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
-      toast.success('Codigo QR descarregado com sucesso (JPEG)');
+      toast.success('Código QR descarregado com sucesso (JPEG)');
     } catch {
       toast.error('Erro ao descarregar o QR Code');
     } finally {
@@ -253,7 +253,7 @@ export default function PainelVisualizar() {
           <Table>
             <TableHeader>
               <TableRow className="bg-[#f0f0eb] hover:bg-[#f0f0eb]">
-                <TableHead className="font-bold text-[#1a1a1a] w-20">No</TableHead>
+                <TableHead className="font-bold text-[#1a1a1a] w-20">Nº</TableHead>
                 <TableHead className="font-bold text-[#1a1a1a]">Nome Completo</TableHead>
                 <TableHead className="font-bold text-[#1a1a1a] hidden md:table-cell">B.I.</TableHead>
                 <TableHead className="font-bold text-[#1a1a1a] hidden lg:table-cell">Veículo</TableHead>
@@ -390,7 +390,7 @@ export default function PainelVisualizar() {
                   <DetailRow label="Nome Completo" value={condutorDetail.nomeCompleto as string} />
                   <DetailRow label="Data de Nascimento" value={condutorDetail.dataNascimento as string} />
                   <DetailRow label="Sexo" value={condutorDetail.sexo as string} />
-                  <DetailRow label="No B.I." value={condutorDetail.numeroBI as string} />
+                  <DetailRow label="Nº B.I." value={condutorDetail.numeroBI as string} />
                   <DetailRow label="Data Emissão B.I." value={condutorDetail.dataEmissaoBI as string} />
                   <DetailRow label="Estado Civil" value={condutorDetail.estadoCivil as string} />
                   <DetailRow label="Telefone 1" value={condutorDetail.telefone1 as string} />
@@ -405,11 +405,11 @@ export default function PainelVisualizar() {
                   <DetailRow label="Modelo" value={(condutorDetail.modeloVeiculo as string) || '-'} />
                   <DetailRow label="Cor" value={(condutorDetail.corVeiculo as string) || '-'} />
                   <DetailRow label="Matricula" value={(condutorDetail.matriculaVeiculo as string) || '-'} />
-                  <DetailRow label="No Carta Condução" value={(condutorDetail.numeroCartaConducao as string) || '-'} />
+                  <DetailRow label="Nº Carta Condução" value={(condutorDetail.numeroCartaConducao as string) || '-'} />
                   <DetailRow label="Categoria" value={(condutorDetail.categoriaCarta as string) || '-'} />
-                  <DetailRow label="Experiencia" value={(condutorDetail.tempoExperiencia as string) || '-'} />
+                  <DetailRow label="Experiência" value={(condutorDetail.tempoExperiencia as string) || '-'} />
                   <DetailRow label="Município Trabalho" value={(condutorDetail.municipioTrabalho as string) || '-'} />
-                  <DetailRow label="Horario" value={(condutorDetail.horarioTrabalho as string) || '-'} />
+                  <DetailRow label="Horário" value={(condutorDetail.horarioTrabalho as string) || '-'} />
                 </div>
               </div>
 
