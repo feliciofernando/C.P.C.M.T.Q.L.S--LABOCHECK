@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import SessionProvider from "@/components/SessionProvider";
+import SplashScreen from "@/components/SplashScreen";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "next-themes";
 
@@ -76,7 +77,7 @@ export default function RootLayout({
           storageKey="cpcmtqls-theme"
         >
           <SessionProvider>
-            {children}
+            <SplashScreen>{children}</SplashScreen>
             <Toaster position="top-center" richColors />
           </SessionProvider>
         </ThemeProvider>
