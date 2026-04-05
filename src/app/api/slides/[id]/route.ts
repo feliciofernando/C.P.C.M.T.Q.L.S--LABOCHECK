@@ -40,13 +40,14 @@ export async function PUT(
     // Verificar se slide existe
     const { data: existing, error: findError } = await supabase
       .from('slides')
-      .select('id')
+      .select('id, titulo')
       .eq('id', id)
       .single();
 
     if (findError || !existing) {
       return NextResponse.json({ error: 'Slide nao encontrado' }, { status: 404 });
     }
+    const tituloSlide = existing.titulo || 'Sem titulo';
 
     const updateData: Record<string, unknown> = {};
     if (body.titulo !== undefined) updateData.titulo = body.titulo.trim();
@@ -71,7 +72,7 @@ export async function PUT(
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'EDITAR_SLIDE', categoria: 'SLIDES', detalhes: `Slide ${id} actualizado` }).catch(() => {});
+    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'EDITAR_SLIDE', categoria: 'SLIDES', detalhes: `Slide "${tituloSlide}" actualizado` }).catch(() => {});
 
     return NextResponse.json(toCamelCase(data));
   } catch (error: unknown) {
@@ -88,13 +89,21 @@ export async function DELETE(
   try {
     const { id } = await params;
 
+    // Buscar titulo do slide antes de eliminar
+    const { data: slideAntes } = await supabase
+      .from('slides')
+      .select('titulo')
+      .eq('id', id)
+      .single();
+    const tituloSlide = slideAntes?.titulo || 'Sem titulo';
+
     const { error } = await supabase.from('slides').delete().eq('id', id);
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'ELIMINAR_SLIDE', categoria: 'SLIDES', detalhes: `Slide ${id} eliminado` }).catch(() => {});
+    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'ELIMINAR_SLIDE', categoria: 'SLIDES', detalhes: `Slide "${tituloSlide}" eliminado` }).catch(() => {});
 
     return NextResponse.json({ message: 'Slide eliminado com sucesso' });
   } catch (error: unknown) {

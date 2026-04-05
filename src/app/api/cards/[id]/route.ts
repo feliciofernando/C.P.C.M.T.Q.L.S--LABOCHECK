@@ -45,7 +45,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Card nao encontrado' }, { status: 404 });
     }
 
-    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'EDITAR_CARD', categoria: 'CARDS', detalhes: `Card ${id} actualizado` }).catch(() => {});
+    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'EDITAR_CARD', categoria: 'CARDS', detalhes: `Card "${data.titulo || 'Sem titulo'}" actualizado` }).catch(() => {});
 
     return NextResponse.json(data);
   } catch (error: unknown) {
@@ -67,13 +67,21 @@ export async function DELETE(
 
     const { id } = await params;
 
+    // Buscar titulo do card antes de eliminar
+    const { data: cardAntes } = await supabase
+      .from('cards')
+      .select('titulo')
+      .eq('id', id)
+      .single();
+    const tituloCard = cardAntes?.titulo || 'Sem titulo';
+
     const { error } = await supabase.from('cards').delete().eq('id', id);
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'ELIMINAR_CARD', categoria: 'CARDS', detalhes: `Card ${id} eliminado` }).catch(() => {});
+    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'ELIMINAR_CARD', categoria: 'CARDS', detalhes: `Card "${tituloCard}" eliminado` }).catch(() => {});
 
     return NextResponse.json({ message: 'Card eliminado com sucesso' });
   } catch (error: unknown) {

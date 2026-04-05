@@ -18,4 +18,6 @@ export const config = {
   matcher: [
     '/admin/:path*',
   ],
+  // Ignorar rotas de API para evitar interferir com NextAuth
+  unstable_allowDynamic: [],
 };

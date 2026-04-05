@@ -39,13 +39,14 @@ export async function PUT(
 
     const { data: existing, error: findError } = await supabase
       .from('servicos')
-      .select('id')
+      .select('id, titulo')
       .eq('id', id)
       .single();
 
     if (findError || !existing) {
       return NextResponse.json({ error: 'Servico nao encontrado' }, { status: 404 });
     }
+    const tituloServico = existing.titulo || 'Sem titulo';
 
     const updateData: Record<string, unknown> = {};
     if (body.titulo !== undefined) updateData.titulo = body.titulo.trim();
@@ -67,7 +68,7 @@ export async function PUT(
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'EDITAR_SERVICO', categoria: 'SERVICOS', detalhes: `Servico ${id} actualizado` }).catch(() => {});
+    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'EDITAR_SERVICO', categoria: 'SERVICOS', detalhes: `Servico "${tituloServico}" actualizado` }).catch(() => {});
 
     return NextResponse.json(toCamelCase(data));
   } catch (error: unknown) {
@@ -84,13 +85,21 @@ export async function DELETE(
   try {
     const { id } = await params;
 
+    // Buscar titulo do servico antes de eliminar
+    const { data: servicoAntes } = await supabase
+      .from('servicos')
+      .select('titulo')
+      .eq('id', id)
+      .single();
+    const tituloServico = servicoAntes?.titulo || 'Sem titulo';
+
     const { error } = await supabase.from('servicos').delete().eq('id', id);
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'ELIMINAR_SERVICO', categoria: 'SERVICOS', detalhes: `Servico ${id} eliminado` }).catch(() => {});
+    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'ELIMINAR_SERVICO', categoria: 'SERVICOS', detalhes: `Servico "${tituloServico}" eliminado` }).catch(() => {});
 
     return NextResponse.json({ message: 'Servico eliminado com sucesso' });
   } catch (error: unknown) {

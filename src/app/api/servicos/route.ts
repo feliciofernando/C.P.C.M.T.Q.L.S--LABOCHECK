@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'CRIAR_SERVICO', categoria: 'SERVICOS', detalhes: `Servico criado: ${body.nome || 'N/A'}` }).catch(() => {});
+    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'CRIAR_SERVICO', categoria: 'SERVICOS', detalhes: `Servico criado: ${body.titulo || 'N/A'}` }).catch(() => {});
 
     return NextResponse.json(toCamelCase(data), { status: 201 });
   } catch (error: unknown) {

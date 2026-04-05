@@ -60,7 +60,14 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Accao invalida' }, { status: 400 });
     }
 
-    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'OPERACAO_EM_MASSA', categoria: 'ALERTAS', detalhes: `Operacao em massa: ${acao} - ${count} registos afectados` }).catch(() => {});
+    const acoesLegiveis: Record<string, string> = {
+      'MARCAR_TODAS_LIDAS': 'Marcar todas como lidas',
+      'RESOLVER_SELECIONADAS': 'Resolver seleccionadas',
+      'ELIMINAR_RESOLVIDAS': 'Eliminar resolvidas',
+      'ELIMINAR_SELECIONADAS': 'Eliminar seleccionadas',
+    };
+
+    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'OPERACAO_EM_MASSA', categoria: 'ALERTAS', detalhes: `Operacao em massa: ${acoesLegiveis[acao] || acao} - ${count} registo(s) afectado(s)` }).catch(() => {});
 
     return NextResponse.json({
       message: `${count} alerta(s) processada(s) com sucesso`,

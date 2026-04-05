@@ -223,14 +223,15 @@ function AdminDashboard() {
 
   // Heartbeat: register current admin as online
   const sendHeartbeat = useCallback(async () => {
-    if (!session?.user?.name) return;
+    const name = session?.user?.name;
+    if (!name) return;
     try {
       await fetch('/api/admin/online', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          adminUsername: session.user.name,
-          adminNome: session.user.name,
+          adminUsername: name,
+          adminNome: name,
         }),
       });
       // Also refresh online list
@@ -238,14 +239,12 @@ function AdminDashboard() {
     } catch {
       // silent
     }
-  }, [session?.user?.name, loadOnlineAdmins]);
+  }, [session, loadOnlineAdmins]);
 
   if (statsLoadedRef.current == null) {
     statsLoadedRef.current = true;
     loadStats();
     loadAlertCount();
-    // Start heartbeat on first load
-    sendHeartbeat();
   }
 
   // Refresh alert count periodically
@@ -256,11 +255,8 @@ function AdminDashboard() {
 
   // Heartbeat every 15 seconds
   useEffect(() => {
-    sendHeartbeat();
-    heartbeatRef.current = setInterval(sendHeartbeat, 15000);
-    return () => {
-      if (heartbeatRef.current) clearInterval(heartbeatRef.current);
-    };
+    const id = setInterval(sendHeartbeat, 15000);
+    return () => clearInterval(id);
   }, [sendHeartbeat]);
 
   const handleRegistoSucesso = () => {

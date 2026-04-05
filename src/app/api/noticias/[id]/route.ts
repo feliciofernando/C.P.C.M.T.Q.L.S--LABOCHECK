@@ -40,13 +40,14 @@ export async function PUT(
     // Verificar se noticia existe
     const { data: existing, error: findError } = await supabase
       .from('noticias')
-      .select('id')
+      .select('id, titulo')
       .eq('id', id)
       .single();
 
     if (findError || !existing) {
       return NextResponse.json({ error: 'Noticia nao encontrada' }, { status: 404 });
     }
+    const tituloNoticia = existing.titulo || 'Sem titulo';
 
     const updateData: Record<string, unknown> = {};
     if (body.titulo !== undefined) updateData.titulo = body.titulo.trim();
@@ -69,7 +70,7 @@ export async function PUT(
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'EDITAR_NOTICIA', categoria: 'NOTICIAS', detalhes: `Noticia ${id} actualizada` }).catch(() => {});
+    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'EDITAR_NOTICIA', categoria: 'NOTICIAS', detalhes: `Noticia "${tituloNoticia}" actualizada` }).catch(() => {});
 
     return NextResponse.json(toCamelCase(data));
   } catch (error: unknown) {
@@ -86,13 +87,21 @@ export async function DELETE(
   try {
     const { id } = await params;
 
+    // Buscar titulo da noticia antes de eliminar
+    const { data: noticiaAntes } = await supabase
+      .from('noticias')
+      .select('titulo')
+      .eq('id', id)
+      .single();
+    const tituloNoticia = noticiaAntes?.titulo || 'Sem titulo';
+
     const { error } = await supabase.from('noticias').delete().eq('id', id);
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'ELIMINAR_NOTICIA', categoria: 'NOTICIAS', detalhes: `Noticia ${id} eliminada` }).catch(() => {});
+    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'ELIMINAR_NOTICIA', categoria: 'NOTICIAS', detalhes: `Noticia "${tituloNoticia}" eliminada` }).catch(() => {});
 
     return NextResponse.json({ message: 'Noticia eliminada com sucesso' });
   } catch (error: unknown) {

@@ -19,13 +19,15 @@ export async function PATCH(
     // Verificar se alerta existe
     const { data: alerta, error: findError } = await supabase
       .from('alertas')
-      .select('id, condutor_id')
+      .select('id, condutor_id, mensagem')
       .eq('id', id)
       .single();
 
     if (findError || !alerta) {
       return NextResponse.json({ error: 'Alerta nao encontrado' }, { status: 404 });
     }
+
+    const resumoAlerta = (alerta.mensagem || '').substring(0, 80) + ((alerta.mensagem || '').length > 80 ? '...' : '');
 
     let updateData: Record<string, unknown> = {};
 
@@ -55,9 +57,9 @@ export async function PATCH(
     }
 
     const logAcao = acao === 'REABRIR' ? 'REABRIR_ALERTA' : acao;
-    const logDetalhes = acao === 'MARCAR_LIDA' ? `Alerta ${id} marcado como lida`
-      : acao === 'MARCAR_RESOLVIDA' ? `Alerta ${id} resolvido`
-      : `Alerta ${id} reaberto`;
+    const logDetalhes = acao === 'MARCAR_LIDA' ? `Alerta \"${resumoAlerta}\" marcado como lida`
+      : acao === 'MARCAR_RESOLVIDA' ? `Alerta \"${resumoAlerta}\" marcado como resolvida`
+      : `Alerta \"${resumoAlerta}\" reaberto`;
     logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: logAcao, categoria: 'ALERTAS', detalhes: logDetalhes }).catch(() => {});
 
     // Buscar dados do condutor separadamente (evitar problemas com relações PostgREST)
@@ -88,13 +90,21 @@ export async function DELETE(
   try {
     const { id } = await params;
 
+    // Buscar dados do alerta antes de eliminar
+    const { data: alertaAntes } = await supabase
+      .from('alertas')
+      .select('mensagem, tipo')
+      .eq('id', id)
+      .single();
+    const resumoAlerta = (alertaAntes?.mensagem || '').substring(0, 80) + (((alertaAntes?.mensagem || '').length > 80) ? '...' : '');
+
     const { error } = await supabase.from('alertas').delete().eq('id', id);
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'ELIMINAR_ALERTA', categoria: 'ALERTAS', detalhes: `Alerta ${id} eliminado` }).catch(() => {});
+    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'ELIMINAR_ALERTA', categoria: 'ALERTAS', detalhes: `Alerta "${resumoAlerta}" eliminado` }).catch(() => {});
 
     return NextResponse.json({ message: 'Alerta eliminado com sucesso' });
   } catch (error: unknown) {

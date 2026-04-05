@@ -14,6 +14,15 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'Status invalido. Use ATIVA ou INATIVA' }, { status: 400 });
     }
 
+    // Buscar nome do condutor antes de alterar
+    const { data: condutor } = await supabase
+      .from('condutores')
+      .select('nome_completo, numero_ordem')
+      .eq('id', id)
+      .single();
+    const nomeCondutor = condutor?.nome_completo || 'Desconhecido';
+    const numeroOrdem = condutor?.numero_ordem || '?';
+
     const { data, error } = await supabase
       .from('condutores')
       .update({ status })
@@ -25,13 +34,15 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
+    const statusLegivel = status === 'ATIVA' ? 'Activa' : 'Inactiva';
+
     // Audit log
     logActivity({
       adminUsername: 'admin',
       adminNome: 'Administrador',
       acao: 'ALTERAR_STATUS',
       categoria: 'CONDUTORES',
-      detalhes: `Status do condutor ${id} alterado para ${status}`,
+      detalhes: `Status do(a) condutor(a) ${nomeCondutor} (N.º ${numeroOrdem}) alterado para ${statusLegivel}`,
     }).catch(() => {});
 
     return NextResponse.json(data);
