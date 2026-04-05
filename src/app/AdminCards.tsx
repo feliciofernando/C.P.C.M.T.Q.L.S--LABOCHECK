@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import TipTapEditor from '@/components/TipTapEditor';
 import {
   Select,
   SelectContent,
@@ -76,6 +77,7 @@ interface CardItem {
 interface CardFormData {
   titulo: string;
   descricao: string;
+  conteudo: string;
   icone: string;
   link: string;
   ordem: number;
@@ -85,6 +87,7 @@ interface CardFormData {
 const emptyCardForm: CardFormData = {
   titulo: '',
   descricao: '',
+  conteudo: '',
   icone: 'MessageSquare',
   link: '',
   ordem: 0,
@@ -139,6 +142,7 @@ export default function AdminCards() {
     setForm({
       titulo: card.titulo,
       descricao: card.descricao,
+      conteudo: (card as Record<string, unknown>).conteudo as string || '',
       icone: card.icone,
       link: card.link,
       ordem: card.ordem,
@@ -159,7 +163,7 @@ export default function AdminCards() {
       const method = editingId ? 'PUT' : 'POST';
       const body = editingId
         ? form
-        : { titulo: form.titulo, descricao: form.descricao, icone: form.icone, link: form.link, ordem: form.ordem };
+        : { titulo: form.titulo, descricao: form.descricao, conteudo: form.conteudo, icone: form.icone, link: form.link, ordem: form.ordem };
 
       const res = await fetch(url, {
         method,
@@ -408,7 +412,7 @@ export default function AdminCards() {
 
       {/* Create/Edit Card Dialog */}
       <Dialog open={formOpen} onOpenChange={setFormOpen}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-[#1a1a1a]">
               {editingId ? 'Editar Card' : 'Novo Card'}
@@ -431,14 +435,24 @@ export default function AdminCards() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="card-descricao">Descricao</Label>
+              <Label htmlFor="card-descricao">Descricao Breve</Label>
               <Textarea
                 id="card-descricao"
                 value={form.descricao}
                 onChange={(e) => setForm({ ...form, descricao: e.target.value })}
                 placeholder="Descricao breve do card"
                 className="border-[#d1d1cc] resize-none"
-                rows={3}
+                rows={2}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Conteudo Completo da Pagina</Label>
+              <TipTapEditor
+                content={form.conteudo}
+                onChange={(html) => setForm({ ...form, conteudo: html })}
+                placeholder="Escreva o conteudo completo da pagina do card..."
+                minHeight="200px"
               />
             </div>
 

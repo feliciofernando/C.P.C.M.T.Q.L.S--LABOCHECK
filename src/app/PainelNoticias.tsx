@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
+import TipTapEditor from '@/components/TipTapEditor';
 import {
   Plus,
   Pencil,
@@ -244,11 +245,11 @@ export default function PainelNoticias() {
 
           <div className="space-y-2">
             <Label className="text-xs font-semibold">Conteudo Completo</Label>
-            <Textarea
-              value={form.conteudo}
-              onChange={(e) => setForm((p) => ({ ...p, conteudo: e.target.value }))}
-              placeholder="Conteudo completo da noticia..."
-              className="text-sm min-h-[150px]"
+            <TipTapEditor
+              content={form.conteudo}
+              onChange={(html) => setForm((p) => ({ ...p, conteudo: html }))}
+              placeholder="Escreva o conteudo completo da noticia..."
+              minHeight="200px"
             />
           </div>
 

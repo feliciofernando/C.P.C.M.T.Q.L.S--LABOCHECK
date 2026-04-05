@@ -203,9 +203,10 @@ export default function NoticiasSection() {
                 </p>
               )}
               {selectedNoticia.conteudo && (
-                <div className="text-sm lg:text-base text-[#6b6b6b] leading-relaxed whitespace-pre-line">
-                  {selectedNoticia.conteudo}
-                </div>
+                <div
+                  className="text-sm lg:text-base text-[#6b6b6b] leading-relaxed [&_h1]:text-xl [&_h1]:font-bold [&_h1]:text-[#1a1a1a] [&_h1]:mb-3 [&_h1]:mt-6 [&_h2]:text-lg [&_h2]:font-bold [&_h2]:text-[#1a1a1a] [&_h2]:mb-2 [&_h2]:mt-5 [&_h3]:text-base [&_h3]:font-bold [&_h3]:text-[#1a1a1a] [&_h3]:mb-2 [&_h3]:mt-4 [&_p]:mb-3 [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-3 [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-3 [&_li]:mb-1 [&_blockquote]:border-l-4 [&_blockquote]:border-[#1a5c2e] [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-[#6b6b6b] [&_blockquote]:my-3 [&_strong]:font-bold [&_strong]:text-[#1a1a1a] [&_em]:italic [&_a]:text-blue-600 [&_a]:underline [&_img]:max-w-full [&_img]:rounded-lg [&_img]:my-2 [&_hr]:border-[#d1d1cc] [&_hr]:my-4"
+                  dangerouslySetInnerHTML={{ __html: selectedNoticia.conteudo }}
+                />
               )}
               <div className="mt-6">
                 <Button

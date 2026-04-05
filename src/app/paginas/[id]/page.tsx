@@ -1,5 +1,4 @@
-import { supabase } from '@/lib/supabase-server';
-import { toCamelCase } from '@/lib/utils-supabase';
+import { db } from '@/lib/db';
 import Navbar from '@/app/Navbar';
 import Link from 'next/link';
 import {
@@ -44,13 +43,9 @@ export default async function PaginaDetailPage({
 }) {
   const { id } = await params;
 
-  const { data, error } = await supabase
-    .from('cards')
-    .select('*')
-    .eq('id', id)
-    .single();
+  const card = await db.card.findUnique({ where: { id } });
 
-  if (error || !data) {
+  if (!card) {
     return (
       <div className="min-h-screen bg-[#f5f5f0]">
         <Navbar />
@@ -76,7 +71,6 @@ export default async function PaginaDetailPage({
     );
   }
 
-  const card = toCamelCase<CardPage>(data);
   const IconComponent = iconMap[card.icone] || MessageSquare;
 
   return (
@@ -154,65 +148,10 @@ export default async function PaginaDetailPage({
 
           {/* Full conteudo */}
           {card.conteudo ? (
-            <div className="prose prose-sm sm:prose max-w-none">
-              {card.conteudo.split('\n').map((paragraph, index) => {
-                const trimmed = paragraph.trim();
-                if (!trimmed) {
-                  return <div key={index} className="h-4" />;
-                }
-
-                // Check if it's a numbered list item (e.g., "1. Title:")
-                const numberedMatch = trimmed.match(/^(\d+)\.\s+(.*)/);
-                if (numberedMatch) {
-                  return (
-                    <div key={index} className="flex gap-3 mb-3 pl-2">
-                      <span className="flex-shrink-0 w-7 h-7 rounded-full bg-[#1a5c2e] text-white text-xs font-bold flex items-center justify-center mt-0.5">
-                        {numberedMatch[1]}
-                      </span>
-                      <div>
-                        <p className="text-[#1a1a1a] text-sm sm:text-base leading-relaxed font-medium">
-                          {numberedMatch[2]}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                }
-
-                // Check if it's a bullet point
-                if (trimmed.startsWith('- ')) {
-                  return (
-                    <div key={index} className="flex items-start gap-2.5 mb-2 pl-4">
-                      <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-[#d4a017] mt-2" />
-                      <p className="text-[#1a1a1a] text-sm sm:text-base leading-relaxed">
-                        {trimmed.substring(2)}
-                      </p>
-                    </div>
-                  );
-                }
-
-                // Check if it's a heading-like text (ends with colon or all caps)
-                if (trimmed.endsWith(':')) {
-                  return (
-                    <h3
-                      key={index}
-                      className="text-[#1a5c2e] font-bold text-sm sm:text-base mt-6 mb-3 uppercase tracking-wide"
-                    >
-                      {trimmed}
-                    </h3>
-                  );
-                }
-
-                // Regular paragraph
-                return (
-                  <p
-                    key={index}
-                    className="text-[#6b6b6b] text-sm sm:text-base leading-relaxed mb-4"
-                  >
-                    {trimmed}
-                  </p>
-                );
-              })}
-            </div>
+            <div
+              className="text-sm sm:text-base leading-relaxed [&_h1]:text-xl [&_h1]:font-bold [&_h1]:text-[#1a1a1a] [&_h1]:mb-3 [&_h1]:mt-6 [&_h2]:text-lg [&_h2]:font-bold [&_h2]:text-[#1a1a1a] [&_h2]:mb-2 [&_h2]:mt-5 [&_h3]:text-base [&_h3]:font-bold [&_h3]:text-[#1a5c2e] [&_h3]:mb-2 [&_h3]:mt-4 [&_p]:mb-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-4 [&_li]:mb-1 [&_blockquote]:border-l-4 [&_blockquote]:border-[#d4a017] [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-[#6b6b6b] [&_blockquote]:my-4 [&_strong]:font-bold [&_strong]:text-[#1a1a1a] [&_em]:italic [&_a]:text-blue-600 [&_a]:underline [&_img]:max-w-full [&_img]:rounded-lg [&_img]:my-3 [&_hr]:border-[#d1d1cc] [&_hr]:my-6"
+              dangerouslySetInnerHTML={{ __html: card.conteudo }}
+            />
           ) : (
             <p className="text-[#6b6b6b] text-sm italic">
               Conteudo em breve disponivel.
