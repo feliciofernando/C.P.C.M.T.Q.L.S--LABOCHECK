@@ -111,7 +111,7 @@ export default function AdminCards() {
   const fetchCards = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/cards');
+      const res = await fetch('/api/cards?all=true');
       if (res.ok) {
         const data = await res.json();
         setCards(data.cards || []);

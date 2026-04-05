@@ -4,9 +4,13 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { logActivity, getLoggedInAdmin } from '@/lib/audit-log';
 
-// GET /api/cards - Fetch all active cards + cards_section settings
-export async function GET() {
+// GET /api/cards - Fetch cards + cards_section settings
+// ?all=true for admin (includes inactive cards)
+export async function GET(request: NextRequest) {
   try {
+    const { searchParams } = new URL(request.url);
+    const all = searchParams.get('all') === 'true';
+
     // Fetch cards_section settings
     const { data: sectionData, error: sectionError } = await supabase
       .from('cards_section')
@@ -14,11 +18,16 @@ export async function GET() {
       .limit(1)
       .single();
 
-    // Fetch active cards
-    const { data: cardsData, error: cardsError } = await supabase
+    // Fetch cards (all or only active)
+    let cardsQuery = supabase
       .from('cards')
-      .select('*')
-      .eq('activo', true)
+      .select('*');
+
+    if (!all) {
+      cardsQuery = cardsQuery.eq('activo', true);
+    }
+
+    const { data: cardsData, error: cardsError } = await cardsQuery
       .order('ordem', { ascending: true });
 
     if (cardsError) {
