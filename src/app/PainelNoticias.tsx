@@ -249,7 +249,7 @@ export default function PainelNoticias() {
               content={form.conteudo}
               onChange={(html) => setForm((p) => ({ ...p, conteudo: html }))}
               placeholder="Escreva o conteudo completo da noticia..."
-              minHeight="200px"
+              minHeight="500px"
             />
           </div>
 
