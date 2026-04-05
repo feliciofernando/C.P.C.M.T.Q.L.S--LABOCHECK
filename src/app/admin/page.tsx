@@ -265,6 +265,39 @@ function AdminDashboard() {
     return () => clearInterval(id);
   }, [sendHeartbeat]);
 
+  // Remove online status when browser/tab is closed
+  useEffect(() => {
+    const adminName = session?.user?.name;
+    if (!adminName) return;
+
+    const cleanup = () => {
+      // Use sendBeacon for reliable delivery on tab close
+      const url = `/api/admin/online?username=${encodeURIComponent(adminName)}`;
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon(
+          new Request(url, { method: 'DELETE', keepalive: true })
+        );
+      } else {
+        fetch(url, { method: 'DELETE' }).catch(() => {});
+      }
+    };
+
+    window.addEventListener('beforeunload', cleanup);
+
+    // Also detect tab visibility changes
+    const handleVisibility = () => {
+      if (document.visibilityState === 'hidden') {
+        cleanup();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    return () => {
+      window.removeEventListener('beforeunload', cleanup);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
+  }, [session]);
+
   const handleRegistoSucesso = () => {
     loadStats();
     setActiveTab('visualizar');

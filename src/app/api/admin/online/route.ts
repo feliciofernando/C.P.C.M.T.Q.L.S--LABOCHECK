@@ -8,11 +8,11 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 // GET /api/admin/online - Listar admins online
 export async function GET() {
   try {
-    // Limpar sessoes expiradas (mais de 2 min sem heartbeat)
+    // Limpar sessoes expiradas (mais de 45 seg sem heartbeat)
     await supabase
       .from('admin_online_status')
       .delete()
-      .lt('last_heartbeat', new Date(Date.now() - 2 * 60 * 1000).toISOString());
+      .lt('last_heartbeat', new Date(Date.now() - 45 * 1000).toISOString());
 
     const { data, error } = await supabase
       .from('admin_online_status')
