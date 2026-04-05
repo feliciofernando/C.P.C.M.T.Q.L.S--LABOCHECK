@@ -265,21 +265,47 @@ function AdminDashboard() {
     return () => clearInterval(id);
   }, [sendHeartbeat]);
 
-  // Remove online status when browser/tab is closed
+  // Remove online status + register logout when browser/tab is closed
   useEffect(() => {
     const adminName = session?.user?.name;
     if (!adminName) return;
 
     const cleanup = () => {
       // Use sendBeacon for reliable delivery on tab close
-      const url = `/api/admin/online?username=${encodeURIComponent(adminName)}`;
+      const onlineUrl = `/api/admin/online?username=${encodeURIComponent(adminName)}`;
       if (navigator.sendBeacon) {
         navigator.sendBeacon(
-          new Request(url, { method: 'DELETE', keepalive: true })
+          new Request(onlineUrl, { method: 'DELETE', keepalive: true })
         );
       } else {
-        fetch(url, { method: 'DELETE' }).catch(() => {});
+        fetch(onlineUrl, { method: 'DELETE' }).catch(() => {});
       }
+
+      // Register logout in audit log via sendBeacon
+      const logUrl = '/api/admin/logs';
+      const logBody = JSON.stringify({
+        adminUsername: adminName,
+        adminNome: adminName,
+        acao: 'LOGOUT',
+        categoria: 'AUTENTICACAO',
+        detalhes: 'Sessao encerrada (navegador/aba fechada)',
+      });
+      if (navigator.sendBeacon) {
+        const blob = new Blob([logBody], { type: 'application/json' });
+        navigator.sendBeacon(logUrl, blob);
+      } else {
+        fetch(logUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: logBody }).catch(() => {});
+      }
+
+      // Clear session cookies so page refresh requires re-login
+      document.cookie.split(';').forEach((cookie) => {
+        const name = cookie.split('=')[0].trim();
+        if (name.startsWith('next-auth') || name.startsWith('__Secure-next-auth')) {
+          const domain = window.location.hostname !== 'localhost' ? `; domain=.${window.location.hostname}` : '';
+          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;${domain}`;
+          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+        }
+      });
     };
 
     window.addEventListener('beforeunload', cleanup);
