@@ -36,32 +36,21 @@ yarn-error.log*
 # vercel
 .vercel
 
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
 local-*
 .claude
 .z-ai-config
+*.log
 dev.log
+dev.out.log
 test
 prompt
 
 server.log
-
 # Skills directory
-/skills/
-
-# Upload folder (user uploaded files)
-/upload/
-
-# Local database
-/db/*.db
-
-# Worklog
+/skills/db/
 worklog.md
-
-# Claude AI config
-.claude
-.claudeignore
-# Temp images
-temp-images/
+skills/web-shader-extractor/
