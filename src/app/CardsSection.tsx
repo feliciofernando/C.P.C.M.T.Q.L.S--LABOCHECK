@@ -49,11 +49,11 @@ function CardBox({ card }: { card: CardItem }) {
   return (
     <Link
       href={'/paginas/' + card.id}
-      className="group block rounded-xl bg-white/[0.08] border border-white/[0.15] p-6 hover:bg-white/[0.15] hover:border-[#d4a017]/50 transition-colors duration-150 text-center"
+      className="group block rounded-xl bg-black/60 border border-white/25 p-6 hover:bg-black/70 hover:border-[#d4a017]/50 transition-colors duration-150 text-center backdrop-blur-sm"
     >
       {/* Icon */}
       <div className="w-14 h-14 mx-auto mb-4">
-        <div className="w-14 h-14 rounded-full bg-white/[0.12] border border-white/[0.2] flex items-center justify-center group-hover:bg-[#d4a017]/20 group-hover:border-[#d4a017]/50 transition-colors duration-150">
+        <div className="w-14 h-14 rounded-full bg-white/15 border border-white/25 flex items-center justify-center group-hover:bg-[#d4a017]/20 group-hover:border-[#d4a017]/50 transition-colors duration-150">
           <IconComponent className="w-6 h-6 text-white group-hover:text-[#d4a017] transition-colors duration-150" />
         </div>
       </div>
@@ -64,7 +64,7 @@ function CardBox({ card }: { card: CardItem }) {
       </h3>
 
       {/* Description */}
-      <p className="text-white/70 text-xs sm:text-sm lg:text-base leading-relaxed line-clamp-3 group-hover:text-white/90 transition-colors duration-150">
+      <p className="text-white/85 text-xs sm:text-sm lg:text-base leading-relaxed line-clamp-3 group-hover:text-white transition-colors duration-150">
         {card.descricao}
       </p>
 
@@ -76,11 +76,11 @@ function CardBox({ card }: { card: CardItem }) {
 
 function CardSkeleton() {
   return (
-    <div className="rounded-xl bg-white/[0.08] border border-white/[0.15] p-6 animate-pulse">
-      <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-white/[0.12]" />
-      <div className="h-4 w-3/4 mx-auto bg-white/[0.1] rounded mb-2" />
-      <div className="h-3 w-full bg-white/[0.08] rounded mb-1" />
-      <div className="h-3 w-5/6 mx-auto bg-white/[0.08] rounded" />
+    <div className="rounded-xl bg-black/60 border border-white/25 p-6 animate-pulse">
+      <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-white/15" />
+      <div className="h-4 w-3/4 mx-auto bg-white/10 rounded mb-2" />
+      <div className="h-3 w-full bg-white/10 rounded mb-1" />
+      <div className="h-3 w-5/6 mx-auto bg-white/10 rounded" />
     </div>
   );
 }
