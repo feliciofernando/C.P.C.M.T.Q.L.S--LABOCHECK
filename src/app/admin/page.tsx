@@ -213,7 +213,14 @@ function AdminDashboard() {
       const res = await fetch('/api/admin/online');
       if (res.ok) {
         const data = await res.json();
-        setOnlineAdmins(data.online || []);
+        const raw = data.online || [];
+        // Dedup by admin_username
+        const seen = new Map<string, typeof raw[0]>();
+        for (const admin of raw) {
+          const key = (admin.admin_username || '').toLowerCase().trim();
+          if (key && !seen.has(key)) seen.set(key, admin);
+        }
+        setOnlineAdmins([...seen.values()]);
       }
     } catch {
       // silent
