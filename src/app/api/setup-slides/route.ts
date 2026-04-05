@@ -51,8 +51,8 @@ export async function GET() {
         INSERT INTO slides (titulo, subtitulo, descricao, texto_botao, link_botao, activo, ordem, tempo_transicao) VALUES
           ('C.P.C.M.T.Q.L.S', 'Conselho Provincial', 'Condutores de Motociclos, Triciclos e Quadriciclos da Lunda Sul', 'Saiba Mais', '#servicos', true, 1, 6000),
           ('Registo de Condutores', 'Condutas Legalizadas', 'Inscreva-se agora e faca parte da nossa comunidade', 'Inscreva-se', '#consultar', true, 2, 5000),
-          ('Formacao Profissional', 'Capacitacao', 'Capacitacao continua para condutores profissionais', 'Ver Cursos', '#servicos', true, 3, 5000),
-          ('Seguranca no Transito', 'Decreto Presidencial No 245/15', 'Comprometidos com a seguranca rodoviaria', 'Consultar', '#contactos', true, 4, 5000),
+          ('Formação Profissional', 'Capacitação', 'Capacitacao continua para condutores profissionais', 'Ver Cursos', '#servicos', true, 3, 5000),
+          ('Segurança no Trânsito', 'Decreto Presidencial No 245/15', 'Comprometidos com a segurança rodoviária', 'Consultar', '#contactos', true, 4, 5000),
           ('Licencas Profissionais', 'Cartao PVC com QR Code', 'Emita a sua licenca profissional com verificacao instantanea', 'Solicitar', '#consultar', true, 5, 5000),
           ('Servicos ao Condutor', 'Apoio Completo', 'Apoio e acompanhamento completo ao condutor', 'Contactar', '#contactos', true, 6, 5000);
       `);

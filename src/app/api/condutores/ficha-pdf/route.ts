@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
   try {
     const { id } = await request.json();
     if (!id) {
-      return NextResponse.json({ error: 'ID obrigatorio' }, { status: 400 });
+      return NextResponse.json({ error: 'ID é obrigatório' }, { status: 400 });
     }
 
     const { data, error } = await supabase

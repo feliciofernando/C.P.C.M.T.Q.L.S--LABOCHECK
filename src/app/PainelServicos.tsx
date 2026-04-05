@@ -41,7 +41,7 @@ interface Servico {
 const ICON_OPTIONS = [
   { value: 'UserPlus', label: 'Utilizador +' },
   { value: 'CreditCard', label: 'Cartao' },
-  { value: 'GraduationCap', label: 'Formacao' },
+  { value: 'GraduationCap', label: 'Formação' },
   { value: 'Shield', label: 'Escudo' },
   { value: 'Wrench', label: 'Chave' },
   { value: 'FileCheck', label: 'Documento' },
@@ -103,7 +103,7 @@ export default function PainelServicos() {
 
   const handleSave = async () => {
     if (!form.titulo.trim()) {
-      toast.error('Titulo e obrigatorio');
+      toast.error('Título é obrigatório');
       return;
     }
     setSaving(true);

@@ -89,7 +89,7 @@ export default function PainelNoticias() {
 
   const handleSave = async () => {
     if (!form.titulo.trim()) {
-      toast.error('Titulo e obrigatorio');
+      toast.error('Título é obrigatório');
       return;
     }
     setSaving(true);

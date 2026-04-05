@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
     const { adminId, adminUsername, adminNome, sessaoId, ipAddress } = body;
 
     if (!adminUsername) {
-      return NextResponse.json({ error: 'adminUsername obrigatorio' }, { status: 400 });
+      return NextResponse.json({ error: 'adminUsername é obrigatório' }, { status: 400 });
     }
 
     // First: clean any duplicates for this username
@@ -147,7 +147,7 @@ export async function DELETE(request: NextRequest) {
     const adminUsername = searchParams.get('username') || '';
 
     if (!adminUsername) {
-      return NextResponse.json({ error: 'username obrigatorio' }, { status: 400 });
+      return NextResponse.json({ error: 'username é obrigatório' }, { status: 400 });
     }
 
     await supabase

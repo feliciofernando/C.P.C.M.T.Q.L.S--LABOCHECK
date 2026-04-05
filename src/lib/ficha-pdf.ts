@@ -117,7 +117,7 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
     ['Estado Civil', c.estadoCivil],
     ['Telefone 1', c.telefone1],
     ['Telefone 2', c.telefone2],
-    ['Endereco / Bairro', c.endereco, 32],
+    ['Endereço / Bairro', c.endereco, 32],
     ['Municipio', c.municipio],
   ];
   for (const [label, value, maxLen] of rows1) {
@@ -132,7 +132,7 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
   doc.setTextColor(DARK);
   doc.setFontSize(9.5);
   doc.setFont('helvetica', 'bold');
-  doc.text('Tipo de Veiculo:', ML, y);
+  doc.text('Tipo de Veículo:', ML, y);
   doc.setFont('helvetica', 'normal');
   const chkM = tipo === 'Motociclo' ? '[X]' : '[ ]';
   const chkT = tipo === 'Triciclo' ? '[X]' : '[ ]';
@@ -141,13 +141,13 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
   y += 5.5;
 
   const rows2: [string, unknown][] = [
-    ['Marca do Veiculo', c.marcaVeiculo],
+    ['Marca do Veículo', c.marcaVeiculo],
     ['Modelo', c.modeloVeiculo],
     ['Cor', c.corVeiculo],
     ['Matricula', c.matriculaVeiculo],
-    ['No da Carta de Conducao', c.numeroCartaConducao],
+    ['N.º da Carta de Condução', c.numeroCartaConducao],
     ['Categoria da Carta', c.categoriaCarta],
-    ['Tempo de Experiencia', c.tempoExperiencia],
+    ['Tempo de Experiência', c.tempoExperiencia],
   ];
   for (const [label, value] of rows2) {
     y = fieldRow(doc, y, label, String(value));
@@ -157,11 +157,11 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
   // ── SECTION 3: LOCAL DE TRABALHO ──
   y = sectionHeader(doc, y, '3', 'LOCAL DE TRABALHO');
   y = fieldRow(doc, y, 'Municipio (actividade)', String(c.municipioTrabalho));
-  y = fieldRow(doc, y, 'Horario de Trabalho', String(c.horarioTrabalho));
+  y = fieldRow(doc, y, 'Horário de Trabalho', String(c.horarioTrabalho));
   y += 2;
 
-  // ── SECTION 4: DOCUMENTACAO E EQUIPAMENTOS ──
-  y = sectionHeader(doc, y, '4', 'DOCUMENTACAO E EQUIPAMENTOS');
+  // ── SECTION 4: DOCUMENTAÇÃO E EQUIPAMENTOS ──
+  y = sectionHeader(doc, y, '4', 'DOCUMENTAÇÃO E EQUIPAMENTOS');
 
   doc.setTextColor(GRAY);
   doc.setFontSize(8);
@@ -171,10 +171,10 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
 
   const docs: [string, string][] = [
     ['temBI', 'Bilhete de Identidade'],
-    ['temCartaConducao', 'Carta de Conducao'],
+    ['temCartaConducao', 'Carta de Condução'],
     ['temDocumentoVeiculo', 'Documento do Veiculo'],
     ['temSeguroVeiculo', 'Seguro do Veiculo'],
-    ['temCapacete', 'Capacete de Protecao'],
+    ['temCapacete', 'Capacete de Proteção'],
     ['temColeteRefletor', 'Colete Refletor'],
   ];
 
@@ -195,12 +195,12 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
   y += 2;
 
   // ── SECTION 5: FORMACAO ──
-  y = sectionHeader(doc, y, '5', 'FORMACAO');
+  y = sectionHeader(doc, y, '5', 'FORMAÇÃO');
 
   doc.setTextColor(DARK);
   doc.setFontSize(9.5);
   doc.setFont('helvetica', 'normal');
-  doc.text('Ja participou em formacao sobre seguranca rodoviaria?', ML, y);
+  doc.text('Já participou em formação sobre segurança rodoviária?', ML, y);
   y += 5;
 
   const formSim = c.participouFormacao ? 'X' : ' ';
@@ -209,12 +209,12 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
   y += 6;
 
   if (c.participouFormacao && c.instituicaoFormacao) {
-    y = fieldRow(doc, y, 'Instituicao', String(c.instituicaoFormacao));
+    y = fieldRow(doc, y, 'Instituição', String(c.instituicaoFormacao));
   }
   y += 2;
 
   // ── SECTION 6: DECLARACAO ──
-  y = sectionHeader(doc, y, '6', 'DECLARACAO');
+  y = sectionHeader(doc, y, '6', 'DECLARAÇÃO');
 
   const declBoxH = 23;
   doc.setFillColor(LGRAY);
@@ -223,10 +223,10 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
   doc.roundedRect(ML, y, CW, declBoxH, 1, 1, 'FD');
 
   const declLines = [
-    'Declaro que as informacoes acima prestadas sao verdadeiras e comprometo-me a',
+    'Declaro que as informações acima prestadas são verdadeiras e comprometo-me a',
     'cumprir as normas do Conselho Provincial dos Condutores de Motociclos, Triciclos e',
     'Quadriciclos da Lunda Sul, bem como respeitar o Codigo de Estrada e as regras de',
-    'seguranca rodoviaria.',
+    'segurança rodoviária.',
   ];
   doc.setTextColor(DARK);
   doc.setFontSize(9);
@@ -239,14 +239,14 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
   y += declBoxH + 5;
 
   // ── SECTION 7: DADOS DA LICENCA ──
-  y = sectionHeader(doc, y, '7', 'DADOS DA LICENCA');
+  y = sectionHeader(doc, y, '7', 'DADOS DA LICENÇA');
 
   const rowsLicenca: [string, string][] = [
     ['No de Registo', str(c.numeroOrdem)],
     ['No Membro', str(c.numeroMembro)],
     ['Nacionalidade', str(c.nacionalidade || 'Angolana')],
     ['Provincia', str(c.provincia || 'Lunda Sul')],
-    ['Data de Emissao', str(c.dataEmissaoLicenca)],
+    ['Data de Emissão', str(c.dataEmissaoLicenca)],
     ['Validade', str(c.validadeLicenca)],
     ['Situacao', str(c.status)],
   ];
@@ -305,7 +305,7 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
   doc.setTextColor(GRAY);
   doc.setFontSize(8);
   doc.setFont('helvetica', 'italic');
-  doc.text('O Responsavel pelo Registo', sigRightX, sigBaseY + 5, { align: 'center' });
+  doc.text('O Responsável pelo Registo', sigRightX, sigBaseY + 5, { align: 'center' });
   doc.setDrawColor(DARK);
   doc.setLineWidth(0.3);
   doc.line(sigRightX - 25, sigBaseY + 6.5, sigRightX + 25, sigBaseY + 6.5);
@@ -316,7 +316,7 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
   doc.setTextColor(WHITE);
   doc.setFontSize(8);
   doc.setFont('helvetica', 'normal');
-  doc.text('Condutores organizados, transito mais seguro', W / 2, H - 7, { align: 'center' });
+  doc.text('Condutores organizados, trânsito mais seguro', W / 2, H - 7, { align: 'center' });
   doc.setTextColor(GOLD);
   doc.setFontSize(6.5);
   doc.text('C.P.C.M.T.Q.L.S | Contactos: 941-000-517 / 924-591-350', W / 2, H - 3, { align: 'center' });

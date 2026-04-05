@@ -180,7 +180,7 @@ export default function TodasNoticiasPage() {
             Lunda Sul (Cassengo, Bairro Social da Juventude, 1o Andar do Centro Comercial do Emporio, vulgo Janota)
           </p>
           <p className="opacity-50 text-xs lg:text-sm mt-2">
-            Condutores organizados, transito mais seguro | Decreto Presidencial No 245/15
+            Condutores organizados, trânsito mais seguro | Decreto Presidencial No 245/15
           </p>
         </div>
       </footer>

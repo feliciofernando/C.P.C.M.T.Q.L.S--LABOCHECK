@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
     const id = searchParams.get('id');
 
     if (!id) {
-      return NextResponse.json({ error: 'ID e obrigatorio' }, { status: 400 });
+      return NextResponse.json({ error: 'ID é obrigatório' }, { status: 400 });
     }
 
     const { data, error } = await supabase

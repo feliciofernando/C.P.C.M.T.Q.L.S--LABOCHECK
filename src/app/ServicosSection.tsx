@@ -66,7 +66,7 @@ export default function ServicosSection() {
     return (
       <section id="servicos" className="py-12 lg:py-16 px-4">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl lg:text-3xl font-bold text-[#1a1a1a] text-center mb-8">Os Nossos Servicos</h2>
+          <h2 className="text-2xl lg:text-3xl font-bold text-[#1a1a1a] text-center mb-8">Os Nossos Serviços</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {[1, 2, 3, 4].map((i) => (
               <div key={i} className="h-64 rounded-xl bg-[#e8e8e3] animate-pulse" />
@@ -81,8 +81,8 @@ export default function ServicosSection() {
     return (
       <section id="servicos" className="py-12 px-4">
         <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-2xl font-bold text-[#1a1a1a] mb-2">Os Nossos Servicos</h2>
-          <p className="text-[#6b6b6b] text-sm lg:text-base">Nenhum servico disponivel no momento.</p>
+          <h2 className="text-2xl font-bold text-[#1a1a1a] mb-2">Os Nossos Serviços</h2>
+          <p className="text-[#6b6b6b] text-sm lg:text-base">Nenhum serviço disponível no momento.</p>
         </div>
       </section>
     );
@@ -98,9 +98,9 @@ export default function ServicosSection() {
             <div className="w-2 h-2 rounded-full bg-[#d4a017]" />
             <div className="h-[1px] w-12 lg:w-16 bg-[#d4a017]/60" />
           </div>
-          <h2 className="text-2xl lg:text-3xl font-bold text-[#1a1a1a]">Os Nossos Servicos</h2>
+          <h2 className="text-2xl lg:text-3xl font-bold text-[#1a1a1a]">Os Nossos Serviços</h2>
           <p className="text-sm lg:text-base text-[#6b6b6b] mt-1">
-            Solucoes completas para condutores profissionais
+            Soluções completas para condutores profissionais
           </p>
         </div>
 

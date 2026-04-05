@@ -42,7 +42,7 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   {
-    label: 'Inicio',
+    label: 'Início',
     href: '/',
     icon: <Home className="w-4 h-4 lg:w-5 lg:h-5" />,
   },
@@ -53,30 +53,30 @@ const menuItems: MenuItem[] = [
       { label: 'Mensagem do Presidente', href: '/paginas/6e83ee50-e486-44e8-b6d7-7a1c1102b0a9', desc: 'Palavras do lider', icon: <Users className="w-4 h-4" /> },
       { label: 'Sobre o Conselho', href: '/paginas/f0e3ce27-6776-44c1-a043-354a74d40509', desc: 'Quem somos', icon: <Building2 className="w-4 h-4" /> },
       { label: 'Galeria de Diretores', href: '/paginas/8547b93c-4d8d-4db0-9b5c-7d1d0ab89bed', desc: 'Nossos diretores', icon: <Users className="w-4 h-4" /> },
-      { label: 'Eventos', href: '/paginas/d465ae1c-6287-412b-9222-6b78ab5b083f', desc: 'Proximos eventos', icon: <Calendar className="w-4 h-4" /> },
+      { label: 'Eventos', href: '/paginas/d465ae1c-6287-412b-9222-6b78ab5b083f', desc: 'Próximos eventos', icon: <Calendar className="w-4 h-4" /> },
     ],
   },
   {
-    label: 'Servicos',
+    label: 'Serviços',
     icon: <Briefcase className="w-4 h-4 lg:w-5 lg:h-5" />,
     children: [
-      { label: 'Emissao de Licencas', href: '/servicos/641325e6-1e07-442f-9099-175f045dd068', desc: 'Licenca profissional PVC', icon: <CreditCard className="w-4 h-4" /> },
+      { label: 'Emissão de Licenças', href: '/servicos/641325e6-1e07-442f-9099-175f045dd068', desc: 'Licença profissional PVC', icon: <CreditCard className="w-4 h-4" /> },
       { label: 'Registo de Condutores', href: '/servicos/e0f2332a-93c1-4f43-9318-cea989b2a0ec', desc: 'Inscreva-se agora', icon: <UserPlus className="w-4 h-4" /> },
-      { label: 'Formacao Profissional', href: '/servicos/fbf2d960-178e-474a-a9f5-8ac2eb797cf2', desc: 'Cursos e capacitacao', icon: <GraduationCap className="w-4 h-4" /> },
-      { label: 'Consultoria e Apoio Legal', href: '/servicos/7bfad4bd-a923-4eef-a884-e1beaf5b5856', desc: 'Assistencia juridica', icon: <Scale className="w-4 h-4" /> },
+      { label: 'Formação Profissional', href: '/servicos/fbf2d960-178e-474a-a9f5-8ac2eb797cf2', desc: 'Cursos e capacitação', icon: <GraduationCap className="w-4 h-4" /> },
+      { label: 'Consultoria e Apoio Legal', href: '/servicos/7bfad4bd-a923-4eef-a884-e1beaf5b5856', desc: 'Assistência jurídica', icon: <Scale className="w-4 h-4" /> },
     ],
   },
   {
     label: 'Recursos',
     icon: <FileText className="w-4 h-4 lg:w-5 lg:h-5" />,
     children: [
-      { label: 'Legislacao', href: '/paginas/5ed2189d-9c81-4b6c-a6bc-d58bc5ada1d9', desc: 'Leis e decretos', icon: <Scale className="w-4 h-4" /> },
+      { label: 'Legislação', href: '/paginas/5ed2189d-9c81-4b6c-a6bc-d58bc5ada1d9', desc: 'Leis e decretos', icon: <Scale className="w-4 h-4" /> },
       { label: 'Documentos', href: '/paginas/ae5d78e7-eba7-45dc-b7a2-c92e0671f302', desc: 'Formularios e guias', icon: <FileText className="w-4 h-4" /> },
-      { label: 'Perguntas Frequentes', href: '/paginas/4c2d8ce4-3473-4125-9366-142d54754025', desc: 'Tire suas duvidas', icon: <HelpCircle className="w-4 h-4" /> },
+      { label: 'Perguntas Frequentes', href: '/paginas/4c2d8ce4-3473-4125-9366-142d54754025', desc: 'Tire suas dúvidas', icon: <HelpCircle className="w-4 h-4" /> },
     ],
   },
   {
-    label: 'Noticias',
+    label: 'Notícias',
     href: '/#noticias',
     icon: <Newspaper className="w-4 h-4 lg:w-5 lg:h-5" />,
   },

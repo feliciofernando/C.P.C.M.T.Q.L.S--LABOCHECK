@@ -152,7 +152,7 @@ export default function HeroSection() {
             Conselho Provincial dos Condutores de Motociclos, Triciclos e Quadriciclos da Lunda Sul
           </p>
           <p className="text-sm sm:text-base mt-5 opacity-80 italic max-w-xl mx-auto font-light tracking-wide">
-            &quot;Condutores organizados, transito mais seguro&quot;
+            &quot;Condutores organizados, trânsito mais seguro&quot;
           </p>
         </div>
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#d4a017] to-transparent opacity-60" />

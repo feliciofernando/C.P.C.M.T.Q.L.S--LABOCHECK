@@ -93,7 +93,7 @@ export async function POST(
 
     if (!titulo) {
       return NextResponse.json(
-        { error: 'Campo obrigatorio: titulo' },
+        { error: 'Campo obrigatório: título' },
         { status: 400 }
       );
     }

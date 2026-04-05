@@ -62,10 +62,10 @@ export default async function ServicoDetailPage({
             <Shield className="w-10 h-10 text-[#1a5c2e]" />
           </div>
           <h1 className="text-2xl font-bold text-[#1a1a1a] mb-3">
-            Servico Nao Encontrado
+            Serviço Não Encontrado
           </h1>
           <p className="text-[#6b6b6b] mb-8">
-            O servico que procura nao existe ou foi removido.
+            O serviço que procura não existe ou foi removido.
           </p>
           <Link
             href="/"
@@ -241,16 +241,16 @@ export default async function ServicoDetailPage({
             <div className="flex items-center gap-2 mb-3">
               <div className="w-2 h-2 rounded-full bg-[#d4a017]" />
               <span className="text-xs font-bold text-[#1a5c2e] uppercase tracking-wide">
-                Informacoes de Contacto
+                Informações de Contacto
               </span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
               <p className="text-[#6b6b6b]">
-                <span className="font-medium text-[#1a1a1a]">Localizacao:</span>{' '}
+                <span className="font-medium text-[#1a1a1a]">Localização:</span>{' '}
                 Cassengo, Bairro Social da Juventude, Saurimo
               </p>
               <p className="text-[#6b6b6b]">
-                <span className="font-medium text-[#1a1a1a]">Horario:</span>{' '}
+                <span className="font-medium text-[#1a1a1a]">Horário:</span>{' '}
                 Segunda a Sexta, 08:00 - 16:00
               </p>
               <p className="text-[#6b6b6b]">

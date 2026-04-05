@@ -175,7 +175,7 @@ export default async function PaginaDetailPage({
                 Cassengo, Bairro Social da Juventude, Saurimo
               </p>
               <p className="text-[#6b6b6b]">
-                <span className="font-medium text-[#1a1a1a]">Horario:</span>{' '}
+                <span className="font-medium text-[#1a1a1a]">Horário:</span>{' '}
                 Segunda a Sexta, 08:00 - 16:00
               </p>
               <p className="text-[#6b6b6b]">

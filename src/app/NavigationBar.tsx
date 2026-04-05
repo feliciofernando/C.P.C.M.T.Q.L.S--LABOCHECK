@@ -14,7 +14,7 @@ const navItems: NavItem[] = [
   { label: 'Sobre o Conselho', href: '#sobre' },
   { label: 'Noticias', href: '#noticias' },
   { label: 'Eventos', href: '#eventos' },
-  { label: 'Legislacao', href: '#legislacao' },
+  { label: 'Legislação', href: '#legislacao' },
   { label: 'Documentos', href: '#documentos' },
   { label: 'Contacto', href: '#contacto' },
 ];

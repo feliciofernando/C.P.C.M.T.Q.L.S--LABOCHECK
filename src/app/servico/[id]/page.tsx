@@ -271,7 +271,7 @@ export default function ServicoDetailPage() {
             Comercial do Emporio, vulgo Janota)
           </p>
           <p className="opacity-50 text-xs mt-2">
-            Condutores organizados, transito mais seguro | Decreto Presidencial
+            Condutores organizados, trânsito mais seguro | Decreto Presidencial
             No 245/15
           </p>
         </div>

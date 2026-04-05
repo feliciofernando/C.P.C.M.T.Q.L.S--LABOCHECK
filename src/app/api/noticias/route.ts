@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     const { titulo, resumo, conteudo, imagemBase64, imagemTipo, activo, destaque, ordem } = body;
 
     if (!titulo || !titulo.trim()) {
-      return NextResponse.json({ error: 'Titulo e obrigatorio' }, { status: 400 });
+      return NextResponse.json({ error: 'Título é obrigatório' }, { status: 400 });
     }
 
     const insertData: Record<string, unknown> = {

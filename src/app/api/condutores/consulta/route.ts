@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search') || '';
 
     if (!search) {
-      return NextResponse.json({ error: 'Parametro de pesquisa e obrigatorio' }, { status: 400 });
+      return NextResponse.json({ error: 'Parâmetro de pesquisa é obrigatório' }, { status: 400 });
     }
 
     const numSearch = parseInt(search);

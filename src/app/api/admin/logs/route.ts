@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     const { adminId, adminUsername, adminNome, acao, categoria, detalhes, ipAddress } = body;
 
     if (!acao || !categoria) {
-      return NextResponse.json({ error: 'acao e categoria sao obrigatorios' }, { status: 400 });
+      return NextResponse.json({ error: 'acção e categoria são obrigatórios' }, { status: 400 });
     }
 
     const { error } = await supabase.from('admin_activity_log').insert({

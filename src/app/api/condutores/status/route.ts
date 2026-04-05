@@ -8,7 +8,7 @@ export async function PUT(request: NextRequest) {
     const { id, status } = await request.json();
 
     if (!id || !status) {
-      return NextResponse.json({ error: 'ID e status sao obrigatorios' }, { status: 400 });
+      return NextResponse.json({ error: 'ID e status são obrigatórios' }, { status: 400 });
     }
 
     if (!['ATIVA', 'INATIVA'].includes(status)) {

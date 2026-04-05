@@ -143,7 +143,7 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
         provincia: condutor.provincia || 'Lunda Sul',
       });
 
-      toast.success('Condutor carregado para edicao');
+      toast.success('Condutor carregado para edição');
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Erro na busca';
       toast.error(message);
@@ -186,7 +186,7 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 2 * 1024 * 1024) {
-      toast.error('A foto deve ter no maximo 2MB');
+      toast.error('A foto deve ter no máximo 2MB');
       return;
     }
     const reader = new FileReader();
@@ -202,19 +202,19 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
 
     // Validations
     if (!form.nomeCompleto.trim()) {
-      toast.error('Nome completo e obrigatorio');
+      toast.error('Nome completo é obrigatório');
       return;
     }
     if (!form.numeroBI.trim()) {
-      toast.error('Numero do Bilhete de Identidade e obrigatorio');
+      toast.error('Número do Bilhete de Identidade é obrigatório');
       return;
     }
     if (!form.sexo) {
-      toast.error('Sexo e obrigatorio');
+      toast.error('Sexo é obrigatório');
       return;
     }
     if (!form.tipoVeiculo) {
-      toast.error('Tipo de veiculo e obrigatorio');
+      toast.error('Tipo de veículo é obrigatório');
       return;
     }
 
@@ -358,7 +358,7 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
             Foto do Condutor
           </Label>
           <p className="text-xs text-[#6b6b6b] mt-1 mb-2">
-            Formato: JPG ou PNG, maximo 2MB
+            Formato: JPG ou PNG, máximo 2MB
           </p>
           <Input
             id="foto"
@@ -475,12 +475,12 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
             />
           </div>
           <div className="md:col-span-2">
-            <Label htmlFor="endereco">Endereco / Bairro</Label>
+            <Label htmlFor="endereco">Endereço / Bairro</Label>
             <Input
               id="endereco"
               value={form.endereco}
               onChange={(e) => updateField('endereco', e.target.value)}
-              placeholder="Endereco completo"
+              placeholder="Endereço completo"
               className="mt-1"
             />
           </div>
@@ -506,7 +506,7 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <div>
-            <Label>Tipo de Veiculo *</Label>
+            <Label>Tipo de Veículo *</Label>
             <RadioGroup
               value={form.tipoVeiculo}
               onValueChange={(v) => updateField('tipoVeiculo', v)}
@@ -521,7 +521,7 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
             </RadioGroup>
           </div>
           <div>
-            <Label htmlFor="marcaVeiculo">Marca do Veiculo</Label>
+            <Label htmlFor="marcaVeiculo">Marca do Veículo</Label>
             <Input
               id="marcaVeiculo"
               value={form.marcaVeiculo}
@@ -551,7 +551,7 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
             />
           </div>
           <div>
-            <Label htmlFor="matriculaVeiculo">Numero da Matricula</Label>
+            <Label htmlFor="matriculaVeiculo">Número da Matrícula</Label>
             <Input
               id="matriculaVeiculo"
               value={form.matriculaVeiculo}
@@ -561,7 +561,7 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
             />
           </div>
           <div>
-            <Label htmlFor="numeroCartaConducao">No da Carta de Conducao</Label>
+            <Label htmlFor="numeroCartaConducao">N.º da Carta de Condução</Label>
             <Input
               id="numeroCartaConducao"
               value={form.numeroCartaConducao}
@@ -581,7 +581,7 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
             />
           </div>
           <div>
-            <Label htmlFor="tempoExperiencia">Tempo de Experiencia</Label>
+            <Label htmlFor="tempoExperiencia">Tempo de Experiência</Label>
             <Input
               id="tempoExperiencia"
               value={form.tempoExperiencia}
@@ -612,7 +612,7 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
             />
           </div>
           <div>
-            <Label htmlFor="horarioTrabalho">Horario de Trabalho</Label>
+            <Label htmlFor="horarioTrabalho">Horário de Trabalho</Label>
             <Input
               id="horarioTrabalho"
               value={form.horarioTrabalho}
@@ -635,10 +635,10 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {[
             { key: 'temBI', label: 'Bilhete de Identidade' },
-            { key: 'temCartaConducao', label: 'Carta de Conducao' },
+            { key: 'temCartaConducao', label: 'Carta de Condução' },
             { key: 'temDocumentoVeiculo', label: 'Documento do Veiculo' },
             { key: 'temSeguroVeiculo', label: 'Seguro do Veiculo' },
-            { key: 'temCapacete', label: 'Capacete de Protecao' },
+            { key: 'temCapacete', label: 'Capacete de Proteção' },
             { key: 'temColeteRefletor', label: 'Colete Refletor' },
           ].map((doc) => (
             <div key={doc.key} className="flex items-center gap-2">
@@ -655,12 +655,12 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
 
       <Separator className="bg-[#d1d1cc]" />
 
-      {/* 5. Formacao */}
+      {/* 5. Formação */}
       <div>
         <h3 className="text-base font-bold text-[#1a5c2e] mb-4 border-b border-[#d1d1cc] pb-2">
-          5. Formacao
+          5. Formação
         </h3>
-        <p className="text-sm text-[#6b6b6b] mb-3">Ja participou em formacao sobre seguranca rodoviaria?</p>
+        <p className="text-sm text-[#6b6b6b] mb-3">Já participou em formação sobre segurança rodoviária?</p>
         <RadioGroup
           value={form.participouFormacao ? 'Sim' : 'Nao'}
           onValueChange={(v) => updateField('participouFormacao', v === 'Sim')}
@@ -671,13 +671,13 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
             <Label htmlFor="form-sim" className="cursor-pointer">Sim</Label>
           </div>
           <div className="flex items-center gap-2">
-            <RadioGroupItem value="Nao" id="form-nao" />
-            <Label htmlFor="form-nao" className="cursor-pointer">Nao</Label>
+            <RadioGroupItem value="Não" id="form-nao" />
+            <Label htmlFor="form-nao" className="cursor-pointer">Não</Label>
           </div>
         </RadioGroup>
         {form.participouFormacao && (
           <div className="max-w-md">
-            <Label htmlFor="instituicaoFormacao">Indique a instituicao</Label>
+            <Label htmlFor="instituicaoFormacao">Indique a instituição</Label>
             <Input
               id="instituicaoFormacao"
               value={form.instituicaoFormacao}
@@ -701,7 +701,7 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
             Declaro que as informacoes acima prestadas sao verdadeiras e comprometo-me a cumprir
             as normas do Conselho Provincial dos Condutores de Motociclos, Triciclos e
             Quadriciclos da Lunda Sul, bem como respeitar o Codigo de Estrada e as regras de
-            seguranca rodoviaria.
+            segurança rodoviária.
           </p>
         </div>
       </div>

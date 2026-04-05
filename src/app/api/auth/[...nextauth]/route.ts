@@ -97,7 +97,7 @@ const authOptions = {
   trustHost: true,
   session: {
     strategy: "jwt" as const,
-    maxAge: 30 * 60,           // 30 minutos - sessao curta por seguranca
+    maxAge: 30 * 60,           // 30 minutos - sessão curta por segurança
     updateAge: 5 * 60,         // Actualizar a cada 5 min
   },
   pages: {

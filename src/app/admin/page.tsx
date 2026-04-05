@@ -538,7 +538,7 @@ function AdminDashboard() {
         <div className="max-w-7xl mx-auto px-4 py-3 text-center text-xs">
           <p className="font-semibold text-sm">C.P.C.M.T.Q.L.S - Painel Administrativo</p>
           <p className="opacity-60 text-xs mt-1">
-            Condutores organizados, transito mais seguro | Decreto Presidencial No 245/15
+            Condutores organizados, trânsito mais seguro | Decreto Presidencial No 245/15
           </p>
         </div>
       </footer>

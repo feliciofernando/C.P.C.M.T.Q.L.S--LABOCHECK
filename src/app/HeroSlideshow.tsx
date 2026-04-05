@@ -123,7 +123,7 @@ export default function HeroSlideshow() {
             Conselho Provincial dos Condutores de Motociclos, Triciclos e Quadriciclos da Lunda Sul
           </p>
           <p className="text-sm sm:text-base mt-5 opacity-80 italic max-w-xl mx-auto font-light tracking-wide">
-            &quot;Condutores organizados, transito mais seguro&quot;
+            &quot;Condutores organizados, trânsito mais seguro&quot;
           </p>
         </div>
       </section>
@@ -194,7 +194,7 @@ export default function HeroSlideshow() {
         className={`absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/30 hover:bg-black/50 text-white flex items-center justify-center transition-all duration-300 backdrop-blur-sm ${
           isHovering ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'
         }`}
-        aria-label="Proximo slide"
+        aria-label="Próximo slide"
       >
         <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
       </button>
