@@ -4,14 +4,10 @@ import { useState, useEffect, useRef } from 'react';
 
 const SPLASH_MIN_DURATION = 2200;
 const SPLASH_MAX_DURATION = 3000;
-const SESSION_KEY = 'cpcmtqls-splash-shown';
 
 export default function SplashScreen({ children }: { children: React.ReactNode }) {
-  /* ---- lazy init: skip if already shown this session ---- */
-  const [phase, setPhase] = useState<'visible' | 'fading' | 'done'>(() => {
-    if (typeof window === 'undefined') return 'visible';
-    return sessionStorage.getItem(SESSION_KEY) === 'true' ? 'done' : 'visible';
-  });
+  /* ---- sempre visivel a cada carregamento ---- */
+  const [phase, setPhase] = useState<'visible' | 'fading' | 'done'>('visible');
 
   /* ---- run once on mount only ---- */
   const initRef = useRef(false);
@@ -35,7 +31,6 @@ export default function SplashScreen({ children }: { children: React.ReactNode }
       /* fully hidden after fade animation (500ms) */
       timers.push(
         setTimeout(() => {
-          sessionStorage.setItem(SESSION_KEY, 'true');
           setPhase('done');
         }, remaining + 500)
       );
@@ -50,7 +45,6 @@ export default function SplashScreen({ children }: { children: React.ReactNode }
     /* safety: never exceed max duration */
     timers.push(
       setTimeout(() => {
-        sessionStorage.setItem(SESSION_KEY, 'true');
         setPhase('done');
       }, SPLASH_MAX_DURATION)
     );
