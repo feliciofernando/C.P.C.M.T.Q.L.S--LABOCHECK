@@ -12,7 +12,6 @@ import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import {
   LogOut,
-  Shield,
   Phone,
   MapPin,
   Clock,
@@ -347,15 +346,15 @@ function AdminDashboard() {
 
             {/* Online Admins */}
             <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1.5 bg-white/10 rounded-full px-2.5 py-1 max-w-xs overflow-hidden">
+              <div className="flex items-center gap-1.5 bg-white/10 rounded-full px-2.5 py-1">
                 <span className="relative flex h-2.5 w-2.5 flex-shrink-0">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-400"></span>
                 </span>
-                <div className="flex items-center gap-1.5 min-w-0">
+                <div className="flex items-center gap-1.5">
                   {onlineAdmins.length > 0 ? (
                     <>
-                      <span className="text-xs font-medium text-white/90 truncate">
+                      <span className="text-xs font-medium text-white/90">
                         {onlineAdmins.map(a => a.admin_nome).join(' · ')}
                       </span>
                       {onlineAdmins.length > 1 && (
@@ -371,10 +370,6 @@ function AdminDashboard() {
                   )}
                 </div>
               </div>
-              <Badge className="bg-[#d4a017]/20 text-[#d4a017] border border-[#d4a017]/40 text-xs px-2 py-0.5">
-                <Shield className="w-3 h-3 mr-1" />
-                Admin
-              </Badge>
             </div>
 
             <Button

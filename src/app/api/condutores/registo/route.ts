@@ -2,10 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-server';
 import { toCamelCase, toSnakeCase, arrayToCamelCase } from '@/lib/utils-supabase';
 import QRCode from 'qrcode';
-import { logActivity } from '@/lib/audit-log';
+import { logActivity, getLoggedInAdmin } from '@/lib/audit-log';
 
 export async function POST(request: NextRequest) {
   try {
+    const admin = await getLoggedInAdmin();
     const data = await request.json();
     const snakeData = toSnakeCase(data);
 
@@ -68,8 +69,9 @@ export async function POST(request: NextRequest) {
 
     // Audit log
     logActivity({
-      adminUsername: 'admin',
-      adminNome: 'Administrador',
+      adminUsername: admin.username,
+      adminNome: admin.nome,
+      adminId: admin.id,
       acao: 'CRIAR_FICHA',
       categoria: 'CONDUTORES',
       detalhes: `Ficha criada para ${data.nomeCompleto || 'N/A'} - No ${nextNumeroOrdem} - BI: ${data.numeroBI || 'N/A'}`,

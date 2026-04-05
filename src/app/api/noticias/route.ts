@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-server';
 import { toCamelCase } from '@/lib/utils-supabase';
-import { logActivity } from '@/lib/audit-log';
+import { logActivity, getLoggedInAdmin } from '@/lib/audit-log';
 
 // GET /api/noticias - Listar noticias (publico: so activas, admin: todas)
 export async function GET(request: NextRequest) {
@@ -49,6 +49,7 @@ export async function GET(request: NextRequest) {
 // POST /api/noticias - Criar nova noticia
 export async function POST(request: NextRequest) {
   try {
+    const admin = await getLoggedInAdmin();
     const body = await request.json();
     const { titulo, resumo, conteudo, imagemBase64, imagemTipo, activo, destaque, ordem } = body;
 
@@ -77,7 +78,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'CRIAR_NOTICIA', categoria: 'NOTICIAS', detalhes: `Noticia criada: ${body.titulo || 'N/A'}` }).catch(() => {});
+    logActivity({ adminUsername: admin.username, adminNome: admin.nome, adminId: admin.id, acao: 'CRIAR_NOTICIA', categoria: 'NOTICIAS', detalhes: `Noticia criada: ${body.titulo || 'N/A'}` }).catch(() => {});
 
     return NextResponse.json(toCamelCase(data), { status: 201 });
   } catch (error: unknown) {

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { logActivity } from '@/lib/audit-log';
+import { logActivity, getLoggedInAdmin } from '@/lib/audit-log';
 
 // PUT /api/cards/[id] - Update card item (admin only)
 export async function PUT(
@@ -15,6 +15,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
     }
 
+    const admin = await getLoggedInAdmin();
     const { id } = await params;
     const body = await request.json();
 
@@ -45,7 +46,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Card nao encontrado' }, { status: 404 });
     }
 
-    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'EDITAR_CARD', categoria: 'CARDS', detalhes: `Card "${data.titulo || 'Sem titulo'}" actualizado` }).catch(() => {});
+    logActivity({ adminUsername: admin.username, adminNome: admin.nome, adminId: admin.id, acao: 'EDITAR_CARD', categoria: 'CARDS', detalhes: `Card "${data.titulo || 'Sem titulo'}" actualizado` }).catch(() => {});
 
     return NextResponse.json(data);
   } catch (error: unknown) {
@@ -65,6 +66,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
     }
 
+    const admin = await getLoggedInAdmin();
     const { id } = await params;
 
     // Buscar titulo do card antes de eliminar
@@ -81,7 +83,7 @@ export async function DELETE(
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'ELIMINAR_CARD', categoria: 'CARDS', detalhes: `Card "${tituloCard}" eliminado` }).catch(() => {});
+    logActivity({ adminUsername: admin.username, adminNome: admin.nome, adminId: admin.id, acao: 'ELIMINAR_CARD', categoria: 'CARDS', detalhes: `Card "${tituloCard}" eliminado` }).catch(() => {});
 
     return NextResponse.json({ message: 'Card eliminado com sucesso' });
   } catch (error: unknown) {
@@ -101,6 +103,7 @@ export async function POST(
       return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
     }
 
+    const admin = await getLoggedInAdmin();
     const body = await request.json();
     const { titulo, descricao, icone, link, ordem } = body;
 
@@ -130,7 +133,7 @@ export async function POST(
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'CRIAR_CARD', categoria: 'CARDS', detalhes: `Card criado: ${body.titulo || 'N/A'}` }).catch(() => {});
+    logActivity({ adminUsername: admin.username, adminNome: admin.nome, adminId: admin.id, acao: 'CRIAR_CARD', categoria: 'CARDS', detalhes: `Card criado: ${body.titulo || 'N/A'}` }).catch(() => {});
 
     return NextResponse.json(data, { status: 201 });
   } catch (error: unknown) {

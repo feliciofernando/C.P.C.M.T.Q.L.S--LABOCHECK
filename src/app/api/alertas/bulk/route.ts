@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-server';
-import { logActivity } from '@/lib/audit-log';
+import { logActivity, getLoggedInAdmin } from '@/lib/audit-log';
 
 export async function POST(request: NextRequest) {
   try {
+    const admin = await getLoggedInAdmin();
     const body = await request.json();
     const { acao, ids } = body;
 
@@ -67,7 +68,7 @@ export async function POST(request: NextRequest) {
       'ELIMINAR_SELECIONADAS': 'Eliminar seleccionadas',
     };
 
-    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'OPERACAO_EM_MASSA', categoria: 'ALERTAS', detalhes: `Operacao em massa: ${acoesLegiveis[acao] || acao} - ${count} registo(s) afectado(s)` }).catch(() => {});
+    logActivity({ adminUsername: admin.username, adminNome: admin.nome, adminId: admin.id, acao: 'OPERACAO_EM_MASSA', categoria: 'ALERTAS', detalhes: `Operacao em massa: ${acoesLegiveis[acao] || acao} - ${count} registo(s) afectado(s)` }).catch(() => {});
 
     return NextResponse.json({
       message: `${count} alerta(s) processada(s) com sucesso`,

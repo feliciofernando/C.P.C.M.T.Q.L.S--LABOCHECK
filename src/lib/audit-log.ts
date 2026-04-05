@@ -1,4 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -87,6 +89,26 @@ export async function logActivity(entry: LogEntry): Promise<void> {
 export function getAdminFromSession(session: { user?: { name?: string; email?: string } } | null): { username: string; nome: string; id?: string } {
   if (!session?.user?.name) return { username: 'desconhecido', nome: 'Desconhecido' };
   return { username: session.user.name, nome: session.user.name };
+}
+
+/**
+ * Obtem informacoes do admin logado a partir da sessao NextAuth (para uso em API routes)
+ * Retorna { username, nome, id } ou defaults se nao estiver logado
+ */
+export async function getLoggedInAdmin(): Promise<{ username: string; nome: string; id: string }> {
+  try {
+    const session = await getServerSession(authOptions);
+    if (session?.user?.name) {
+      return {
+        username: session.user.name,
+        nome: session.user.name,
+        id: (session.user as Record<string, unknown>).id as string || '',
+      };
+    }
+  } catch {
+    // Se nao conseguir obter sessao, retorna defaults
+  }
+  return { username: 'desconhecido', nome: 'Desconhecido', id: '' };
 }
 
 /**

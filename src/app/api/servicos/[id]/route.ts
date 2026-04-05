@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-server';
 import { toCamelCase } from '@/lib/utils-supabase';
-import { logActivity } from '@/lib/audit-log';
+import { logActivity, getLoggedInAdmin } from '@/lib/audit-log';
 
 // GET /api/servicos/[id] - Buscar servico por ID
 export async function GET(
@@ -34,6 +34,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const admin = await getLoggedInAdmin();
     const { id } = await params;
     const body = await request.json();
 
@@ -68,7 +69,7 @@ export async function PUT(
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'EDITAR_SERVICO', categoria: 'SERVICOS', detalhes: `Servico "${tituloServico}" actualizado` }).catch(() => {});
+    logActivity({ adminUsername: admin.username, adminNome: admin.nome, adminId: admin.id, acao: 'EDITAR_SERVICO', categoria: 'SERVICOS', detalhes: `Servico "${tituloServico}" actualizado` }).catch(() => {});
 
     return NextResponse.json(toCamelCase(data));
   } catch (error: unknown) {
@@ -83,6 +84,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const admin = await getLoggedInAdmin();
     const { id } = await params;
 
     // Buscar titulo do servico antes de eliminar
@@ -99,7 +101,7 @@ export async function DELETE(
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'ELIMINAR_SERVICO', categoria: 'SERVICOS', detalhes: `Servico "${tituloServico}" eliminado` }).catch(() => {});
+    logActivity({ adminUsername: admin.username, adminNome: admin.nome, adminId: admin.id, acao: 'ELIMINAR_SERVICO', categoria: 'SERVICOS', detalhes: `Servico "${tituloServico}" eliminado` }).catch(() => {});
 
     return NextResponse.json({ message: 'Servico eliminado com sucesso' });
   } catch (error: unknown) {

@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-server';
 import { toCamelCase, toSnakeCase } from '@/lib/utils-supabase';
-import { logActivity } from '@/lib/audit-log';
+import { logActivity, getLoggedInAdmin } from '@/lib/audit-log';
 
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const admin = await getLoggedInAdmin();
     const { id } = await params;
     const data = await request.json();
     const snakeData = toSnakeCase(data);
@@ -30,7 +31,7 @@ export async function PUT(
       .single();
 
     if (error) return NextResponse.json({ error: error.message }, { status: 400 });
-    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'EDITAR_FICHA', categoria: 'CONDUTORES', detalhes: `Ficha do(a) condutor(a) ${nomeCondutor} (N.º ${numeroOrdem}) actualizada` }).catch(() => {});
+    logActivity({ adminUsername: admin.username, adminNome: admin.nome, adminId: admin.id, acao: 'EDITAR_FICHA', categoria: 'CONDUTORES', detalhes: `Ficha do(a) condutor(a) ${nomeCondutor} (N.º ${numeroOrdem}) actualizada` }).catch(() => {});
     return NextResponse.json(toCamelCase(updated));
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Erro ao actualizar';
@@ -43,6 +44,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const admin = await getLoggedInAdmin();
     const { id } = await params;
 
     // Buscar nome do condutor antes de eliminar
@@ -60,7 +62,7 @@ export async function DELETE(
       .eq('id', id);
 
     if (error) return NextResponse.json({ error: error.message }, { status: 400 });
-    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'ELIMINAR_FICHA', categoria: 'CONDUTORES', detalhes: `Ficha do(a) condutor(a) ${nomeCondutor} (N.º ${numeroOrdem}) eliminada` }).catch(() => {});
+    logActivity({ adminUsername: admin.username, adminNome: admin.nome, adminId: admin.id, acao: 'ELIMINAR_FICHA', categoria: 'CONDUTORES', detalhes: `Ficha do(a) condutor(a) ${nomeCondutor} (N.º ${numeroOrdem}) eliminada` }).catch(() => {});
     return NextResponse.json({ success: true });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Erro ao eliminar';

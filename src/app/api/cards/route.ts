@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { logActivity } from '@/lib/audit-log';
+import { logActivity, getLoggedInAdmin } from '@/lib/audit-log';
 
 // GET /api/cards - Fetch all active cards + cards_section settings
 export async function GET() {
@@ -57,6 +57,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
     }
 
+    const admin = await getLoggedInAdmin();
     const body = await request.json();
     const { titulo, subtitulo, imagem_fundo_base64, imagem_fundo_tipo } = body;
 
@@ -108,7 +109,7 @@ export async function PUT(request: NextRequest) {
       result = data;
     }
 
-    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'ALTERAR_SECCAO', categoria: 'CARDS', detalhes: 'Seccao de cards actualizada' }).catch(() => {});
+    logActivity({ adminUsername: admin.username, adminNome: admin.nome, adminId: admin.id, acao: 'ALTERAR_SECCAO', categoria: 'CARDS', detalhes: 'Seccao de cards actualizada' }).catch(() => {});
 
     return NextResponse.json(result);
   } catch (error: unknown) {

@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-server';
 import { toCamelCase } from '@/lib/utils-supabase';
-import { logActivity } from '@/lib/audit-log';
+import { logActivity, getLoggedInAdmin } from '@/lib/audit-log';
 
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const admin = await getLoggedInAdmin();
     const { id } = await params;
     const body = await request.json();
     const { acao, resolucao } = body;
@@ -60,7 +61,7 @@ export async function PATCH(
     const logDetalhes = acao === 'MARCAR_LIDA' ? `Alerta \"${resumoAlerta}\" marcado como lida`
       : acao === 'MARCAR_RESOLVIDA' ? `Alerta \"${resumoAlerta}\" marcado como resolvida`
       : `Alerta \"${resumoAlerta}\" reaberto`;
-    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: logAcao, categoria: 'ALERTAS', detalhes: logDetalhes }).catch(() => {});
+    logActivity({ adminUsername: admin.username, adminNome: admin.nome, adminId: admin.id, acao: logAcao, categoria: 'ALERTAS', detalhes: logDetalhes }).catch(() => {});
 
     // Buscar dados do condutor separadamente (evitar problemas com relações PostgREST)
     let condutorData = null;
@@ -88,6 +89,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const admin = await getLoggedInAdmin();
     const { id } = await params;
 
     // Buscar dados do alerta antes de eliminar
@@ -104,7 +106,7 @@ export async function DELETE(
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'ELIMINAR_ALERTA', categoria: 'ALERTAS', detalhes: `Alerta "${resumoAlerta}" eliminado` }).catch(() => {});
+    logActivity({ adminUsername: admin.username, adminNome: admin.nome, adminId: admin.id, acao: 'ELIMINAR_ALERTA', categoria: 'ALERTAS', detalhes: `Alerta "${resumoAlerta}" eliminado` }).catch(() => {});
 
     return NextResponse.json({ message: 'Alerta eliminado com sucesso' });
   } catch (error: unknown) {

@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-server';
-import { logActivity } from '@/lib/audit-log';
+import { logActivity, getLoggedInAdmin } from '@/lib/audit-log';
 
 export async function PUT(request: NextRequest) {
   try {
+    const admin = await getLoggedInAdmin();
     const { id, status } = await request.json();
 
     if (!id || !status) {
@@ -38,8 +39,9 @@ export async function PUT(request: NextRequest) {
 
     // Audit log
     logActivity({
-      adminUsername: 'admin',
-      adminNome: 'Administrador',
+      adminUsername: admin.username,
+      adminNome: admin.nome,
+      adminId: admin.id,
       acao: 'ALTERAR_STATUS',
       categoria: 'CONDUTORES',
       detalhes: `Status do(a) condutor(a) ${nomeCondutor} (N.º ${numeroOrdem}) alterado para ${statusLegivel}`,
