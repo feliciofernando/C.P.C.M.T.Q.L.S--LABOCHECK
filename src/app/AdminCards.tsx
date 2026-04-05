@@ -412,17 +412,19 @@ export default function AdminCards() {
 
       {/* Create/Edit Card Dialog */}
       <Dialog open={formOpen} onOpenChange={setFormOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-[#1a1a1a]">
-              {editingId ? 'Editar Card' : 'Novo Card'}
-            </DialogTitle>
-            <DialogDescription>
-              {editingId ? 'Actualize os campos do card.' : 'Preencha os campos para criar um novo card.'}
-            </DialogDescription>
-          </DialogHeader>
+        <DialogContent className="max-w-3xl max-h-[90vh] flex flex-col overflow-hidden p-0">
+          <div className="px-6 pt-6 pb-2 flex-shrink-0">
+            <DialogHeader>
+              <DialogTitle className="text-[#1a1a1a]">
+                {editingId ? 'Editar Card' : 'Novo Card'}
+              </DialogTitle>
+              <DialogDescription>
+                {editingId ? 'Actualize os campos do card.' : 'Preencha os campos para criar um novo card.'}
+              </DialogDescription>
+            </DialogHeader>
+          </div>
 
-          <div className="space-y-4 py-2">
+          <div className="overflow-y-auto flex-1 px-6 space-y-4 py-2">
             <div className="space-y-2">
               <Label htmlFor="card-titulo">Titulo *</Label>
               <Input
@@ -515,23 +517,25 @@ export default function AdminCards() {
             </div>
           </div>
 
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setFormOpen(false)}
-              className="border-[#d1d1cc]"
-            >
-              Cancelar
-            </Button>
-            <Button
-              onClick={handleSaveCard}
-              disabled={saving}
-              className="bg-[#1a5c2e] text-white hover:bg-[#0f3d1d]"
-            >
-              {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              {editingId ? 'Actualizar' : 'Criar'}
-            </Button>
-          </DialogFooter>
+          <div className="px-6 py-4 border-t border-[#d1d1cc] flex-shrink-0">
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setFormOpen(false)}
+                className="border-[#d1d1cc]"
+              >
+                Cancelar
+              </Button>
+              <Button
+                onClick={handleSaveCard}
+                disabled={saving}
+                className="bg-[#1a5c2e] text-white hover:bg-[#0f3d1d]"
+              >
+                {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                {editingId ? 'Actualizar' : 'Criar'}
+              </Button>
+            </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
 
