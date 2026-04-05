@@ -1,6 +1,6 @@
 'use client';
 
-import { useEditor, EditorContent, BubbleMenu } from '@tiptap/react';
+import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
@@ -334,45 +334,6 @@ export default function TipTapEditor({
           className="hidden"
         />
       </div>
-
-      {/* Bubble Menu for quick formatting */}
-      {editor && (
-        <BubbleMenu editor={editor} tippyOptions={{ duration: 100 }}>
-          <div className="flex items-center gap-0.5 p-1 rounded-lg border border-[#d1d1cc] bg-white shadow-lg">
-            <ToolbarButton
-              onClick={() => editor.chain().focus().toggleBold().run()}
-              active={editor.isActive('bold')}
-              title="Negrito"
-            >
-              <Bold className="w-3.5 h-3.5" />
-            </ToolbarButton>
-            <ToolbarButton
-              onClick={() => editor.chain().focus().toggleItalic().run()}
-              active={editor.isActive('italic')}
-              title="Italico"
-            >
-              <Italic className="w-3.5 h-3.5" />
-            </ToolbarButton>
-            <ToolbarButton
-              onClick={() => editor.chain().focus().toggleUnderline().run()}
-              active={editor.isActive('underline')}
-              title="Sublinhado"
-            >
-              <UnderlineIcon className="w-3.5 h-3.5" />
-            </ToolbarButton>
-            <ToolbarButton onClick={setLink} active={editor.isActive('link')} title="Link">
-              <LinkIcon className="w-3.5 h-3.5" />
-            </ToolbarButton>
-            <ToolbarButton
-              onClick={() => editor.chain().focus().toggleHighlight().run()}
-              active={editor.isActive('highlight')}
-              title="Destacar"
-            >
-              <Highlighter className="w-3.5 h-3.5" />
-            </ToolbarButton>
-          </div>
-        </BubbleMenu>
-      )}
 
       {/* Editor Content */}
       <div style={{ minHeight }}>
