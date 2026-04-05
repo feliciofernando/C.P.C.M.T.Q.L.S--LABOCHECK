@@ -10,9 +10,9 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { label: 'Inicio', href: '#inicio' },
+  { label: 'Início', href: '#inicio' },
   { label: 'Sobre o Conselho', href: '#sobre' },
-  { label: 'Noticias', href: '#noticias' },
+  { label: 'Notícias', href: '#noticias' },
   { label: 'Eventos', href: '#eventos' },
   { label: 'Legislação', href: '#legislacao' },
   { label: 'Documentos', href: '#documentos' },

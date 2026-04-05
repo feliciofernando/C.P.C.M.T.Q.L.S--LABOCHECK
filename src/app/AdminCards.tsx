@@ -55,12 +55,12 @@ import {
 
 const AVAILABLE_ICONS = [
   { value: 'MessageSquare', label: 'Mensagem' },
-  { value: 'Calendar', label: 'Calendario' },
+  { value: 'Calendar', label: 'Calendário' },
   { value: 'Scale', label: 'Lei' },
   { value: 'HelpCircle', label: 'Ajuda' },
   { value: 'FileText', label: 'Documento' },
   { value: 'Users', label: 'Utilizadores' },
-  { value: 'Building2', label: 'Edificio' },
+  { value: 'Building2', label: 'Edifício' },
   { value: 'Newspaper', label: 'Noticias' },
 ];
 
@@ -119,7 +119,7 @@ export default function AdminCards() {
         toast.error('Erro ao carregar cards');
       }
     } catch {
-      toast.error('Erro de ligacao ao servidor');
+      toast.error('Erro de ligação ao servidor');
     } finally {
       setLoading(false);
     }
@@ -153,7 +153,7 @@ export default function AdminCards() {
 
   const handleSaveCard = async () => {
     if (!form.titulo.trim()) {
-      toast.error('Preencha o campo titulo');
+      toast.error('Preencha o campo título');
       return;
     }
 
@@ -180,7 +180,7 @@ export default function AdminCards() {
         toast.error(data.error || 'Erro ao guardar card');
       }
     } catch {
-      toast.error('Erro de ligacao ao servidor');
+      toast.error('Erro de ligação ao servidor');
     } finally {
       setSaving(false);
     }
@@ -198,7 +198,7 @@ export default function AdminCards() {
         toast.error('Erro ao eliminar card');
       }
     } catch {
-      toast.error('Erro de ligacao ao servidor');
+      toast.error('Erro de ligação ao servidor');
     } finally {
       setDeleting(false);
       setDeleteId(null);
@@ -219,7 +219,7 @@ export default function AdminCards() {
         toast.error('Erro ao alterar estado');
       }
     } catch {
-      toast.error('Erro de ligacao ao servidor');
+      toast.error('Erro de ligação ao servidor');
     }
   };
 
@@ -314,11 +314,11 @@ export default function AdminCards() {
                 <TableHeader>
                   <TableRow className="bg-[#f5f5f0]">
                     <TableHead className="font-semibold text-xs w-10">Ordem</TableHead>
-                    <TableHead className="font-semibold text-xs">Titulo</TableHead>
-                    <TableHead className="font-semibold text-xs hidden sm:table-cell">Icone</TableHead>
-                    <TableHead className="font-semibold text-xs hidden md:table-cell">Descricao</TableHead>
+                    <TableHead className="font-semibold text-xs">Título</TableHead>
+                    <TableHead className="font-semibold text-xs hidden sm:table-cell">Ícone</TableHead>
+                    <TableHead className="font-semibold text-xs hidden md:table-cell">Descrição</TableHead>
                     <TableHead className="font-semibold text-xs text-center">Estado</TableHead>
-                    <TableHead className="font-semibold text-xs text-right">Accoes</TableHead>
+                    <TableHead className="font-semibold text-xs text-right">Acções</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -426,30 +426,30 @@ export default function AdminCards() {
 
           <div className="overflow-y-auto flex-1 px-6 space-y-4 py-2">
             <div className="space-y-2">
-              <Label htmlFor="card-titulo">Titulo *</Label>
+              <Label htmlFor="card-titulo">Título *</Label>
               <Input
                 id="card-titulo"
                 value={form.titulo}
                 onChange={(e) => setForm({ ...form, titulo: e.target.value })}
-                placeholder="Titulo do card"
+                placeholder="Título do card"
                 className="border-[#d1d1cc]"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="card-descricao">Descricao Breve</Label>
+              <Label htmlFor="card-descricao">Descrição Breve</Label>
               <Textarea
                 id="card-descricao"
                 value={form.descricao}
                 onChange={(e) => setForm({ ...form, descricao: e.target.value })}
-                placeholder="Descricao breve do card"
+                placeholder="Descrição breve do card"
                 className="border-[#d1d1cc] resize-none"
                 rows={2}
               />
             </div>
 
             <div className="space-y-2">
-              <Label>Conteudo Completo da Pagina</Label>
+              <Label>Conteúdo Completo da Página</Label>
               <TipTapEditor
                 content={form.conteudo}
                 onChange={(html) => setForm({ ...form, conteudo: html })}
@@ -460,13 +460,13 @@ export default function AdminCards() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="card-icone">Icone</Label>
+                <Label htmlFor="card-icone">Ícone</Label>
                 <Select
                   value={form.icone}
                   onValueChange={(value) => setForm({ ...form, icone: value })}
                 >
                   <SelectTrigger className="border-[#d1d1cc]">
-                    <SelectValue placeholder="Seleccionar icone" />
+                    <SelectValue placeholder="Seleccionar ícone" />
                   </SelectTrigger>
                   <SelectContent>
                     {AVAILABLE_ICONS.map((icon) => (
@@ -545,7 +545,7 @@ export default function AdminCards() {
           <AlertDialogHeader>
             <AlertDialogTitle>Eliminar Card</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem a certeza que deseja eliminar este card? Esta accao e irreversivel.
+              Tem a certeza que deseja eliminar este card? Esta acção é irreversível.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

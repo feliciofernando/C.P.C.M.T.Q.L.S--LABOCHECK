@@ -46,7 +46,7 @@ export default function PainelConfiguracoes() {
       setSection(sec);
       setSectionForm(sec);
     } catch {
-      toast.error('Erro ao carregar configuracoes');
+      toast.error('Erro ao carregar configurações');
     } finally {
       setLoading(false);
     }
@@ -87,15 +87,15 @@ export default function PainelConfiguracoes() {
         body: JSON.stringify(sectionForm),
       });
       if (res.ok) {
-        toast.success('Seccao actualizada com sucesso');
+        toast.success('Secção actualizada com sucesso');
         setEditingSection(false);
         loadSection();
       } else {
         const data = await res.json();
-        toast.error(data.error || 'Erro ao actualizar seccao');
+        toast.error(data.error || 'Erro ao actualizar secção');
       }
     } catch {
-      toast.error('Erro de ligacao ao servidor');
+      toast.error('Erro de ligação ao servidor');
     } finally {
       setSavingSection(false);
     }
@@ -117,7 +117,7 @@ export default function PainelConfiguracoes() {
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg flex items-center gap-2">
               <ImageIcon className="w-5 h-5" />
-              Seccao de Cards
+              Secção de Cards
             </CardTitle>
             {!editingSection ? (
               <Button
@@ -127,7 +127,7 @@ export default function PainelConfiguracoes() {
                 className="bg-white/10 text-white border-white/30 hover:bg-white/20"
               >
                 <Pencil className="w-4 h-4 mr-1.5" />
-                Editar Seccao
+                Editar Secção
               </Button>
             ) : (
               <div className="flex gap-2">
@@ -174,8 +174,8 @@ export default function PainelConfiguracoes() {
                   </div>
                 )}
                 <div>
-                  <p className="font-semibold text-sm text-[#1a1a1a]">{section.titulo || 'Sem titulo'}</p>
-                  <p className="text-xs text-[#6b6b6b]">{section.subtitulo || 'Sem subtitulo'}</p>
+                  <p className="font-semibold text-sm text-[#1a1a1a]">{section.titulo || 'Sem título'}</p>
+                  <p className="text-xs text-[#6b6b6b]">{section.subtitulo || 'Sem subtítulo'}</p>
                 </div>
               </div>
             </div>
@@ -186,7 +186,7 @@ export default function PainelConfiguracoes() {
             <div className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="sec-titulo">Titulo da Seccao</Label>
+                  <Label htmlFor="sec-titulo">Título da Secção</Label>
                   <Input
                     id="sec-titulo"
                     value={sectionForm.titulo}
@@ -196,12 +196,12 @@ export default function PainelConfiguracoes() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="sec-subtitulo">Subtitulo</Label>
+                  <Label htmlFor="sec-subtitulo">Subtítulo</Label>
                   <Input
                     id="sec-subtitulo"
                     value={sectionForm.subtitulo}
                     onChange={(e) => setSectionForm({ ...sectionForm, subtitulo: e.target.value })}
-                    placeholder="Subtitulo opcional"
+                    placeholder="Subtítulo opcional"
                     className="border-[#d1d1cc]"
                   />
                 </div>
@@ -258,10 +258,10 @@ export default function PainelConfiguracoes() {
                 <div className="flex items-start gap-2">
                   <Info className="w-4 h-4 text-[#1a5c2e] mt-0.5 flex-shrink-0" />
                   <div className="text-xs text-[#6b6b6b] space-y-1.5">
-                    <p className="font-semibold text-[#1a1a1a]">Informacoes:</p>
+                    <p className="font-semibold text-[#1a1a1a]">Informações:</p>
                     <ul className="list-disc list-inside space-y-0.5">
-                      <li>Os cards individuais sao geridos na aba &quot;Cards&quot; do menu</li>
-                      <li>A imagem de fundo sera usada como plano de fundo da seccao</li>
+                      <li>Os cards individuais são geridos na aba &quot;Cards&quot; do menu</li>
+                      <li>A imagem de fundo será usada como plano de fundo da secção</li>
                       <li>Formatos aceites: PNG, JPG, WebP (max 2MB)</li>
                     </ul>
                   </div>

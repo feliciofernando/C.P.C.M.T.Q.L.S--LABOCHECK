@@ -472,7 +472,7 @@ export default function PainelAlertas({ onUpdate }: PainelAlertasProps) {
           <SelectContent>
             <SelectItem value="TODOS">Prioridade</SelectItem>
             <SelectItem value="ALTA">Alta</SelectItem>
-            <SelectItem value="MEDIA">Media</SelectItem>
+            <SelectItem value="MEDIA">Média</SelectItem>
             <SelectItem value="BAIXA">Baixa</SelectItem>
           </SelectContent>
         </Select>
@@ -651,7 +651,7 @@ export default function PainelAlertas({ onUpdate }: PainelAlertasProps) {
       {pagination.totalPages > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-[#6b6b6b]">
-            Pagina {pagination.page} de {pagination.totalPages}
+            Página {pagination.page} de {pagination.totalPages}
           </p>
           <div className="flex gap-2">
             <Button
@@ -668,7 +668,7 @@ export default function PainelAlertas({ onUpdate }: PainelAlertasProps) {
               onClick={() => setPagination((prev) => ({ ...prev, page: prev.page + 1 }))}
               disabled={pagination.page >= pagination.totalPages}
             >
-              Proximo <ChevronRight className="w-4 h-4 ml-1" />
+              Próximo <ChevronRight className="w-4 h-4 ml-1" />
             </Button>
           </div>
         </div>
@@ -692,7 +692,7 @@ export default function PainelAlertas({ onUpdate }: PainelAlertasProps) {
               </div>
               <div>
                 <label className="text-sm font-medium text-[#1a1a1a] block mb-1.5">
-                  Nota de Resolucao (opcional)
+                  Nota de Resolução (opcional)
                 </label>
                 <Textarea
                   value={resolveNote}
@@ -718,7 +718,7 @@ export default function PainelAlertas({ onUpdate }: PainelAlertasProps) {
               ) : (
                 <CheckCircle2 className="w-4 h-4" />
               )}
-              {resolving ? 'A resolver...' : 'Confirmar Resolucao'}
+              {resolving ? 'A resolver...' : 'Confirmar Resolução'}
             </Button>
           </DialogFooter>
         </DialogContent>

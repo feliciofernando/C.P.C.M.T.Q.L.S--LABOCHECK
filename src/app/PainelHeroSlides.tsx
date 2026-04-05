@@ -120,7 +120,7 @@ export default function PainelHeroSlides() {
         toast.error('Erro ao carregar slides');
       }
     } catch {
-      toast.error('Erro de ligacao ao servidor');
+      toast.error('Erro de ligação ao servidor');
     } finally {
       setLoading(false);
     }
@@ -178,7 +178,7 @@ export default function PainelHeroSlides() {
 
   const handleSaveSlide = async () => {
     if (!form.titulo.trim()) {
-      toast.error('Preencha o campo titulo');
+      toast.error('Preencha o campo título');
       return;
     }
 
@@ -202,7 +202,7 @@ export default function PainelHeroSlides() {
         toast.error(data.error || 'Erro ao guardar slide');
       }
     } catch {
-      toast.error('Erro de ligacao ao servidor');
+      toast.error('Erro de ligação ao servidor');
     } finally {
       setSaving(false);
     }
@@ -220,7 +220,7 @@ export default function PainelHeroSlides() {
         toast.error('Erro ao eliminar slide');
       }
     } catch {
-      toast.error('Erro de ligacao ao servidor');
+      toast.error('Erro de ligação ao servidor');
     } finally {
       setDeleting(false);
       setDeleteId(null);
@@ -241,7 +241,7 @@ export default function PainelHeroSlides() {
         toast.error('Erro ao alterar estado');
       }
     } catch {
-      toast.error('Erro de ligacao ao servidor');
+      toast.error('Erro de ligação ao servidor');
     }
   };
 
@@ -355,11 +355,11 @@ export default function PainelHeroSlides() {
                   <TableRow className="bg-[#f5f5f0]">
                     <TableHead className="font-semibold text-xs w-10">Ordem</TableHead>
                     <TableHead className="font-semibold text-xs w-16">Imagem</TableHead>
-                    <TableHead className="font-semibold text-xs">Titulo</TableHead>
-                    <TableHead className="font-semibold text-xs hidden md:table-cell">Subtitulo</TableHead>
-                    <TableHead className="font-semibold text-xs hidden lg:table-cell">Descricao</TableHead>
+                    <TableHead className="font-semibold text-xs">Título</TableHead>
+                    <TableHead className="font-semibold text-xs hidden md:table-cell">Subtítulo</TableHead>
+                    <TableHead className="font-semibold text-xs hidden lg:table-cell">Descrição</TableHead>
                     <TableHead className="font-semibold text-xs text-center w-20">Estado</TableHead>
-                    <TableHead className="font-semibold text-xs text-right w-32">Accoes</TableHead>
+                    <TableHead className="font-semibold text-xs text-right w-32">Acções</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -488,7 +488,7 @@ export default function PainelHeroSlides() {
           <div className="space-y-4 py-2">
             {/* Title */}
             <div className="space-y-2">
-              <Label htmlFor="slide-titulo">Titulo *</Label>
+              <Label htmlFor="slide-titulo">Título *</Label>
               <Input
                 id="slide-titulo"
                 value={form.titulo}
@@ -500,7 +500,7 @@ export default function PainelHeroSlides() {
 
             {/* Subtitle */}
             <div className="space-y-2">
-              <Label htmlFor="slide-subtitulo">Subtitulo</Label>
+              <Label htmlFor="slide-subtitulo">Subtítulo</Label>
               <Input
                 id="slide-subtitulo"
                 value={form.subtitulo}
@@ -512,7 +512,7 @@ export default function PainelHeroSlides() {
 
             {/* Description */}
             <div className="space-y-2">
-              <Label htmlFor="slide-descricao">Descricao</Label>
+              <Label htmlFor="slide-descricao">Descrição</Label>
               <Textarea
                 id="slide-descricao"
                 value={form.descricao}
@@ -574,7 +574,7 @@ export default function PainelHeroSlides() {
             {/* Button Text + Link */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="slide-texto-botao">Texto do Botao</Label>
+                <Label htmlFor="slide-texto-botao">Texto do Botão</Label>
                 <Input
                   id="slide-texto-botao"
                   value={form.textoBotao}
@@ -584,12 +584,12 @@ export default function PainelHeroSlides() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="slide-link-botao">Link do Botao</Label>
+                <Label htmlFor="slide-link-botao">Link do Botão</Label>
                 <Input
                   id="slide-link-botao"
                   value={form.linkBotao}
                   onChange={(e) => setForm({ ...form, linkBotao: e.target.value })}
-                  placeholder="#servicos ou URL"
+                  placeholder="#serviços ou URL"
                   className="border-[#d1d1cc]"
                 />
               </div>
@@ -610,7 +610,7 @@ export default function PainelHeroSlides() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="slide-tempo">Tempo de Transicao (ms)</Label>
+                <Label htmlFor="slide-tempo">Tempo de Transição (ms)</Label>
                 <Input
                   id="slide-tempo"
                   type="number"
@@ -673,7 +673,7 @@ export default function PainelHeroSlides() {
           <AlertDialogHeader>
             <AlertDialogTitle>Eliminar Slide</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem a certeza que deseja eliminar este slide? Esta accao e irreversivel.
+              Tem a certeza que deseja eliminar este slide? Esta acção é irreversível.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

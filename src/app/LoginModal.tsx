@@ -57,11 +57,11 @@ export default function LoginModal({ open, onOpenChange }: LoginModalProps) {
       });
 
       if (result?.error) {
-        toast.error('Credenciais invalidas');
+        toast.error('Credenciais inválidas');
         // Limpar password apos erro
         setPassword('');
       } else {
-        toast.success('Sessao iniciada com sucesso');
+        toast.success('Sessão iniciada com sucesso');
         setUsername('');
         setPassword('');
         onOpenChange(false);
@@ -70,7 +70,7 @@ export default function LoginModal({ open, onOpenChange }: LoginModalProps) {
         window.location.replace('/admin');
       }
     } catch {
-      toast.error('Erro ao iniciar sessao');
+      toast.error('Erro ao iniciar sessão');
     } finally {
       setLoading(false);
     }
@@ -85,7 +85,7 @@ export default function LoginModal({ open, onOpenChange }: LoginModalProps) {
             Acesso Administrativo
           </DialogTitle>
           <DialogDescription>
-            Introduza as suas credenciais para aceder ao painel de gestao.
+            Introduza as suas credenciais para aceder ao painel de gestão.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleLogin} className="space-y-4 mt-2">

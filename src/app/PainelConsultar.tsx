@@ -71,7 +71,7 @@ export default function PainelConsultar({ autoSearch }: PainelConsultarProps) {
       {autoSearch && (
         <div className="max-w-xl mx-auto bg-[#1a5c2e]/10 border border-[#1a5c2e]/30 rounded-lg p-4 text-center">
           <p className="text-sm font-medium text-[#1a1c2e]">
-            📱 Escaneado via Codigo QR — a mostrar dados do condutor
+            📱 Escaneado via Código QR — a mostrar dados do condutor
           </p>
           <p className="text-xs text-[#6b6b6b] mt-1">
             B.I.: {autoSearch}
@@ -86,10 +86,10 @@ export default function PainelConsultar({ autoSearch }: PainelConsultarProps) {
           <h3 className="text-lg font-bold text-[#1a1a1a]">Consultar a Minha Ficha</h3>
         </div>
         <p className="text-sm text-[#6b6b6b]">
-          Insira o seu <span className="font-medium">Numero do Bilhete de Identidade</span>,{' '}
+          Insira o seu <span className="font-medium">Número do Bilhete de Identidade</span>,{' '}
           <span className="font-medium">Nome Completo</span> ou{' '}
-          <span className="font-medium">Numero de Ordem</span> para visualizar
-          os seus dados e a situacao da sua ficha.
+          <span className="font-medium">Número de Ordem</span> para visualizar
+          os seus dados e a situação da sua ficha.
         </p>
       </div>
 
@@ -100,7 +100,7 @@ export default function PainelConsultar({ autoSearch }: PainelConsultarProps) {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="B.I., Nome ou No de Ordem..."
+            placeholder="B.I., Nome ou Nº de Ordem..."
             className="flex-1"
           />
           <Button
@@ -148,7 +148,7 @@ export default function PainelConsultar({ autoSearch }: PainelConsultarProps) {
                   condutor.status === 'ATIVA' ? 'text-[#1a5c2e]' : 'text-[#c0392b]'
                 }`} />
                 <div>
-                  <p className="font-bold text-sm">Situacao da Ficha</p>
+                  <p className="font-bold text-sm">Situação da Ficha</p>
                   <p className="text-xs text-[#6b6b6b]">
                     Data de Registo: {formatDate(condutor.dataRegisto as string)}
                   </p>
@@ -168,13 +168,13 @@ export default function PainelConsultar({ autoSearch }: PainelConsultarProps) {
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                 <InfoRow label="Nome Completo" value={condutor.nomeCompleto as string} highlight />
-                <InfoRow label="No de Ordem" value={String(condutor.numeroOrdem)} highlight />
-                <InfoRow label="No do B.I." value={condutor.numeroBI as string} />
+                <InfoRow label="Nº de Ordem" value={String(condutor.numeroOrdem)} highlight />
+                <InfoRow label="Nº do B.I." value={condutor.numeroBI as string} />
                 <InfoRow label="Data de Nascimento" value={condutor.dataNascimento as string} />
                 <InfoRow label="Sexo" value={condutor.sexo as string} />
                 <InfoRow label="Estado Civil" value={condutor.estadoCivil as string} />
-                <InfoRow label="Endereco" value={condutor.endereco as string} />
-                <InfoRow label="Municipio" value={condutor.municipio as string} />
+                <InfoRow label="Endereço" value={condutor.endereco as string} />
+                <InfoRow label="Município" value={condutor.municipio as string} />
               </div>
             </CardContent>
           </Card>
@@ -186,14 +186,14 @@ export default function PainelConsultar({ autoSearch }: PainelConsultarProps) {
                 <FileText className="w-4 h-4" /> Dados Profissionais
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                <InfoRow label="Tipo de Veiculo" value={condutor.tipoVeiculo as string} />
+                <InfoRow label="Tipo de Veículo" value={condutor.tipoVeiculo as string} />
                 <InfoRow label="Categoria" value={(condutor.categoriaCarta as string) || '-'} />
                 <InfoRow label="Marca / Modelo" value={
                   [condutor.marcaVeiculo, condutor.modeloVeiculo].filter(Boolean).join(' - ') || '-'
                 } />
                 <InfoRow label="Cor" value={(condutor.corVeiculo as string) || '-'} />
-                <InfoRow label="Matricula" value={(condutor.matriculaVeiculo as string) || '-'} />
-                <InfoRow label="Municipio de Trabalho" value={(condutor.municipioTrabalho as string) || '-'} />
+                <InfoRow label="Matrícula" value={(condutor.matriculaVeiculo as string) || '-'} />
+                <InfoRow label="Município de Trabalho" value={(condutor.municipioTrabalho as string) || '-'} />
               </div>
             </CardContent>
           </Card>
@@ -202,14 +202,14 @@ export default function PainelConsultar({ autoSearch }: PainelConsultarProps) {
           <Card className="border-[#d1d1cc]">
             <CardContent className="p-5">
               <h4 className="font-bold text-[#1a5c2e] mb-3 flex items-center gap-2">
-                <Shield className="w-4 h-4" /> Dados da Licenca
+                <Shield className="w-4 h-4" /> Dados da Licença
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                <InfoRow label="No Membro" value={(condutor.numeroMembro as string) || '-'} highlight />
-                <InfoRow label="Titulo" value="Condutor Profissional" />
+                <InfoRow label="Nº Membro" value={(condutor.numeroMembro as string) || '-'} highlight />
+                <InfoRow label="Título" value="Condutor Profissional" />
                 <InfoRow label="Nacionalidade" value={(condutor.nacionalidade as string) || 'Angolana'} />
-                <InfoRow label="Provincia" value={(condutor.provincia as string) || 'Lunda Sul'} />
-                <InfoRow label="Data de Emissao" value={condutor.dataEmissaoLicenca as string} />
+                <InfoRow label="Província" value={(condutor.provincia as string) || 'Lunda Sul'} />
+                <InfoRow label="Data de Emissão" value={condutor.dataEmissaoLicenca as string} />
                 <InfoRow label="Validade" value={condutor.validadeLicenca as string} />
               </div>
             </CardContent>

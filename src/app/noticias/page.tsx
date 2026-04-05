@@ -69,7 +69,7 @@ export default function TodasNoticiasPage() {
               <Newspaper className="w-6 h-6 lg:w-7 lg:h-7 text-white" />
               <div className="h-[1px] w-12 lg:w-16 bg-[#d4a017]/60" />
             </div>
-            <h1 className="text-3xl lg:text-4xl font-bold">Todas as Noticias</h1>
+            <h1 className="text-3xl lg:text-4xl font-bold">Todas as Notícias</h1>
             <p className="text-sm lg:text-base text-white/80 mt-2">
               Mantenha-se informado sobre todas as novidades do Conselho
             </p>
@@ -84,7 +84,7 @@ export default function TodasNoticiasPage() {
             className="inline-flex items-center gap-1.5 text-sm lg:text-base text-[#1a5c2e] font-medium hover:underline mb-6"
           >
             <ArrowLeft className="w-4 h-4 lg:w-5 lg:h-5" />
-            Voltar a Pagina Inicial
+            Voltar a Página Inicial
           </Link>
 
           {/* Loading */}
@@ -105,7 +105,7 @@ export default function TodasNoticiasPage() {
             <div className="text-center py-16">
               <Newspaper className="w-16 h-16 mx-auto text-[#d1d1cc] mb-4" />
               <p className="text-[#6b6b6b] text-lg">
-                Nenhuma noticia disponivel no momento.
+                Nenhuma notícia disponível no momento.
               </p>
             </div>
           ) : (
@@ -158,7 +158,7 @@ export default function TodasNoticiasPage() {
           {!loading && noticias.length > 0 && (
             <div className="mt-8 text-center">
               <p className="text-sm text-[#6b6b6b]">
-                {noticias.length} {noticias.length === 1 ? 'noticia encontrada' : 'noticias encontradas'}
+                {noticias.length} {noticias.length === 1 ? 'notícia encontrada' : 'notícias encontradas'}
               </p>
             </div>
           )}
@@ -177,10 +177,10 @@ export default function TodasNoticiasPage() {
             Contactos: 941-000-517 / 924-591-350 | WhatsApp: 941-000-517
           </p>
           <p className="opacity-60 text-xs lg:text-sm mt-1">
-            Lunda Sul (Cassengo, Bairro Social da Juventude, 1o Andar do Centro Comercial do Emporio, vulgo Janota)
+            Lunda Sul (Cassengo, Bairro Social da Juventude, 1º Andar do Centro Comercial do Empório, vulgo Janota)
           </p>
           <p className="opacity-50 text-xs lg:text-sm mt-2">
-            Condutores organizados, trânsito mais seguro | Decreto Presidencial No 245/15
+            Condutores organizados, trânsito mais seguro | Decreto Presidencial Nº 245/15
           </p>
         </div>
       </footer>

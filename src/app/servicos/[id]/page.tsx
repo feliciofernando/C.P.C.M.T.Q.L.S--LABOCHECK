@@ -72,7 +72,7 @@ export default async function ServicoDetailPage({
             className="inline-flex items-center gap-2 px-6 py-3 bg-[#1a5c2e] text-white rounded-lg hover:bg-[#0f3d1d] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Voltar ao Inicio
+            Voltar ao Início
           </Link>
         </div>
       </div>
@@ -229,7 +229,7 @@ export default async function ServicoDetailPage({
             </div>
           ) : (
             <p className="text-[#6b6b6b] text-sm italic">
-              Conteudo em breve disponivel.
+              Conteúdo em breve disponível.
             </p>
           )}
 
@@ -268,7 +268,7 @@ export default async function ServicoDetailPage({
             className="inline-flex items-center gap-2 text-sm text-[#6b6b6b] hover:text-[#1a5c2e] transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            Voltar a pagina inicial
+            Voltar a página inicial
           </Link>
         </div>
       </div>

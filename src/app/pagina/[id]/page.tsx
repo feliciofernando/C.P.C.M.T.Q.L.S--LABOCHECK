@@ -86,7 +86,7 @@ export default function PaginaDetailPage() {
         <div className="flex-1 flex items-center justify-center">
           <div className="flex flex-col items-center gap-3">
             <Loader2 className="w-8 h-8 animate-spin text-[#1a5c2e]" />
-            <p className="text-sm text-[#6b6b6b]">A carregar pagina...</p>
+            <p className="text-sm text-[#6b6b6b]">A carregar página...</p>
           </div>
         </div>
       </div>
@@ -103,15 +103,15 @@ export default function PaginaDetailPage() {
               <MessageSquare className="w-8 h-8 text-[#1a5c2e]/40" />
             </div>
             <h1 className="text-xl font-bold text-[#1a1a1a]">
-              Pagina nao encontrada
+              Página não encontrada
             </h1>
             <p className="text-sm text-[#6b6b6b]">
-              A pagina que procura nao existe ou foi removida.
+              A página que procura não existe ou foi removida.
             </p>
             <Link href="/">
               <Button className="bg-[#1a5c2e] hover:bg-[#0f3d1d] text-white gap-2">
                 <ArrowLeft className="w-4 h-4" />
-                Voltar ao Inicio
+                Voltar ao Início
               </Button>
             </Link>
           </div>
@@ -219,7 +219,7 @@ export default function PaginaDetailPage() {
             ) : (
               <div className="text-center py-8">
                 <p className="text-sm text-[#6b6b6b]">
-                  Conteudo detalhado desta seccao sera disponibilizado em breve.
+                  Conteúdo detalhado desta secção será disponibilizado em breve.
                 </p>
               </div>
             )}
@@ -234,7 +234,7 @@ export default function PaginaDetailPage() {
               className="text-[#6b6b6b] hover:text-[#1a5c2e] gap-2"
             >
               <ArrowLeft className="w-4 h-4" />
-              Voltar a pagina inicial
+              Voltar a página inicial
             </Button>
           </Link>
         </div>
@@ -253,12 +253,12 @@ export default function PaginaDetailPage() {
             Contactos: 941-000-517 / 924-591-350 | WhatsApp: 941-000-517
           </p>
           <p className="opacity-60 text-xs mt-1">
-            Lunda Sul (Cassengo, Bairro Social da Juventude, 1o Andar do Centro
-            Comercial do Emporio, vulgo Janota)
+            Lunda Sul (Cassengo, Bairro Social da Juventude, 1º Andar do Centro
+            Comercial do Empório, vulgo Janota)
           </p>
           <p className="opacity-50 text-xs mt-2">
             Condutores organizados, transito mais seguro | Decreto Presidencial
-            No 245/15
+            Nº 245/15
           </p>
         </div>
       </footer>

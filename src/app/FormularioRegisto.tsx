@@ -88,7 +88,7 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
 
   const handleSearch = async () => {
     if (!searchInput.trim()) {
-      toast.error('Digite um nome ou numero de ordem para buscar');
+      toast.error('Digite um nome ou número de ordem para buscar');
       return;
     }
 
@@ -100,7 +100,7 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || 'Condutor nao encontrado');
+        throw new Error(data.error || 'Condutor não encontrado');
       }
 
       const condutor = await res.json();
@@ -156,7 +156,7 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
     if (!editId) return;
 
     const confirmed = window.confirm(
-      'Tem certeza que deseja eliminar este condutor? Esta accao e irreversivel.'
+      'Tem certeza que deseja eliminar este condutor? Esta acção é irreversível.'
     );
     if (!confirmed) return;
 
@@ -283,7 +283,7 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
                 handleSearch();
               }
             }}
-            placeholder="Buscar por nome, numero de BI ou numero de ordem..."
+            placeholder="Buscar por nome, número de BI ou número de ordem..."
             className="flex-1"
           />
           <Button
@@ -312,7 +312,7 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
               Editando: <span className="font-bold">{editNome}</span>
               {editOrdem !== null && (
                 <span className="ml-2 text-amber-600">
-                  &mdash; No de Ordem: {editOrdem}
+                  &mdash; Nº de Ordem: {editOrdem}
                 </span>
               )}
             </p>
@@ -325,7 +325,7 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
               className="text-sm h-8 border-gray-400 text-gray-700 hover:bg-gray-100"
             >
               <XCircle className="w-4 h-4 mr-1" />
-              Cancelar Edicao
+              Cancelar Edição
             </Button>
             <Button
               type="button"
@@ -428,7 +428,7 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
             />
           </div>
           <div>
-            <Label htmlFor="dataEmissaoBI">Data de Emissao do B.I.</Label>
+            <Label htmlFor="dataEmissaoBI">Data de Emissão do B.I.</Label>
             <Input
               id="dataEmissaoBI"
               type="date"
@@ -449,8 +449,8 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
               <SelectContent>
                 <SelectItem value="Solteiro/a">Solteiro/a</SelectItem>
                 <SelectItem value="Casado/a">Casado/a</SelectItem>
-                <SelectItem value="Uniao de Facto">Uniao de Facto</SelectItem>
-                <SelectItem value="Viuvo/a">Viuvo/a</SelectItem>
+                <SelectItem value="União de Facto">União de Facto</SelectItem>
+                <SelectItem value="Viúvo/a">Viúvo/a</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -485,7 +485,7 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
             />
           </div>
           <div>
-            <Label htmlFor="municipio">Municipio</Label>
+            <Label htmlFor="municipio">Município</Label>
             <Input
               id="municipio"
               value={form.municipio}
@@ -602,7 +602,7 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="municipioTrabalho">Municipio onde exerce actividade</Label>
+            <Label htmlFor="municipioTrabalho">Município onde exerce actividade</Label>
             <Input
               id="municipioTrabalho"
               value={form.municipioTrabalho}
@@ -626,18 +626,18 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
 
       <Separator className="bg-[#d1d1cc]" />
 
-      {/* 4. Documentacao */}
+      {/* 4. Documentação */}
       <div>
         <h3 className="text-base font-bold text-[#1a5c2e] mb-4 border-b border-[#d1d1cc] pb-2">
-          4. Documentacao e Equipamentos
+          4. Documentação e Equipamentos
         </h3>
         <p className="text-sm text-[#6b6b6b] mb-3">Assinale os documentos e equipamentos que possui:</p>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {[
             { key: 'temBI', label: 'Bilhete de Identidade' },
             { key: 'temCartaConducao', label: 'Carta de Condução' },
-            { key: 'temDocumentoVeiculo', label: 'Documento do Veiculo' },
-            { key: 'temSeguroVeiculo', label: 'Seguro do Veiculo' },
+            { key: 'temDocumentoVeiculo', label: 'Documento do Veículo' },
+            { key: 'temSeguroVeiculo', label: 'Seguro do Veículo' },
             { key: 'temCapacete', label: 'Capacete de Proteção' },
             { key: 'temColeteRefletor', label: 'Colete Refletor' },
           ].map((doc) => (
@@ -682,7 +682,7 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
               id="instituicaoFormacao"
               value={form.instituicaoFormacao}
               onChange={(e) => updateField('instituicaoFormacao', e.target.value)}
-              placeholder="Nome da instituicao"
+              placeholder="Nome da instituição"
               className="mt-1"
             />
           </div>
@@ -691,16 +691,16 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
 
       <Separator className="bg-[#d1d1cc]" />
 
-      {/* 6. Declaracao */}
+      {/* 6. Declaração */}
       <div>
         <h3 className="text-base font-bold text-[#1a5c2e] mb-4 border-b border-[#d1d1cc] pb-2">
-          6. Declaracao
+          6. Declaração
         </h3>
         <div className="bg-[#f0f0eb] p-4 rounded-lg border border-[#d1d1cc]">
           <p className="text-sm text-[#1a1a1a] leading-relaxed">
-            Declaro que as informacoes acima prestadas sao verdadeiras e comprometo-me a cumprir
+            Declaro que as informações acima prestadas são verdadeiras e comprometo-me a cumprir
             as normas do Conselho Provincial dos Condutores de Motociclos, Triciclos e
-            Quadriciclos da Lunda Sul, bem como respeitar o Codigo de Estrada e as regras de
+            Quadriciclos da Lunda Sul, bem como respeitar o Código de Estrada e as regras de
             segurança rodoviária.
           </p>
         </div>
@@ -727,7 +727,7 @@ export default function FormularioRegisto({ onSucesso }: FormularioRegistoProps)
               ? 'A guardar...'
               : 'A registar...'
             : editId
-              ? 'Guardar Alteracoes'
+              ? 'Guardar Alterações'
               : 'Registar Condutor'}
         </Button>
       </div>

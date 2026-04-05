@@ -74,44 +74,44 @@ interface LogStats {
    ============================================================ */
 
 const CATEGORIA_LABELS: Record<string, string> = {
-  AUTENTICACAO: 'Autenticacao',
+  AUTENTICACAO: 'Autenticação',
   CONDUTORES: 'Condutores',
-  NOTICIAS: 'Noticias',
-  SERVICOS: 'Servicos',
+  NOTICIAS: 'Notícias',
+  SERVICOS: 'Serviços',
   ALERTAS: 'Alertas',
   SLIDES: 'Slides',
   CARDS: 'Cards',
-  CONFIGURACAO: 'Configuracao',
+  CONFIGURACAO: 'Configuração',
   SISTEMA: 'Sistema',
 };
 
 const ACAO_LABELS: Record<string, string> = {
-  LOGIN: 'Inicio de Sessao',
-  LOGOUT: 'Fim de Sessao',
+  LOGIN: 'Início de Sessão',
+  LOGOUT: 'Fim de Sessão',
   CRIAR_FICHA: 'Ficha Criada',
   EDITAR_FICHA: 'Ficha Editada',
   ELIMINAR_FICHA: 'Ficha Eliminada',
   ALTERAR_STATUS: 'Status Alterado',
-  CRIAR_NOTICIA: 'Noticia Criada',
-  EDITAR_NOTICIA: 'Noticia Editada',
-  ELIMINAR_NOTICIA: 'Noticia Eliminada',
-  CRIAR_SERVICO: 'Servico Criado',
-  EDITAR_SERVICO: 'Servico Editado',
-  ELIMINAR_SERVICO: 'Servico Eliminado',
-  VERIFICAR_VALIDADES: 'Verificacao de Validades',
+  CRIAR_NOTICIA: 'Notícia Criada',
+  EDITAR_NOTICIA: 'Notícia Editada',
+  ELIMINAR_NOTICIA: 'Notícia Eliminada',
+  CRIAR_SERVICO: 'Serviço Criado',
+  EDITAR_SERVICO: 'Serviço Editado',
+  ELIMINAR_SERVICO: 'Serviço Eliminado',
+  VERIFICAR_VALIDADES: 'Verificação de Validades',
   MARCAR_LIDA: 'Alerta Lida',
   MARCAR_RESOLVIDA: 'Alerta Resolvido',
   REABRIR_ALERTA: 'Alerta Reaberto',
   ELIMINAR_ALERTA: 'Alerta Eliminado',
-  OPERACAO_EM_MASSA: 'Operacao em Massa',
+  OPERACAO_EM_MASSA: 'Operação em Massa',
   CRIAR_SLIDE: 'Slide Criado',
   EDITAR_SLIDE: 'Slide Editado',
   ELIMINAR_SLIDE: 'Slide Eliminado',
   CRIAR_CARD: 'Card Criado',
   EDITAR_CARD: 'Card Editado',
   ELIMINAR_CARD: 'Card Eliminado',
-  ALTERAR_SECCAO: 'Seccao de Cards Alterada',
-  ALTERAR_CONFIGURACAO: 'Configuracao Alterada',
+  ALTERAR_SECCAO: 'Secção de Cards Alterada',
+  ALTERAR_CONFIGURACAO: 'Configuração Alterada',
 };
 
 /* ============================================================
@@ -379,7 +379,7 @@ export default function PainelLogs() {
               Registo de Actividades - Auditoria
             </h2>
             <p className="text-xs text-[#6b6b6b]">
-              Controlo completo de todas as accoes realizadas no sistema
+              Controlo completo de todas as acções realizadas no sistema
             </p>
           </div>
         </div>
@@ -391,7 +391,7 @@ export default function PainelLogs() {
             </div>
             <div>
               <h3 className="text-base font-bold text-amber-800 mb-2">
-                Tabela de auditoria nao configurada
+                Tabela de auditoria não configurada
               </h3>
               <p className="text-sm text-amber-700 max-w-lg leading-relaxed">
                 Execute o script{' '}
@@ -433,7 +433,7 @@ export default function PainelLogs() {
               Registo de Actividades - Auditoria
             </h2>
             <p className="text-xs text-[#6b6b6b]">
-              Controlo completo de todas as accoes realizadas no sistema
+              Controlo completo de todas as acções realizadas no sistema
             </p>
           </div>
         </div>
@@ -455,7 +455,7 @@ export default function PainelLogs() {
         <div className="bg-white border border-[#d1d1cc] rounded-lg p-4 text-center">
           <div className="flex items-center justify-center gap-2 mb-1">
             <Clock className="w-4 h-4 text-[#6b6b6b]" />
-            <p className="text-xs text-[#6b6b6b] font-medium">Total de Registros</p>
+            <p className="text-xs text-[#6b6b6b] font-medium">Total de Registos</p>
           </div>
           <p className="text-2xl font-bold text-[#1a1a1a]">
             {statsLoading ? (
@@ -557,7 +557,7 @@ export default function PainelLogs() {
             </SelectContent>
           </Select>
 
-          {/* Accao dropdown */}
+          {/* Acção dropdown */}
           <Select
             value={acaoFilter}
             onValueChange={(v) => {
@@ -566,10 +566,10 @@ export default function PainelLogs() {
             }}
           >
             <SelectTrigger className="text-sm">
-              <SelectValue placeholder="Todas Accoes" />
+              <SelectValue placeholder="Todas Acções" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="TODOS">Todas Accoes</SelectItem>
+              <SelectItem value="TODOS">Todas Acções</SelectItem>
               {Object.entries(ACAO_LABELS).map(([key, label]) => (
                 <SelectItem key={key} value={key}>
                   {label}
@@ -585,7 +585,7 @@ export default function PainelLogs() {
               value={dataInicio}
               onChange={(e) => setDataInicio(e.target.value)}
               className="text-sm flex-1"
-              placeholder="Data inicio"
+              placeholder="Data início"
             />
             <Input
               type="date"
@@ -686,7 +686,7 @@ export default function PainelLogs() {
                     Categoria
                   </TableHead>
                   <TableHead className="text-xs font-semibold text-[#1a1a1a] w-[160px]">
-                    Accao
+                    Acção
                   </TableHead>
                   <TableHead className="text-xs font-semibold text-[#1a1a1a]">
                     Detalhes
@@ -734,7 +734,7 @@ export default function PainelLogs() {
                         {getCategoriaBadge(log.categoria)}
                       </TableCell>
 
-                      {/* Accao */}
+                      {/* Acção */}
                       <TableCell className="py-2.5">
                         <span className="text-xs text-[#1a1a1a]">
                           {getAcaoLabel(log.acao)}
@@ -769,7 +769,7 @@ export default function PainelLogs() {
       {pagination.totalPages > 1 && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-sm text-[#6b6b6b]">
-            Pagina {pagination.page} de {pagination.totalPages}
+            Página {pagination.page} de {pagination.totalPages}
             <span className="ml-2 text-xs">
               ({((pagination.page - 1) * pagination.limit + 1)}
               -
@@ -829,7 +829,7 @@ export default function PainelLogs() {
               disabled={pagination.page >= pagination.totalPages || loading}
               className="text-sm gap-1.5"
             >
-              Proximo
+              Próximo
               <ChevronRight className="w-4 h-4" />
             </Button>
           </div>

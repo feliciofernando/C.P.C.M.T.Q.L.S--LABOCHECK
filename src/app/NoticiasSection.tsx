@@ -51,7 +51,7 @@ export default function NoticiasSection() {
     return (
       <section id="noticias" className="py-12 lg:py-16 px-4">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl lg:text-3xl font-bold text-[#1a1a1a] text-center mb-8">Noticias</h2>
+          <h2 className="text-2xl lg:text-3xl font-bold text-[#1a1a1a] text-center mb-8">Notícias</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[1, 2, 3, 4].map((i) => (
               <Card key={i} className="border-[#d1d1cc] overflow-hidden">
@@ -73,8 +73,8 @@ export default function NoticiasSection() {
     return (
       <section id="noticias" className="py-12 px-4">
         <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-2xl font-bold text-[#1a1a1a] mb-2">Noticias</h2>
-          <p className="text-[#6b6b6b] text-sm lg:text-base">Nenhuma noticia disponivel no momento.</p>
+          <h2 className="text-2xl font-bold text-[#1a1a1a] mb-2">Notícias</h2>
+          <p className="text-[#6b6b6b] text-sm lg:text-base">Nenhuma notícia disponível no momento.</p>
         </div>
       </section>
     );
@@ -90,9 +90,9 @@ export default function NoticiasSection() {
             <Newspaper className="w-5 h-5 lg:w-6 lg:h-6 text-[#1a5c2e]" />
             <div className="h-[1px] w-12 lg:w-16 bg-[#d4a017]/60" />
           </div>
-          <h2 className="text-2xl lg:text-3xl font-bold text-[#1a1a1a]">Noticias</h2>
+          <h2 className="text-2xl lg:text-3xl font-bold text-[#1a1a1a]">Notícias</h2>
           <p className="text-sm lg:text-base text-[#6b6b6b] mt-1">
-            Mantenha-se informado sobre as ultimas novidades
+            Mantenha-se informado sobre as últimas novidades
           </p>
         </div>
 
@@ -146,7 +146,7 @@ export default function NoticiasSection() {
             href="/noticias"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[#1a5c2e] text-white font-semibold text-sm lg:text-base hover:bg-[#0f3d1d] transition-colors"
           >
-            Ver Todas as Noticias
+            Ver Todas as Notícias
             <ArrowRight className="w-4 h-4 lg:w-5 lg:h-5" />
           </Link>
         </div>

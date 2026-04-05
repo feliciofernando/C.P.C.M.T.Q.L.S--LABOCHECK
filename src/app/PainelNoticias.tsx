@@ -76,7 +76,7 @@ export default function PainelNoticias() {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 2 * 1024 * 1024) {
-      toast.error('Imagem demasiado grande. Maximo 2MB.');
+      toast.error('Imagem demasiado grande. Máximo 2MB.');
       return;
     }
     const reader = new FileReader();
@@ -102,7 +102,7 @@ export default function PainelNoticias() {
         body: JSON.stringify(form),
       });
       if (res.ok) {
-        toast.success(editing ? 'Noticia actualizada!' : 'Noticia criada!');
+        toast.success(editing ? 'Notícia actualizada!' : 'Notícia criada!');
         setEditing(null);
         setForm(emptyNoticia);
         loadNoticias();
@@ -111,7 +111,7 @@ export default function PainelNoticias() {
         toast.error(err.error || 'Erro ao guardar');
       }
     } catch {
-      toast.error('Erro de conexao');
+      toast.error('Erro de conexão');
     } finally {
       setSaving(false);
     }
@@ -132,17 +132,17 @@ export default function PainelNoticias() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Tem certeza que deseja eliminar esta noticia?')) return;
+    if (!confirm('Tem certeza que deseja eliminar esta notícia?')) return;
     try {
       const res = await fetch(`/api/noticias/${id}`, { method: 'DELETE' });
       if (res.ok) {
-        toast.success('Noticia eliminada!');
+        toast.success('Notícia eliminada!');
         loadNoticias();
       } else {
         toast.error('Erro ao eliminar');
       }
     } catch {
-      toast.error('Erro de conexao');
+      toast.error('Erro de conexão');
     }
   };
 
@@ -181,7 +181,7 @@ export default function PainelNoticias() {
     return (
       <div className="flex items-center justify-center py-12">
         <RefreshCw className="w-6 h-6 animate-spin text-[#6b6b6b]" />
-        <span className="ml-2 text-sm text-[#6b6b6b]">A carregar noticias...</span>
+        <span className="ml-2 text-sm text-[#6b6b6b]">A carregar notícias...</span>
       </div>
     );
   }
@@ -191,7 +191,7 @@ export default function PainelNoticias() {
       {/* Header with create button */}
       <div className="flex items-center justify-between">
         <p className="text-sm text-[#6b6b6b]">
-          {noticias.length} {noticias.length === 1 ? 'noticia' : 'noticias'} registadas
+          {noticias.length} {noticias.length === 1 ? 'notícia' : 'notícias'} registadas
         </p>
         {!editing && (
           <Button
@@ -199,7 +199,7 @@ export default function PainelNoticias() {
             className="bg-[#1a5c2e] hover:bg-[#0f3d1d] text-white text-sm gap-1.5"
           >
             <Plus className="w-4 h-4" />
-            Nova Noticia
+            Nova Notícia
           </Button>
         )}
       </div>
@@ -208,16 +208,16 @@ export default function PainelNoticias() {
       {editing !== null && (
         <div className="border border-[#d1d1cc] rounded-lg p-4 bg-[#f5f5f0]/50 space-y-4">
           <h3 className="text-sm font-bold text-[#1a1a1a]">
-            {editing?.id ? 'Editar Noticia' : 'Nova Noticia'}
+            {editing?.id ? 'Editar Notícia' : 'Nova Notícia'}
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label className="text-xs font-semibold">Titulo *</Label>
+              <Label className="text-xs font-semibold">Título *</Label>
               <Input
                 value={form.titulo}
                 onChange={(e) => setForm((p) => ({ ...p, titulo: e.target.value }))}
-                placeholder="Titulo da noticia"
+                placeholder="Título da notícia"
                 className="text-sm"
               />
             </div>
@@ -238,17 +238,17 @@ export default function PainelNoticias() {
             <Textarea
               value={form.resumo}
               onChange={(e) => setForm((p) => ({ ...p, resumo: e.target.value }))}
-              placeholder="Breve resumo da noticia (2-3 frases)"
+              placeholder="Breve resumo da notícia (2-3 frases)"
               className="text-sm min-h-[80px]"
             />
           </div>
 
           <div className="space-y-2">
-            <Label className="text-xs font-semibold">Conteudo Completo</Label>
+            <Label className="text-xs font-semibold">Conteúdo Completo</Label>
             <TipTapEditor
               content={form.conteudo}
               onChange={(html) => setForm((p) => ({ ...p, conteudo: html }))}
-              placeholder="Escreva o conteudo completo da noticia..."
+              placeholder="Escreva o conteúdo completo da notícia..."
               minHeight="500px"
             />
           </div>
@@ -329,11 +329,11 @@ export default function PainelNoticias() {
         </div>
       )}
 
-      {/* Noticias List */}
+      {/* Notícias List */}
       <div className="space-y-2 max-h-96 overflow-y-auto">
         {noticias.length === 0 ? (
           <p className="text-center text-sm text-[#6b6b6b] py-8">
-            Nenhuma noticia registada. Crie a primeira!
+            Nenhuma notícia registada. Crie a primeira!
           </p>
         ) : (
           noticias.map((noticia) => (

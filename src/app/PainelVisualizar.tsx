@@ -216,7 +216,7 @@ export default function PainelVisualizar() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Pesquisar por Nome, B.I. ou No de Ordem..."
+            placeholder="Pesquisar por Nome, B.I. ou Nº de Ordem..."
             className="pl-9"
           />
         </div>
@@ -256,10 +256,10 @@ export default function PainelVisualizar() {
                 <TableHead className="font-bold text-[#1a1a1a] w-20">No</TableHead>
                 <TableHead className="font-bold text-[#1a1a1a]">Nome Completo</TableHead>
                 <TableHead className="font-bold text-[#1a1a1a] hidden md:table-cell">B.I.</TableHead>
-                <TableHead className="font-bold text-[#1a1a1a] hidden lg:table-cell">Veiculo</TableHead>
-                <TableHead className="font-bold text-[#1a1a1a] hidden lg:table-cell">Municipio</TableHead>
-                <TableHead className="font-bold text-[#1a1a1a] w-28">Situacao</TableHead>
-                <TableHead className="font-bold text-[#1a1a1a] w-20">Acoes</TableHead>
+                <TableHead className="font-bold text-[#1a1a1a] hidden lg:table-cell">Veículo</TableHead>
+                <TableHead className="font-bold text-[#1a1a1a] hidden lg:table-cell">Município</TableHead>
+                <TableHead className="font-bold text-[#1a1a1a] w-28">Situação</TableHead>
+                <TableHead className="font-bold text-[#1a1a1a] w-20">Acções</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -322,7 +322,7 @@ export default function PainelVisualizar() {
       {pagination.totalPages > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-[#6b6b6b]">
-            Pagina {pagination.page} de {pagination.totalPages}
+            Página {pagination.page} de {pagination.totalPages}
           </p>
           <div className="flex gap-2">
             <Button
@@ -339,7 +339,7 @@ export default function PainelVisualizar() {
               onClick={() => setPagination((prev) => ({ ...prev, page: prev.page + 1 }))}
               disabled={pagination.page >= pagination.totalPages}
             >
-              Proximo <ChevronRight className="w-4 h-4 ml-1" />
+              Próximo <ChevronRight className="w-4 h-4 ml-1" />
             </Button>
           </div>
         </div>
@@ -350,7 +350,7 @@ export default function PainelVisualizar() {
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-[#1a5c2e]">
-              Ficha de Registo - No {selectedCondutor?.numeroOrdem}
+              Ficha de Registo - Nº {selectedCondutor?.numeroOrdem}
             </DialogTitle>
           </DialogHeader>
           {loadingDetail ? (
@@ -391,24 +391,24 @@ export default function PainelVisualizar() {
                   <DetailRow label="Data de Nascimento" value={condutorDetail.dataNascimento as string} />
                   <DetailRow label="Sexo" value={condutorDetail.sexo as string} />
                   <DetailRow label="No B.I." value={condutorDetail.numeroBI as string} />
-                  <DetailRow label="Data Emissao B.I." value={condutorDetail.dataEmissaoBI as string} />
+                  <DetailRow label="Data Emissão B.I." value={condutorDetail.dataEmissaoBI as string} />
                   <DetailRow label="Estado Civil" value={condutorDetail.estadoCivil as string} />
                   <DetailRow label="Telefone 1" value={condutorDetail.telefone1 as string} />
                   <DetailRow label="Telefone 2" value={(condutorDetail.telefone2 as string) || '-'} />
-                  <DetailRow label="Endereco" value={condutorDetail.endereco as string} />
-                  <DetailRow label="Municipio" value={condutorDetail.municipio as string} />
+                  <DetailRow label="Endereço" value={condutorDetail.endereco as string} />
+                  <DetailRow label="Município" value={condutorDetail.municipio as string} />
                 </div>
                 <div className="space-y-3">
                   <h4 className="font-bold text-[#1a5c2e] border-b border-[#d1d1cc] pb-1">Dados Profissionais</h4>
-                  <DetailRow label="Tipo de Veiculo" value={condutorDetail.tipoVeiculo as string} />
+                  <DetailRow label="Tipo de Veículo" value={condutorDetail.tipoVeiculo as string} />
                   <DetailRow label="Marca" value={(condutorDetail.marcaVeiculo as string) || '-'} />
                   <DetailRow label="Modelo" value={(condutorDetail.modeloVeiculo as string) || '-'} />
                   <DetailRow label="Cor" value={(condutorDetail.corVeiculo as string) || '-'} />
                   <DetailRow label="Matricula" value={(condutorDetail.matriculaVeiculo as string) || '-'} />
-                  <DetailRow label="No Carta Conducao" value={(condutorDetail.numeroCartaConducao as string) || '-'} />
+                  <DetailRow label="No Carta Condução" value={(condutorDetail.numeroCartaConducao as string) || '-'} />
                   <DetailRow label="Categoria" value={(condutorDetail.categoriaCarta as string) || '-'} />
                   <DetailRow label="Experiencia" value={(condutorDetail.tempoExperiencia as string) || '-'} />
-                  <DetailRow label="Municipio Trabalho" value={(condutorDetail.municipioTrabalho as string) || '-'} />
+                  <DetailRow label="Município Trabalho" value={(condutorDetail.municipioTrabalho as string) || '-'} />
                   <DetailRow label="Horario" value={(condutorDetail.horarioTrabalho as string) || '-'} />
                 </div>
               </div>
@@ -424,10 +424,10 @@ export default function PainelVisualizar() {
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-bold text-sm text-[#1a1a1a]">Codigo QR</p>
+                    <p className="font-bold text-sm text-[#1a1a1a]">Código QR</p>
                     <p className="text-xs text-[#6b6b6b] mt-1">
-                      Este codigo QR esta armazenado na base de dados e pode ser utilizado
-                      para geracao de certificados (MS Word).
+                      Este código QR está armazenado na base de dados e pode ser utilizado
+                      para geração de certificados (MS Word).
                     </p>
                     <p className="text-xs text-[#6b6b6b] mt-1">
                       Formato: JPEG (Base64)

@@ -113,12 +113,12 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
     ['Data de Nascimento', c.dataNascimento],
     ['Sexo', c.sexo],
     ['No do Bilhete de Identidade', c.numeroBI],
-    ['Data de Emissao do B.I.', c.dataEmissaoBI],
+    ['Data de Emissão do B.I.', c.dataEmissaoBI],
     ['Estado Civil', c.estadoCivil],
     ['Telefone 1', c.telefone1],
     ['Telefone 2', c.telefone2],
     ['Endereço / Bairro', c.endereco, 32],
-    ['Municipio', c.municipio],
+    ['Município', c.municipio],
   ];
   for (const [label, value, maxLen] of rows1) {
     y = fieldRow(doc, y, label, String(value), (maxLen as number) || 42);
@@ -144,7 +144,7 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
     ['Marca do Veículo', c.marcaVeiculo],
     ['Modelo', c.modeloVeiculo],
     ['Cor', c.corVeiculo],
-    ['Matricula', c.matriculaVeiculo],
+    ['Matrícula', c.matriculaVeiculo],
     ['N.º da Carta de Condução', c.numeroCartaConducao],
     ['Categoria da Carta', c.categoriaCarta],
     ['Tempo de Experiência', c.tempoExperiencia],
@@ -156,7 +156,7 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
 
   // ── SECTION 3: LOCAL DE TRABALHO ──
   y = sectionHeader(doc, y, '3', 'LOCAL DE TRABALHO');
-  y = fieldRow(doc, y, 'Municipio (actividade)', String(c.municipioTrabalho));
+  y = fieldRow(doc, y, 'Município (actividade)', String(c.municipioTrabalho));
   y = fieldRow(doc, y, 'Horário de Trabalho', String(c.horarioTrabalho));
   y += 2;
 
@@ -172,8 +172,8 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
   const docs: [string, string][] = [
     ['temBI', 'Bilhete de Identidade'],
     ['temCartaConducao', 'Carta de Condução'],
-    ['temDocumentoVeiculo', 'Documento do Veiculo'],
-    ['temSeguroVeiculo', 'Seguro do Veiculo'],
+    ['temDocumentoVeiculo', 'Documento do Veículo'],
+    ['temSeguroVeiculo', 'Seguro do Veículo'],
     ['temCapacete', 'Capacete de Proteção'],
     ['temColeteRefletor', 'Colete Refletor'],
   ];
@@ -205,7 +205,7 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
 
   const formSim = c.participouFormacao ? 'X' : ' ';
   const formNao = !c.participouFormacao ? 'X' : ' ';
-  doc.text(`[${formSim}] Sim            [${formNao}] Nao`, ML + 4, y);
+  doc.text(`[${formSim}] Sim            [${formNao}] Não`, ML + 4, y);
   y += 6;
 
   if (c.participouFormacao && c.instituicaoFormacao) {
@@ -225,7 +225,7 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
   const declLines = [
     'Declaro que as informações acima prestadas são verdadeiras e comprometo-me a',
     'cumprir as normas do Conselho Provincial dos Condutores de Motociclos, Triciclos e',
-    'Quadriciclos da Lunda Sul, bem como respeitar o Codigo de Estrada e as regras de',
+    'Quadriciclos da Lunda Sul, bem como respeitar o Código de Estrada e as regras de',
     'segurança rodoviária.',
   ];
   doc.setTextColor(DARK);
@@ -242,13 +242,13 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
   y = sectionHeader(doc, y, '7', 'DADOS DA LICENÇA');
 
   const rowsLicenca: [string, string][] = [
-    ['No de Registo', str(c.numeroOrdem)],
-    ['No Membro', str(c.numeroMembro)],
+    ['Nº de Registo', str(c.numeroOrdem)],
+    ['Nº Membro', str(c.numeroMembro)],
     ['Nacionalidade', str(c.nacionalidade || 'Angolana')],
-    ['Provincia', str(c.provincia || 'Lunda Sul')],
+    ['Província', str(c.provincia || 'Lunda Sul')],
     ['Data de Emissão', str(c.dataEmissaoLicenca)],
     ['Validade', str(c.validadeLicenca)],
-    ['Situacao', str(c.status)],
+    ['Situação', str(c.status)],
   ];
 
   for (let i = 0; i < rowsLicenca.length; i += 2) {

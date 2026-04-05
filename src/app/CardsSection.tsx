@@ -180,7 +180,7 @@ export default function CardsSection() {
           <div className="text-center py-12">
             <MessageSquare className="w-12 h-12 mx-auto text-white/20 mb-4" />
             <p className="text-white/50 text-sm">
-              Nenhum card disponivel no momento.
+              Nenhum card disponível no momento.
             </p>
           </div>
         ) : (

@@ -40,13 +40,13 @@ interface Servico {
 
 const ICON_OPTIONS = [
   { value: 'UserPlus', label: 'Utilizador +' },
-  { value: 'CreditCard', label: 'Cartao' },
+  { value: 'Cartão', label: 'Cartão' },
   { value: 'GraduationCap', label: 'Formação' },
   { value: 'Shield', label: 'Escudo' },
   { value: 'Wrench', label: 'Chave' },
   { value: 'FileCheck', label: 'Documento' },
   { value: 'Users', label: 'Grupo' },
-  { value: 'Car', label: 'Veiculo' },
+  { value: 'Car', label: 'Veículo' },
   { value: 'BookOpen', label: 'Livro' },
 ];
 
@@ -90,7 +90,7 @@ export default function PainelServicos() {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 2 * 1024 * 1024) {
-      toast.error('Imagem demasiado grande. Maximo 2MB.');
+      toast.error('Imagem demasiado grande. Máximo 2MB.');
       return;
     }
     const reader = new FileReader();
@@ -116,7 +116,7 @@ export default function PainelServicos() {
         body: JSON.stringify(form),
       });
       if (res.ok) {
-        toast.success(editing ? 'Servico actualizado!' : 'Servico criado!');
+        toast.success(editing ? 'Serviço actualizado!' : 'Serviço criado!');
         setEditing(null);
         setForm(emptyServico);
         loadServicos();
@@ -125,7 +125,7 @@ export default function PainelServicos() {
         toast.error(err.error || 'Erro ao guardar');
       }
     } catch {
-      toast.error('Erro de conexao');
+      toast.error('Erro de conexão');
     } finally {
       setSaving(false);
     }
@@ -145,17 +145,17 @@ export default function PainelServicos() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Tem certeza que deseja eliminar este servico?')) return;
+    if (!confirm('Tem certeza que deseja eliminar este serviço?')) return;
     try {
       const res = await fetch(`/api/servicos/${id}`, { method: 'DELETE' });
       if (res.ok) {
-        toast.success('Servico eliminado!');
+        toast.success('Serviço eliminado!');
         loadServicos();
       } else {
         toast.error('Erro ao eliminar');
       }
     } catch {
-      toast.error('Erro de conexao');
+      toast.error('Erro de conexão');
     }
   };
 
@@ -195,7 +195,7 @@ export default function PainelServicos() {
     return (
       <div className="flex items-center justify-center py-12">
         <RefreshCw className="w-6 h-6 animate-spin text-[#6b6b6b]" />
-        <span className="ml-2 text-sm text-[#6b6b6b]">A carregar servicos...</span>
+        <span className="ml-2 text-sm text-[#6b6b6b]">A carregar serviços...</span>
       </div>
     );
   }
@@ -205,7 +205,7 @@ export default function PainelServicos() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <p className="text-sm text-[#6b6b6b]">
-          {servicos.length} {servicos.length === 1 ? 'servico' : 'servicos'} registados
+          {servicos.length} {servicos.length === 1 ? 'serviço' : 'serviços'} registados
         </p>
         {!editing && (
           <Button
@@ -213,7 +213,7 @@ export default function PainelServicos() {
             className="bg-[#1a5c2e] hover:bg-[#0f3d1d] text-white text-sm gap-1.5"
           >
             <Plus className="w-4 h-4" />
-            Novo Servico
+            Novo Serviço
           </Button>
         )}
       </div>
@@ -222,21 +222,21 @@ export default function PainelServicos() {
       {editing !== null && (
         <div className="border border-[#d1d1cc] rounded-lg p-4 bg-[#f5f5f0]/50 space-y-4">
           <h3 className="text-sm font-bold text-[#1a1a1a]">
-            {editing?.id ? 'Editar Servico' : 'Novo Servico'}
+            {editing?.id ? 'Editar Serviço' : 'Novo Serviço'}
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label className="text-xs font-semibold">Titulo *</Label>
+              <Label className="text-xs font-semibold">Título *</Label>
               <Input
                 value={form.titulo}
                 onChange={(e) => setForm((p) => ({ ...p, titulo: e.target.value }))}
-                placeholder="Nome do servico"
+                placeholder="Nome do serviço"
                 className="text-sm"
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-xs font-semibold">Icone</Label>
+              <Label className="text-xs font-semibold">Ícone</Label>
               <Select
                 value={form.icone}
                 onValueChange={(value) => setForm((p) => ({ ...p, icone: value }))}
@@ -256,11 +256,11 @@ export default function PainelServicos() {
           </div>
 
           <div className="space-y-2">
-            <Label className="text-xs font-semibold">Descricao</Label>
+            <Label className="text-xs font-semibold">Descrição</Label>
             <Textarea
               value={form.descricao}
               onChange={(e) => setForm((p) => ({ ...p, descricao: e.target.value }))}
-              placeholder="Descricao do servico"
+              placeholder="Descrição do serviço"
               className="text-sm min-h-[80px]"
             />
           </div>
@@ -295,7 +295,7 @@ export default function PainelServicos() {
                   </button>
                 )}
                 <p className="text-xs text-[#6b6b6b] mt-1">
-                  Imagem de fundo para o cartao de servico. Se nao carregada, sera usada uma cor de gradiente.
+                  Imagem de fundo para o cartão de serviço. Se não carregada, será usada uma cor de gradiente.
                 </p>
               </div>
               {form.imagemBase64 && (
@@ -346,11 +346,11 @@ export default function PainelServicos() {
         </div>
       )}
 
-      {/* Servicos List */}
+      {/* Serviços List */}
       <div className="space-y-2 max-h-96 overflow-y-auto">
         {servicos.length === 0 ? (
           <p className="text-center text-sm text-[#6b6b6b] py-8">
-            Nenhum servico registado. Crie o primeiro!
+            Nenhum serviço registado. Crie o primeiro!
           </p>
         ) : (
           servicos.map((servico) => (
@@ -410,7 +410,7 @@ export default function PainelServicos() {
                   )}
                 </div>
                 <p className="text-xs text-[#6b6b6b] truncate">
-                  {servico.descricao || 'Sem descricao'}
+                  {servico.descricao || 'Sem descrição'}
                 </p>
               </div>
 

@@ -90,10 +90,10 @@ function AdminLoginForm() {
       });
 
       if (result?.error) {
-        toast.error('Credenciais invalidas');
+        toast.error('Credenciais inválidas');
         setPassword('');
       } else {
-        toast.success('Sessao iniciada com sucesso');
+        toast.success('Sessão iniciada com sucesso');
         setUsername('');
         setPassword('');
         // Recarregar a pagina para mostrar o dashboard
@@ -101,7 +101,7 @@ function AdminLoginForm() {
       }
     } catch (err) {
       console.error('Login error:', err);
-      toast.error('Erro ao iniciar sessao. Verifique a sua ligacao.');
+      toast.error('Erro ao iniciar sessão. Verifique a sua ligação.');
     } finally {
       setLoading(false);
     }
@@ -124,7 +124,7 @@ function AdminLoginForm() {
               className="w-16 h-16 rounded-full border-2 border-[#d4a017] mx-auto mb-3"
             />
             <h2 className="text-base font-bold text-[#1a1a1a]">C.P.C.M.T.Q.L.S</h2>
-            <p className="text-xs text-[#6b6b6b] mt-1">Painel de Gestao - Lunda Sul</p>
+            <p className="text-xs text-[#6b6b6b] mt-1">Painel de Gestão - Lunda Sul</p>
           </div>
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
@@ -321,8 +321,8 @@ function AdminDashboard() {
           adminUsername: adminName,
           adminNome: adminName,
           acao: 'LOGOUT',
-          categoria: 'AUTENTICACAO',
-          detalhes: 'Fim de sessao no painel administrativo',
+          categoria: 'AUTENTICAÇÃO',
+          detalhes: 'Fim de sessão no painel administrativo',,
         }),
       });
     } catch {
@@ -428,8 +428,8 @@ function AdminDashboard() {
             <NavButton active={activeTab === 'visualizar'} onClick={() => setActiveTab('visualizar')} icon={<FileText className="w-5 h-5" />} label="Base de Dados" />
             <NavButton active={activeTab === 'alertas'} onClick={() => setActiveTab('alertas')} icon={<Bell className="w-5 h-5" />} label="Alertas" badge={alertCount.PENDENTE > 0 ? alertCount.PENDENTE : undefined} />
             <NavButton active={activeTab === 'consultar'} onClick={() => setActiveTab('consultar')} icon={<Search className="w-5 h-5" />} label="Consultar" />
-            <NavButton active={activeTab === 'noticias'} onClick={() => setActiveTab('noticias')} icon={<Newspaper className="w-5 h-5" />} label="Noticias" />
-            <NavButton active={activeTab === 'servicos'} onClick={() => setActiveTab('servicos')} icon={<Briefcase className="w-5 h-5" />} label="Servicos" />
+            <NavButton active={activeTab === 'noticias'} onClick={() => setActiveTab('noticias')} icon={<Newspaper className="w-5 h-5" />} label="Notícias" />
+            <NavButton active={activeTab === 'servicos'} onClick={() => setActiveTab('servicos')} icon={<Briefcase className="w-5 h-5" />} label="Serviços" />
             <NavButton active={activeTab === 'cards'} onClick={() => setActiveTab('cards')} icon={<LayoutGrid className="w-5 h-5" />} label="Cards" />
             <NavButton active={activeTab === 'registos'} onClick={() => setActiveTab('registos')} icon={<ClipboardList className="w-5 h-5" />} label="Registos" />
             <NavButton active={activeTab === 'configuracoes'} onClick={() => setActiveTab('configuracoes')} icon={<Settings className="w-5 h-5" />} label="Config" />
@@ -471,7 +471,7 @@ function AdminDashboard() {
               <CardHeader className="bg-[#1a5c2e] text-white py-4 px-6">
                 <CardTitle className="text-lg flex items-center gap-2">
                   <Bell className="w-5 h-5" />
-                  Sistema de Alertas - Validade de Licencas
+                  Sistema de Alertas - Validade de Licenças
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6">
@@ -496,7 +496,7 @@ function AdminDashboard() {
               <CardHeader className="bg-[#1a5c2e] text-white py-4 px-6">
                 <CardTitle className="text-lg flex items-center gap-2">
                   <Newspaper className="w-5 h-5" />
-                  Gestao de Noticias
+                  Gestão de Notícias
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6">
@@ -510,7 +510,7 @@ function AdminDashboard() {
               <CardHeader className="bg-[#1a5c2e] text-white py-4 px-6">
                 <CardTitle className="text-lg flex items-center gap-2">
                   <Briefcase className="w-5 h-5" />
-                  Gestao de Servicos
+                  Gestão de Serviços
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6">
@@ -538,7 +538,7 @@ function AdminDashboard() {
         <div className="max-w-7xl mx-auto px-4 py-3 text-center text-xs">
           <p className="font-semibold text-sm">C.P.C.M.T.Q.L.S - Painel Administrativo</p>
           <p className="opacity-60 text-xs mt-1">
-            Condutores organizados, trânsito mais seguro | Decreto Presidencial No 245/15
+            Condutores organizados, trânsito mais seguro | Decreto Presidencial Nº 245/15
           </p>
         </div>
       </footer>

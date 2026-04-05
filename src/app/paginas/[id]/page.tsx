@@ -54,17 +54,17 @@ export default async function PaginaDetailPage({
             <MessageSquare className="w-10 h-10 text-[#1a5c2e]" />
           </div>
           <h1 className="text-2xl font-bold text-[#1a1a1a] mb-3">
-            Pagina Nao Encontrada
+            Página Não Encontrada
           </h1>
           <p className="text-[#6b6b6b] mb-8">
-            A pagina que procura nao existe ou foi removida.
+            A página que procura não existe ou foi removida.
           </p>
           <Link
             href="/"
             className="inline-flex items-center gap-2 px-6 py-3 bg-[#1a5c2e] text-white rounded-lg hover:bg-[#0f3d1d] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Voltar ao Inicio
+            Voltar ao Início
           </Link>
         </div>
       </div>
@@ -154,7 +154,7 @@ export default async function PaginaDetailPage({
             />
           ) : (
             <p className="text-[#6b6b6b] text-sm italic">
-              Conteudo em breve disponivel.
+              Conteúdo em breve disponível.
             </p>
           )}
 
@@ -166,12 +166,12 @@ export default async function PaginaDetailPage({
             <div className="flex items-center gap-2 mb-3">
               <div className="w-2 h-2 rounded-full bg-[#d4a017]" />
               <span className="text-xs font-bold text-[#1a5c2e] uppercase tracking-wide">
-                Precisa de Mais Informacoes?
+                Precisa de Mais Informações?
               </span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
               <p className="text-[#6b6b6b]">
-                <span className="font-medium text-[#1a1a1a]">Localizacao:</span>{' '}
+                <span className="font-medium text-[#1a1a1a]">Localização:</span>{' '}
                 Cassengo, Bairro Social da Juventude, Saurimo
               </p>
               <p className="text-[#6b6b6b]">
@@ -193,7 +193,7 @@ export default async function PaginaDetailPage({
             className="inline-flex items-center gap-2 text-sm text-[#6b6b6b] hover:text-[#1a5c2e] transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            Voltar a pagina inicial
+            Voltar a página inicial
           </Link>
         </div>
       </div>
