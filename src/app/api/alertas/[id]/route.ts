@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-server';
 import { toCamelCase } from '@/lib/utils-supabase';
+import { logActivity } from '@/lib/audit-log';
 
 export async function PATCH(
   request: NextRequest,
@@ -53,6 +54,12 @@ export async function PATCH(
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
+    const logAcao = acao === 'REABRIR' ? 'REABRIR_ALERTA' : acao;
+    const logDetalhes = acao === 'MARCAR_LIDA' ? `Alerta ${id} marcado como lida`
+      : acao === 'MARCAR_RESOLVIDA' ? `Alerta ${id} resolvido`
+      : `Alerta ${id} reaberto`;
+    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: logAcao, categoria: 'ALERTAS', detalhes: logDetalhes }).catch(() => {});
+
     // Buscar dados do condutor separadamente (evitar problemas com relações PostgREST)
     let condutorData = null;
     if (updated.condutor_id) {
@@ -86,6 +93,8 @@ export async function DELETE(
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
+
+    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'ELIMINAR_ALERTA', categoria: 'ALERTAS', detalhes: `Alerta ${id} eliminado` }).catch(() => {});
 
     return NextResponse.json({ message: 'Alerta eliminado com sucesso' });
   } catch (error: unknown) {

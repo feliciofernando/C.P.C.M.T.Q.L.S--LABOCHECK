@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-server';
 import { toCamelCase, toSnakeCase, arrayToCamelCase } from '@/lib/utils-supabase';
 import QRCode from 'qrcode';
+import { logActivity } from '@/lib/audit-log';
 
 export async function POST(request: NextRequest) {
   try {
@@ -64,6 +65,15 @@ export async function POST(request: NextRequest) {
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
+
+    // Audit log
+    logActivity({
+      adminUsername: 'admin',
+      adminNome: 'Administrador',
+      acao: 'CRIAR_FICHA',
+      categoria: 'CONDUTORES',
+      detalhes: `Ficha criada para ${data.nomeCompleto || 'N/A'} - No ${nextNumeroOrdem} - BI: ${data.numeroBI || 'N/A'}`,
+    }).catch(() => {});
 
     return NextResponse.json(toCamelCase(condutor), { status: 201 });
   } catch (error: unknown) {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-server';
 import { toCamelCase } from '@/lib/utils-supabase';
+import { logActivity } from '@/lib/audit-log';
 
 // GET /api/slides - Listar slides (publico: so activas, admin: todas)
 export async function GET(request: NextRequest) {
@@ -67,6 +68,8 @@ export async function POST(request: NextRequest) {
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
+
+    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'CRIAR_SLIDE', categoria: 'SLIDES', detalhes: `Slide criado: ${body.titulo || 'N/A'}` }).catch(() => {});
 
     return NextResponse.json(toCamelCase(data), { status: 201 });
   } catch (error: unknown) {

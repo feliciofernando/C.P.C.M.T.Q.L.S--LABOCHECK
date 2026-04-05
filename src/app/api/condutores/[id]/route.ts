@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-server';
 import { toCamelCase, toSnakeCase } from '@/lib/utils-supabase';
+import { logActivity } from '@/lib/audit-log';
 
 export async function PUT(
   request: NextRequest,
@@ -20,6 +21,7 @@ export async function PUT(
       .single();
 
     if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'EDITAR_FICHA', categoria: 'CONDUTORES', detalhes: `Ficha do condutor ${id} actualizada` }).catch(() => {});
     return NextResponse.json(toCamelCase(updated));
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Erro ao actualizar';
@@ -39,6 +41,7 @@ export async function DELETE(
       .eq('id', id);
 
     if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'ELIMINAR_FICHA', categoria: 'CONDUTORES', detalhes: `Ficha do condutor ${id} eliminada` }).catch(() => {});
     return NextResponse.json({ success: true });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Erro ao eliminar';

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { logActivity } from '@/lib/audit-log';
 
 // GET /api/cards - Fetch all active cards + cards_section settings
 export async function GET() {
@@ -106,6 +107,8 @@ export async function PUT(request: NextRequest) {
       }
       result = data;
     }
+
+    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'ALTERAR_SECCAO', categoria: 'CARDS', detalhes: 'Seccao de cards actualizada' }).catch(() => {});
 
     return NextResponse.json(result);
   } catch (error: unknown) {

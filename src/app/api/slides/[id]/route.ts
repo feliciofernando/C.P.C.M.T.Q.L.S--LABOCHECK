@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-server';
 import { toCamelCase } from '@/lib/utils-supabase';
+import { logActivity } from '@/lib/audit-log';
 
 // GET /api/slides/[id] - Buscar slide por ID
 export async function GET(
@@ -70,6 +71,8 @@ export async function PUT(
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
+    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'EDITAR_SLIDE', categoria: 'SLIDES', detalhes: `Slide ${id} actualizado` }).catch(() => {});
+
     return NextResponse.json(toCamelCase(data));
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Erro ao actualizar slide';
@@ -90,6 +93,8 @@ export async function DELETE(
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
+
+    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'ELIMINAR_SLIDE', categoria: 'SLIDES', detalhes: `Slide ${id} eliminado` }).catch(() => {});
 
     return NextResponse.json({ message: 'Slide eliminado com sucesso' });
   } catch (error: unknown) {

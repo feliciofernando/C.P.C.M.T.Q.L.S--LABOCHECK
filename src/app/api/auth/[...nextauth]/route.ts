@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { createClient } from "@supabase/supabase-js";
+import { logActivity } from "@/lib/audit-log";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -67,6 +68,17 @@ const authOptions = {
           }
 
           console.log('[AUTH] Login successful for:', data.username);
+          
+          // Registar login no log de auditoria
+          logActivity({
+            adminId: data.id,
+            adminUsername: data.username,
+            adminNome: data.nome,
+            acao: 'LOGIN',
+            categoria: 'AUTENTICACAO',
+            detalhes: 'Inicio de sessao no painel administrativo',
+          }).catch(() => {});
+          
           return {
             id: data.id,
             name: data.nome,

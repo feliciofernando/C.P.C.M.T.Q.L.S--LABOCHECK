@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-server';
+import { logActivity } from '@/lib/audit-log';
 
 export async function PUT(request: NextRequest) {
   try {
@@ -23,6 +24,15 @@ export async function PUT(request: NextRequest) {
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
+
+    // Audit log
+    logActivity({
+      adminUsername: 'admin',
+      adminNome: 'Administrador',
+      acao: 'ALTERAR_STATUS',
+      categoria: 'CONDUTORES',
+      detalhes: `Status do condutor ${id} alterado para ${status}`,
+    }).catch(() => {});
 
     return NextResponse.json(data);
   } catch (error: unknown) {

@@ -29,6 +29,8 @@ import {
   Image as ImageIcon,
   Play,
   CircleDot,
+  ClipboardList,
+  Users,
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -42,6 +44,7 @@ import PainelNoticias from '../PainelNoticias';
 import PainelServicos from '../PainelServicos';
 import AdminCards from '../AdminCards';
 import PainelHeroSlides from '../PainelHeroSlides';
+import PainelLogs from '../PainelLogs';
 
 interface Stats {
   total: number;
@@ -54,6 +57,14 @@ interface AlertCount {
   PENDENTE: number;
   LIDA: number;
   RESOLVIDA: number;
+}
+
+interface OnlineAdmin {
+  admin_id: string;
+  admin_username: string;
+  admin_nome: string;
+  login_at: string;
+  last_heartbeat: string;
 }
 
 /* ==============================
@@ -170,7 +181,9 @@ function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('inscrever');
   const [stats, setStats] = useState<Stats>({ total: 0, ativas: 0, inativas: 0 });
   const [alertCount, setAlertCount] = useState<AlertCount>({ total: 0, PENDENTE: 0, LIDA: 0, RESOLVIDA: 0 });
+  const [onlineAdmins, setOnlineAdmins] = useState<OnlineAdmin[]>([]);
   const statsLoadedRef = useRef(false);
+  const heartbeatRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const loadStats = useCallback(async () => {
     try {
@@ -196,10 +209,43 @@ function AdminDashboard() {
     }
   }, []);
 
+  const loadOnlineAdmins = useCallback(async () => {
+    try {
+      const res = await fetch('/api/admin/online');
+      if (res.ok) {
+        const data = await res.json();
+        setOnlineAdmins(data.online || []);
+      }
+    } catch {
+      // silent
+    }
+  }, []);
+
+  // Heartbeat: register current admin as online
+  const sendHeartbeat = useCallback(async () => {
+    if (!session?.user?.name) return;
+    try {
+      await fetch('/api/admin/online', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          adminUsername: session.user.name,
+          adminNome: session.user.name,
+        }),
+      });
+      // Also refresh online list
+      loadOnlineAdmins();
+    } catch {
+      // silent
+    }
+  }, [session?.user?.name, loadOnlineAdmins]);
+
   if (statsLoadedRef.current == null) {
     statsLoadedRef.current = true;
     loadStats();
     loadAlertCount();
+    // Start heartbeat on first load
+    sendHeartbeat();
   }
 
   // Refresh alert count periodically
@@ -207,6 +253,15 @@ function AdminDashboard() {
     const interval = setInterval(loadAlertCount, 60000);
     return () => clearInterval(interval);
   }, [loadAlertCount]);
+
+  // Heartbeat every 15 seconds
+  useEffect(() => {
+    sendHeartbeat();
+    heartbeatRef.current = setInterval(sendHeartbeat, 15000);
+    return () => {
+      if (heartbeatRef.current) clearInterval(heartbeatRef.current);
+    };
+  }, [sendHeartbeat]);
 
   const handleRegistoSucesso = () => {
     loadStats();
@@ -219,6 +274,33 @@ function AdminDashboard() {
   };
 
   const handleLogout = async () => {
+    const adminName = session?.user?.name || 'admin';
+
+    // Remove online status
+    try {
+      await fetch(`/api/admin/online?username=${encodeURIComponent(adminName)}`, { method: 'DELETE' });
+    } catch {
+      // silent
+    }
+
+    // Log logout
+    try {
+      await fetch('/api/admin/logs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          adminUsername: adminName,
+          adminNome: adminName,
+          acao: 'LOGOUT',
+          categoria: 'AUTENTICACAO',
+          detalhes: 'Fim de sessao no painel administrativo',
+        }),
+      });
+    } catch {
+      // silent
+    }
+
+    // Clear cookies
     document.cookie.split(';').forEach((cookie) => {
       const name = cookie.split('=')[0].trim();
       if (name.startsWith('next-auth') || name.startsWith('__Secure-next-auth')) {
@@ -226,10 +308,10 @@ function AdminDashboard() {
       }
     });
 
-    await signOut({
-      redirect: false,
-    });
+    // Clear heartbeat
+    if (heartbeatRef.current) clearInterval(heartbeatRef.current);
 
+    await signOut({ redirect: false });
     window.location.replace('/');
   };
 
@@ -253,7 +335,7 @@ function AdminDashboard() {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-3 sm:ml-auto text-sm">
+          <div className="flex items-center gap-3 sm:ml-auto text-sm flex-wrap justify-center">
             <div className="flex gap-2">
               <Badge variant="secondary" className="bg-white/20 text-white hover:bg-white/30 text-xs px-2 py-0.5">
                 Total: {stats.total}
@@ -266,21 +348,39 @@ function AdminDashboard() {
               </Badge>
             </div>
             <Separator orientation="vertical" className="h-6 bg-white/30 hidden sm:block" />
+
+            {/* Online Admins */}
             <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1.5 bg-white/10 rounded-full px-2.5 py-1">
-                <span className="relative flex h-2.5 w-2.5">
+              <div className="flex items-center gap-1.5 bg-white/10 rounded-full px-2.5 py-1 max-w-xs overflow-hidden">
+                <span className="relative flex h-2.5 w-2.5 flex-shrink-0">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-400"></span>
                 </span>
-                <span className="text-xs font-medium text-white/90 hidden sm:inline">
-                  {session?.user?.name || 'Admin'}
-                </span>
+                <div className="flex items-center gap-1.5 min-w-0">
+                  {onlineAdmins.length > 0 ? (
+                    <>
+                      <span className="text-xs font-medium text-white/90 truncate">
+                        {onlineAdmins.map(a => a.admin_nome).join(' · ')}
+                      </span>
+                      {onlineAdmins.length > 1 && (
+                        <span className="text-[10px] bg-green-500/30 text-green-300 px-1.5 py-0.5 rounded-full flex-shrink-0">
+                          {onlineAdmins.length} online
+                        </span>
+                      )}
+                    </>
+                  ) : (
+                    <span className="text-xs font-medium text-white/90">
+                      {session?.user?.name || 'Admin'}
+                    </span>
+                  )}
+                </div>
               </div>
               <Badge className="bg-[#d4a017]/20 text-[#d4a017] border border-[#d4a017]/40 text-xs px-2 py-0.5">
                 <Shield className="w-3 h-3 mr-1" />
                 Admin
               </Badge>
             </div>
+
             <Button
               variant="ghost"
               size="sm"
@@ -306,6 +406,7 @@ function AdminDashboard() {
             <NavButton active={activeTab === 'noticias'} onClick={() => setActiveTab('noticias')} icon={<Newspaper className="w-5 h-5" />} label="Noticias" />
             <NavButton active={activeTab === 'servicos'} onClick={() => setActiveTab('servicos')} icon={<Briefcase className="w-5 h-5" />} label="Servicos" />
             <NavButton active={activeTab === 'cards'} onClick={() => setActiveTab('cards')} icon={<LayoutGrid className="w-5 h-5" />} label="Cards" />
+            <NavButton active={activeTab === 'registos'} onClick={() => setActiveTab('registos')} icon={<ClipboardList className="w-5 h-5" />} label="Registos" />
             <NavButton active={activeTab === 'configuracoes'} onClick={() => setActiveTab('configuracoes')} icon={<Settings className="w-5 h-5" />} label="Config" />
           </div>
         </div>
@@ -395,6 +496,10 @@ function AdminDashboard() {
 
           <TabsContent value="cards">
             <AdminCards />
+          </TabsContent>
+
+          <TabsContent value="registos">
+            <PainelLogs />
           </TabsContent>
 
           <TabsContent value="configuracoes">

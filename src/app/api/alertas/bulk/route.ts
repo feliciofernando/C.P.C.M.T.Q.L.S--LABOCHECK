@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-server';
+import { logActivity } from '@/lib/audit-log';
 
 export async function POST(request: NextRequest) {
   try {
@@ -58,6 +59,8 @@ export async function POST(request: NextRequest) {
       default:
         return NextResponse.json({ error: 'Accao invalida' }, { status: 400 });
     }
+
+    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'OPERACAO_EM_MASSA', categoria: 'ALERTAS', detalhes: `Operacao em massa: ${acao} - ${count} registos afectados` }).catch(() => {});
 
     return NextResponse.json({
       message: `${count} alerta(s) processada(s) com sucesso`,

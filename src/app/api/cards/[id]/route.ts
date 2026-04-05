@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { logActivity } from '@/lib/audit-log';
 
 // PUT /api/cards/[id] - Update card item (admin only)
 export async function PUT(
@@ -44,6 +45,8 @@ export async function PUT(
       return NextResponse.json({ error: 'Card nao encontrado' }, { status: 404 });
     }
 
+    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'EDITAR_CARD', categoria: 'CARDS', detalhes: `Card ${id} actualizado` }).catch(() => {});
+
     return NextResponse.json(data);
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Erro ao actualizar card';
@@ -69,6 +72,8 @@ export async function DELETE(
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
+
+    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'ELIMINAR_CARD', categoria: 'CARDS', detalhes: `Card ${id} eliminado` }).catch(() => {});
 
     return NextResponse.json({ message: 'Card eliminado com sucesso' });
   } catch (error: unknown) {
@@ -116,6 +121,8 @@ export async function POST(
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
+
+    logActivity({ adminUsername: 'admin', adminNome: 'Administrador', acao: 'CRIAR_CARD', categoria: 'CARDS', detalhes: `Card criado: ${body.titulo || 'N/A'}` }).catch(() => {});
 
     return NextResponse.json(data, { status: 201 });
   } catch (error: unknown) {
