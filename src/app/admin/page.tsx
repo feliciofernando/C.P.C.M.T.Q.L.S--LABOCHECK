@@ -322,7 +322,7 @@ function AdminDashboard() {
           adminNome: adminName,
           acao: 'LOGOUT',
           categoria: 'AUTENTICAÇÃO',
-          detalhes: 'Fim de sessão no painel administrativo',,
+          detalhes: 'Fim de sessão no painel administrativo',
         }),
       });
     } catch {
