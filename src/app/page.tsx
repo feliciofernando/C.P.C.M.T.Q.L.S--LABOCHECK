@@ -102,7 +102,7 @@ function PublicPage() {
 
       {/* Botao Flutuante WhatsApp */}
       <a
-        href="https://wa.me/244941000517?text=%7B%22greeting%22%3A%22Bem-vindo(a)%20ao%20C.P.C.M.T.Q.L.S.%20Por%20favor%2C%20em%20que%20podemos%20ajudar%3F%22%7D"
+        href={`https://wa.me/244941000517?text=${encodeURIComponent('Bem-vindo(a) ao C.P.C.M.T.Q.L.S. Por favor, em que podemos ajudar?')}`}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Contactar via WhatsApp"
