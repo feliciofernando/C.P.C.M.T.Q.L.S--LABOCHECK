@@ -1,4 +1,5 @@
-import { db } from '@/lib/db';
+import { supabase } from '@/lib/supabase-server';
+import { toCamelCase } from '@/lib/utils-supabase';
 import Navbar from '@/app/Navbar';
 import Link from 'next/link';
 import {
@@ -30,7 +31,6 @@ interface CardPage {
   titulo: string;
   descricao: string;
   icone: string;
-  link: string;
   conteudo: string;
   ordem: number;
   activo: boolean;
@@ -43,9 +43,13 @@ export default async function PaginaDetailPage({
 }) {
   const { id } = await params;
 
-  const card = await db.card.findUnique({ where: { id } });
+  const { data, error } = await supabase
+    .from('cards')
+    .select('*')
+    .eq('id', id)
+    .single();
 
-  if (!card) {
+  if (error || !data) {
     return (
       <div className="min-h-screen bg-[#f5f5f0]">
         <Navbar />
@@ -71,6 +75,7 @@ export default async function PaginaDetailPage({
     );
   }
 
+  const card = toCamelCase<CardPage>(data);
   const IconComponent = iconMap[card.icone] || MessageSquare;
 
   return (
