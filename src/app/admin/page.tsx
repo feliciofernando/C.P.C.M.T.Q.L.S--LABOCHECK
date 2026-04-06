@@ -30,9 +30,12 @@ import {
   CircleDot,
   ClipboardList,
   Users,
+  UserCheck,
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 import PainelConsultar from '../PainelConsultar';
 import FormularioRegisto from '../FormularioRegisto';
@@ -378,33 +381,91 @@ function AdminDashboard() {
             </div>
             <Separator orientation="vertical" className="h-6 bg-white/30 hidden sm:block" />
 
-            {/* Online Admins */}
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1.5 bg-white/10 rounded-full px-2.5 py-1">
-                <span className="relative flex h-2.5 w-2.5 flex-shrink-0">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-400"></span>
-                </span>
-                <div className="flex items-center gap-1.5">
-                  {onlineAdmins.length > 0 ? (
-                    <>
-                      <span className="text-xs font-medium text-white/90">
-                        {onlineAdmins.map(a => a.admin_nome).join(' · ')}
-                      </span>
-                      {onlineAdmins.length > 1 && (
-                        <span className="text-[10px] bg-green-500/30 text-green-300 px-1.5 py-0.5 rounded-full flex-shrink-0">
-                          {onlineAdmins.length} online
-                        </span>
-                      )}
-                    </>
-                  ) : (
-                    <span className="text-xs font-medium text-white/90">
-                      {session?.user?.name || 'Admin'}
+            {/* Online Admins - Popover */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <button className="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 rounded-full px-2.5 py-1.5 transition-colors cursor-pointer">
+                  <span className="relative flex h-2.5 w-2.5 flex-shrink-0">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-400"></span>
+                  </span>
+                  <Users className="w-4 h-4 text-white/90" />
+                  <span className="text-xs font-semibold text-white min-w-[18px] text-center">
+                    {onlineAdmins.length > 0 ? onlineAdmins.length : 1}
+                  </span>
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-64 p-0" align="end" sideOffset={8}>
+                <div className="bg-[#1a5c2e] text-white rounded-t-md px-4 py-2.5">
+                  <div className="flex items-center gap-2">
+                    <UserCheck className="w-4 h-4" />
+                    <span className="text-sm font-semibold">
+                      Admins Online
                     </span>
-                  )}
+                  </div>
                 </div>
-              </div>
-            </div>
+                <ScrollArea className="max-h-64">
+                  <div className="px-2 py-1">
+                    {onlineAdmins.length > 0 ? (
+                      onlineAdmins.map((admin, idx) => (
+                        <div
+                          key={admin.admin_id || idx}
+                          className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-green-50 transition-colors"
+                        >
+                          <div className="w-8 h-8 rounded-full bg-[#1a5c2e] flex items-center justify-center flex-shrink-0">
+                            <span className="text-xs font-bold text-white">
+                              {(admin.admin_nome || admin.admin_username || '?').charAt(0).toUpperCase()}
+                            </span>
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium text-gray-900 truncate">
+                              {admin.admin_nome || admin.admin_username}
+                            </p>
+                            <p className="text-[10px] text-gray-500">
+                              Desde {admin.login_at
+                                ? new Date(admin.login_at).toLocaleTimeString('pt-AO', {
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                  })
+                                : 'agora'}
+                            </p>
+                          </div>
+                          <span className="relative flex h-2 w-2 flex-shrink-0">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400"></span>
+                          </span>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-green-50">
+                        <div className="w-8 h-8 rounded-full bg-[#1a5c2e] flex items-center justify-center flex-shrink-0">
+                          <span className="text-xs font-bold text-white">
+                            {(session?.user?.name || '?').charAt(0).toUpperCase()}
+                          </span>
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium text-gray-900 truncate">
+                            {session?.user?.name || 'Admin'}
+                          </p>
+                          <p className="text-[10px] text-gray-500">Online agora</p>
+                        </div>
+                        <span className="relative flex h-2 w-2 flex-shrink-0">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400"></span>
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </ScrollArea>
+                <div className="border-t px-4 py-2 bg-gray-50 rounded-b-md">
+                  <p className="text-[10px] text-gray-500 text-center">
+                    {onlineAdmins.length > 0
+                      ? `${onlineAdmins.length} administrador${onlineAdmins.length > 1 ? 'es' : ''} online`
+                      : '1 administrador online'}
+                  </p>
+                </div>
+              </PopoverContent>
+            </Popover>
 
             <Button
               variant="ghost"
