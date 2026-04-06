@@ -49,7 +49,7 @@ function CardBox({ card }: { card: CardItem }) {
   return (
     <Link
       href={'/paginas/' + card.id}
-      className="group block rounded-2xl bg-white/70 border border-white/60 p-6 hover:bg-white/90 hover:border-[#2d7a42]/40 hover:shadow-xl hover:shadow-green-900/10 transition-all duration-300 text-center backdrop-blur-sm"
+      className="group block rounded-2xl bg-white/70 border border-white/60 p-6 hover:bg-white/90 hover:border-[#2d7a42]/40 hover:shadow-xl hover:shadow-green-900/10 hover:-translate-y-2 transition-all duration-300 text-center backdrop-blur-sm"
     >
       {/* Icon */}
       <div className="w-14 h-14 mx-auto mb-4">

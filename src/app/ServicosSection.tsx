@@ -113,7 +113,7 @@ export default function ServicosSection() {
               <Link
                 key={servico.id}
                 href={'/servicos/' + servico.id}
-                className="group block relative rounded-xl overflow-hidden h-64"
+                className="group block relative rounded-xl overflow-hidden h-64 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
               >
                 {/* Background image (or gradient fallback) */}
                 {hasImage ? (
