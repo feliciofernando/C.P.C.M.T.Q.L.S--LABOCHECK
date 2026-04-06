@@ -105,7 +105,8 @@ export async function GET(request: NextRequest) {
     if (search) {
       const numSearch = parseInt(search);
       if (!isNaN(numSearch)) {
-        query = query.or(`nome_completo.ilike.%${search}%,numero_bi.ilike.%${search}%,numero_ordem.eq.${numSearch}`);
+        // Prioritize exact numero_ordem match, then name/BI as fallback
+        query = query.or(`numero_ordem.eq.${numSearch},nome_completo.ilike.%${search}%,numero_bi.ilike.%${search}%,numero_membro.ilike.%${search}%`);
       } else {
         query = query.or(`nome_completo.ilike.%${search}%,numero_bi.ilike.%${search}%`);
       }

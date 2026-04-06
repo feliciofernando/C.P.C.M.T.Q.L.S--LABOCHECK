@@ -11,12 +11,16 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Parâmetro de pesquisa é obrigatório' }, { status: 400 });
     }
 
-    const numSearch = parseInt(search);
+    const trimmed = search.trim();
+
+    // Strategy: search by numero_ordem (padded or integer), BI, or name
+    // 1. Try as numero_ordem (parse "002" -> 2, "10" -> 10)
+    const numSearch = parseInt(trimmed);
     let data = null;
     let error = null;
 
-    if (!isNaN(numSearch) && String(numSearch) === search.trim()) {
-      // Pure number: search ONLY by exact numero_ordem
+    if (!isNaN(numSearch)) {
+      // Search by numero_ordem as integer
       const res = await supabase
         .from('condutores')
         .select('*')
@@ -24,12 +28,25 @@ export async function GET(request: NextRequest) {
         .limit(1);
       data = res.data;
       error = res.error;
-    } else {
-      // Text: search by BI or name
+    }
+
+    // 2. If no result by order number, search by BI or name
+    if (!data || data.length === 0) {
       const res = await supabase
         .from('condutores')
         .select('*')
-        .or(`numero_bi.ilike.%${search}%,nome_completo.ilike.%${search}%`)
+        .or(`numero_bi.ilike.%${trimmed}%,nome_completo.ilike.%${trimmed}%`)
+        .limit(1);
+      data = res.data;
+      error = res.error;
+    }
+
+    // 3. If still no result, also try numero_membro (for "000001/C.P.C..." searches)
+    if (!data || data.length === 0) {
+      const res = await supabase
+        .from('condutores')
+        .select('*')
+        .ilike('numero_membro', `%${trimmed}%`)
         .limit(1);
       data = res.data;
       error = res.error;
