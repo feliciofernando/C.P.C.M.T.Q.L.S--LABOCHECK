@@ -84,13 +84,21 @@ export default function HeroSlideshow() {
     };
   }, [currentIndex, isPaused, isHovering, slides, goToNext]);
 
-  // Loading state
+  // Loading state — green alegre style
   if (!loaded) {
     return (
-      <section className="relative w-full min-h-[420px] sm:min-h-[480px] flex items-center justify-center overflow-hidden bg-[#1a1a1a]">
-        <div className="relative z-10 text-center text-white px-4 py-16 sm:py-20 opacity-0">
+      <section className="relative w-full min-h-[420px] sm:min-h-[480px] flex items-center justify-center overflow-hidden">
+        {/* Light green gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#e8f5e9] via-[#f1f8e9] to-[#dcedc8]" />
+        {/* Decorative blurred circles */}
+        <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-[#a5d6a7]/30 blur-3xl" />
+        <div className="absolute top-1/4 -left-20 w-72 h-72 rounded-full bg-[#c8e6c9]/40 blur-3xl" />
+        <div className="absolute -bottom-24 right-1/4 w-80 h-80 rounded-full bg-[#dcedc8]/50 blur-3xl" />
+        {/* Green accent line at top */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#1a5c2e]/40 to-transparent z-20" />
+        <div className="relative z-10 text-center text-[#1a3a24] px-4 py-16 sm:py-20 opacity-0">
           <div className="mb-6 inline-block">
-            <img src="/logotipo.jpg" alt="" className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-[#d4a017]" />
+            <img src="/logotipo.jpg" alt="" className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-[#1a5c2e]/20" />
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-wider">C.P.C.M.T.Q.L.S</h2>
         </div>
@@ -98,31 +106,42 @@ export default function HeroSlideshow() {
     );
   }
 
-  // Fallback if no slides
+  // Fallback if no slides — green alegre style
   if (slides.length === 0) {
     return (
-      <section className="relative w-full min-h-[420px] sm:min-h-[480px] flex items-center justify-center overflow-hidden bg-[#1a1a1a]">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/50" />
-        <div className="relative z-10 text-center text-white px-4 py-16 sm:py-20">
+      <section className="relative w-full min-h-[420px] sm:min-h-[480px] flex items-center justify-center overflow-hidden">
+        {/* Light green gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#e8f5e9] via-[#f1f8e9] to-[#dcedc8]" />
+        {/* Decorative blurred circles */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-[#a5d6a7]/30 blur-3xl" />
+          <div className="absolute top-1/4 -left-20 w-72 h-72 rounded-full bg-[#c8e6c9]/40 blur-3xl" />
+          <div className="absolute -bottom-24 right-1/4 w-80 h-80 rounded-full bg-[#dcedc8]/50 blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-[#e8f5e9]/60 blur-3xl" />
+        </div>
+        {/* Green accent line at top */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#1a5c2e]/40 to-transparent z-20" />
+
+        <div className="relative z-10 text-center text-[#1a3a24] px-4 py-16 sm:py-20">
           <div className="mb-6 inline-block">
             <img
               src="/logotipo.jpg"
               alt="Logotipo C.P.C.M.T.Q.L.S"
-              className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-[#d4a017] shadow-[0_0_30px_rgba(212,160,23,0.3)] mx-auto"
+              className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-[#1a5c2e]/20 shadow-lg shadow-green-900/10 mx-auto"
             />
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-wider drop-shadow-lg">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-wider text-[#1a3a24]">
             C.P.C.M.T.Q.L.S
           </h2>
           <div className="flex items-center justify-center gap-3 my-4">
-            <div className="h-[1px] w-12 sm:w-20 bg-[#d4a017]/60" />
-            <div className="w-2 h-2 rounded-full bg-[#d4a017]" />
-            <div className="h-[1px] w-12 sm:w-20 bg-[#d4a017]/60" />
+            <span className="block w-12 sm:w-20 h-[1px] bg-gradient-to-r from-transparent to-[#1a5c2e]/40" />
+            <span className="block w-2.5 h-2.5 rounded-full bg-[#1a5c2e]" />
+            <span className="block w-12 sm:w-20 h-[1px] bg-gradient-to-l from-transparent to-[#1a5c2e]/40" />
           </div>
-          <p className="text-sm sm:text-base lg:text-lg opacity-95 max-w-3xl mx-auto leading-relaxed font-medium">
+          <p className="text-sm sm:text-base lg:text-lg text-[#4a6b54] max-w-3xl mx-auto leading-relaxed font-medium">
             Conselho Provincial dos Condutores de Motociclos, Triciclos e Quadriciclos da Lunda Sul
           </p>
-          <p className="text-sm sm:text-base mt-5 opacity-80 italic max-w-xl mx-auto font-light tracking-wide">
+          <p className="text-sm sm:text-base mt-5 text-[#4a6b54]/70 italic max-w-xl mx-auto font-light tracking-wide">
             &quot;Condutores organizados, trânsito mais seguro&quot;
           </p>
         </div>
@@ -141,40 +160,57 @@ export default function HeroSlideshow() {
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
-      {/* Gold accent line at top */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#d4a017] to-transparent opacity-60 z-20" />
+      {/* Green accent line at top */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#1a5c2e]/40 to-transparent z-20" />
 
-      {/* Background Image */}
+      {/* Background Image (slide) */}
+      {backgroundImage && (
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-500"
+          style={{
+            backgroundImage: `url(${backgroundImage})`,
+            opacity: isTransitioning ? 0 : 1,
+          }}
+        />
+      )}
+
+      {/* Light green blur overlay on top of image */}
+      {backgroundImage && (
+        <div className="absolute inset-0 backdrop-blur-[6px] bg-white/40" />
+      )}
+
+      {/* Light green gradient (always present as base) */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-500"
-        style={{
-          backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none',
-          opacity: isTransitioning ? 0 : 1,
-        }}
+        className={`absolute inset-0 bg-gradient-to-br from-[#e8f5e9] via-[#f1f8e9]/90 to-[#dcedc8] transition-opacity duration-500 ${
+          backgroundImage ? 'opacity-60' : 'opacity-100'
+        }`}
       />
 
-      {/* Dark gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-black/55" />
-      {/* Dark vignette */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.4)_100%)]" />
+      {/* Subtle decorative blurred circles */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-[#a5d6a7]/30 blur-3xl" />
+        <div className="absolute top-1/4 -left-20 w-72 h-72 rounded-full bg-[#c8e6c9]/40 blur-3xl" />
+        <div className="absolute -bottom-24 right-1/4 w-80 h-80 rounded-full bg-[#dcedc8]/50 blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-[#e8f5e9]/60 blur-3xl" />
+      </div>
 
       {/* Content */}
       <div
-        className="relative z-10 text-center text-white px-4 py-16 sm:py-20 lg:max-w-6xl max-w-4xl mx-auto transition-all duration-500"
+        className="relative z-10 text-center text-[#1a3a24] px-4 py-16 sm:py-20 lg:max-w-6xl max-w-4xl mx-auto transition-all duration-500"
         style={{
           opacity: isTransitioning ? 0 : 1,
           transform: isTransitioning ? 'translateY(12px)' : 'translateY(0)',
         }}
       >
-        <h2 className="text-4xl sm:text-5xl lg:text-7xl xl:text-8xl font-extrabold tracking-wider drop-shadow-lg leading-tight">
+        <h2 className="text-4xl sm:text-5xl lg:text-7xl xl:text-8xl font-extrabold tracking-wider text-[#1a3a24] leading-tight">
           {currentSlide?.titulo}
         </h2>
         <div className="flex items-center justify-center gap-3 my-4">
-          <div className="h-[1px] w-16 sm:w-24 bg-[#d4a017]/60" />
-          <div className="w-2.5 h-2.5 rounded-full bg-[#d4a017]" />
-          <div className="h-[1px] w-16 sm:w-24 bg-[#d4a017]/60" />
+          <span className="block w-16 sm:w-24 h-[1px] bg-gradient-to-r from-transparent to-[#1a5c2e]/40" />
+          <span className="block w-2.5 h-2.5 rounded-full bg-[#1a5c2e]" />
+          <span className="block w-16 sm:w-24 h-[1px] bg-gradient-to-l from-transparent to-[#1a5c2e]/40" />
         </div>
-        <p className="text-base sm:text-lg lg:text-2xl xl:text-3xl opacity-95 max-w-3xl lg:max-w-5xl mx-auto leading-relaxed font-medium">
+        <p className="text-base sm:text-lg lg:text-2xl xl:text-3xl text-[#4a6b54] max-w-3xl lg:max-w-5xl mx-auto leading-relaxed font-medium">
           {currentSlide?.subtitulo}
         </p>
       </div>
@@ -182,7 +218,7 @@ export default function HeroSlideshow() {
       {/* Left/Right Arrow Buttons */}
       <button
         onClick={goToPrev}
-        className={`absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/30 hover:bg-black/50 text-white flex items-center justify-center transition-all duration-300 backdrop-blur-sm ${
+        className={`absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#1a5c2e]/10 hover:bg-[#1a5c2e]/20 text-[#1a5c2e] flex items-center justify-center transition-all duration-300 backdrop-blur-sm ${
           isHovering ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
         }`}
         aria-label="Slide anterior"
@@ -191,7 +227,7 @@ export default function HeroSlideshow() {
       </button>
       <button
         onClick={goToNext}
-        className={`absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/30 hover:bg-black/50 text-white flex items-center justify-center transition-all duration-300 backdrop-blur-sm ${
+        className={`absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#1a5c2e]/10 hover:bg-[#1a5c2e]/20 text-[#1a5c2e] flex items-center justify-center transition-all duration-300 backdrop-blur-sm ${
           isHovering ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'
         }`}
         aria-label="Próximo slide"
@@ -208,14 +244,17 @@ export default function HeroSlideshow() {
               onClick={() => goToSlide(index)}
               className={`rounded-full transition-all duration-300 ${
                 index === currentIndex
-                  ? 'w-8 h-3 bg-[#d4a017]'
-                  : 'w-3 h-3 bg-white/50 hover:bg-white/80'
+                  ? 'w-8 h-3 bg-[#1a5c2e]'
+                  : 'w-3 h-3 bg-[#1a5c2e]/25 hover:bg-[#1a5c2e]/50'
               }`}
               aria-label={`Ir para slide ${index + 1}`}
             />
           ))}
         </div>
       )}
+
+      {/* Decorative bottom edge */}
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#1a5c2e]/30 to-transparent z-10" />
     </section>
   );
 }
