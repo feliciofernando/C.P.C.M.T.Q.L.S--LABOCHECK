@@ -535,7 +535,7 @@ export default function PainelAlertas({ onUpdate }: PainelAlertasProps) {
                   {/* Condutor info */}
                   <div className="flex flex-wrap gap-3 mt-2 text-xs text-[#6b6b6b]">
                     <span>
-                      <strong>Nº Ordem:</strong> {alerta.condutor.numeroOrdem}
+                      <strong>Nº Ordem:</strong> {String(alerta.condutor.numeroOrdem).padStart(3, '0')}
                     </span>
                     <span>
                       <strong>B.I.:</strong> {alerta.condutor.numeroBI}
@@ -687,7 +687,7 @@ export default function PainelAlertas({ onUpdate }: PainelAlertasProps) {
             <div className="space-y-4">
               <div className="bg-[#f0f0eb] rounded-lg p-3 border border-[#d1d1cc]">
                 <p className="text-sm font-medium text-[#1a1a1a]">{resolveAlerta.condutor.nomeCompleto}</p>
-                <p className="text-xs text-[#6b6b6b] mt-1">Nº Ordem: {resolveAlerta.condutor.numeroOrdem} | B.I.: {resolveAlerta.condutor.numeroBI}</p>
+                <p className="text-xs text-[#6b6b6b] mt-1">Nº Ordem: {String(resolveAlerta.condutor.numeroOrdem).padStart(3, '0')} | B.I.: {resolveAlerta.condutor.numeroBI}</p>
                 <p className="text-xs text-[#6b6b6b] mt-1">Validade: {resolveAlerta.dataValidade}</p>
               </div>
               <div>
@@ -736,7 +736,7 @@ export default function PainelAlertas({ onUpdate }: PainelAlertasProps) {
               Tem a certeza que deseja eliminar este alerta? Esta acção não pode ser desfeita.
               {deleteAlerta && (
                 <span className="block mt-2 font-medium text-[#1a1a1a]">
-                  {deleteAlerta.condutor.nomeCompleto} - Nº {deleteAlerta.condutor.numeroOrdem}
+                  {deleteAlerta.condutor.nomeCompleto} - Nº {String(deleteAlerta.condutor.numeroOrdem).padStart(3, '0')}
                 </span>
               )}
             </AlertDialogDescription>

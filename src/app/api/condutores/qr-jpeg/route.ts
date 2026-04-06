@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
     return new NextResponse(imageBuffer, {
       headers: {
         'Content-Type': 'image/jpeg',
-        'Content-Disposition': `inline; filename="QR_Code_${data.numero_ordem}_${String(data.nome_completo).replace(/\s+/g, '_')}.jpg"`,
+        'Content-Disposition': `inline; filename="QR_Code_${String(data.numero_ordem).padStart(3, '0')}_${String(data.nome_completo).replace(/\s+/g, '_')}.jpg"`,
       },
     });
   } catch (error: unknown) {

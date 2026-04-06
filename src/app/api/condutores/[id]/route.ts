@@ -21,7 +21,7 @@ export async function PUT(
       .eq('id', id)
       .single();
     const nomeCondutor = condutorAntes?.nome_completo || 'Desconhecido';
-    const numeroOrdem = condutorAntes?.numero_ordem || '?';
+    const numeroOrdem = String(condutorAntes?.numero_ordem || 0).padStart(3, '0');
 
     const { data: updated, error } = await supabase
       .from('condutores')
@@ -54,7 +54,7 @@ export async function DELETE(
       .eq('id', id)
       .single();
     const nomeCondutor = condutorAntes?.nome_completo || 'Desconhecido';
-    const numeroOrdem = condutorAntes?.numero_ordem || '?';
+    const numeroOrdem = String(condutorAntes?.numero_ordem || 0).padStart(3, '0');
 
     const { error } = await supabase
       .from('condutores')

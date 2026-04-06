@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     const pdfBuffer = generateFichaPDF(condutor);
 
     const nome = String(condutor.nomeCompleto || 'condutor').replace(/\s+/g, '_');
-    const numero = String(condutor.numeroOrdem || '0');
+    const numero = String(condutor.numeroOrdem || 0).padStart(3, '0');
 
     return new NextResponse(pdfBuffer, {
       headers: {

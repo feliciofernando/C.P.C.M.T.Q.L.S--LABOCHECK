@@ -160,7 +160,7 @@ export default function PainelVisualizar() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `Ficha_Registo_${condutorDetail.numeroOrdem}_${String(condutorDetail.nomeCompleto).replace(/\s+/g, '_')}.pdf`;
+      a.download = `Ficha_Registo_${String(condutorDetail.numeroOrdem).padStart(3, '0')}_${String(condutorDetail.nomeCompleto).replace(/\s+/g, '_')}.pdf`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -183,7 +183,7 @@ export default function PainelVisualizar() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `QR_Code_${condutorDetail.numeroOrdem}_${String(condutorDetail.nomeCompleto).replace(/\s+/g, '_')}.jpg`;
+      a.download = `QR_Code_${String(condutorDetail.numeroOrdem).padStart(3, '0')}_${String(condutorDetail.nomeCompleto).replace(/\s+/g, '_')}.jpg`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -279,7 +279,7 @@ export default function PainelVisualizar() {
               ) : (
                 condutores.map((c) => (
                   <TableRow key={c.id} className="hover:bg-[#f8f8f5]">
-                    <TableCell className="font-medium">{c.numeroOrdem}</TableCell>
+                    <TableCell className="font-medium font-mono">{String(c.numeroOrdem).padStart(3, '0')}</TableCell>
                     <TableCell>
                       <div>
                         <span className="font-medium">{c.nomeCompleto}</span>
@@ -350,7 +350,7 @@ export default function PainelVisualizar() {
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-[#1a5c2e]">
-              Ficha de Registo - Nº {selectedCondutor?.numeroOrdem}
+              Ficha de Registo - Nº {String(selectedCondutor?.numeroOrdem).padStart(3, '0')}
             </DialogTitle>
           </DialogHeader>
           {loadingDetail ? (

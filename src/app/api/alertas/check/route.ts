@@ -41,11 +41,11 @@ export async function POST() {
         const diasExpirada = Math.abs(diffDias);
         tipo = 'EXPIRADA';
         prioridade = diasExpirada > 90 ? 'ALTA' : 'MEDIA';
-        mensagem = `A Licenca Profissional de Condutor de ${condutor.nome_completo} (No ${condutor.numero_ordem}) expirou ha ${diasExpirada} dia${diasExpirada !== 1 ? 's' : ''}. Data de validade: ${condutor.validade_licenca}. Contacto: ${condutor.telefone1}.`;
+        mensagem = `A Licenca Profissional de Condutor de ${condutor.nome_completo} (Nº ${String(condutor.numero_ordem).padStart(3, '0')}) expirou ha ${diasExpirada} dia${diasExpirada !== 1 ? 's' : ''}. Data de validade: ${condutor.validade_licenca}. Contacto: ${condutor.telefone1}.`;
       } else if (diffDias <= 30) {
         tipo = 'EXPIRANDO_1MES';
         prioridade = diffDias <= 7 ? 'ALTA' : 'MEDIA';
-        mensagem = `A Licenca Profissional de Condutor de ${condutor.nome_completo} (No ${condutor.numero_ordem}) expira em ${diffDias} dia${diffDias !== 1 ? 's' : ''}. Data de validade: ${condutor.validade_licenca}. Contacto: ${condutor.telefone1}.`;
+        mensagem = `A Licenca Profissional de Condutor de ${condutor.nome_completo} (Nº ${String(condutor.numero_ordem).padStart(3, '0')}) expira em ${diffDias} dia${diffDias !== 1 ? 's' : ''}. Data de validade: ${condutor.validade_licenca}. Contacto: ${condutor.telefone1}.`;
       } else {
         continue;
       }

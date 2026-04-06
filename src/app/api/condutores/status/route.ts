@@ -22,7 +22,7 @@ export async function PUT(request: NextRequest) {
       .eq('id', id)
       .single();
     const nomeCondutor = condutor?.nome_completo || 'Desconhecido';
-    const numeroOrdem = condutor?.numero_ordem || '?';
+    const numeroOrdem = String(condutor?.numero_ordem || 0).padStart(3, '0');
 
     const { data, error } = await supabase
       .from('condutores')
