@@ -272,10 +272,17 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
   y += 5;
 
   // ── SIGNATURES ──
+  // Ensure signatures fit above the green footer bar (at H - 11)
+  const footerTop = H - 11;
+  const sigNeededHeight = 24; // approximate height needed for signatures
+  if (y + sigNeededHeight > footerTop) {
+    y = footerTop - sigNeededHeight;
+  }
+
   doc.setDrawColor(DGRAY);
   doc.setLineWidth(0.2);
   doc.line(ML, y, MR, y);
-  y += 10;
+  y += 8;
 
   const sigLeftX = ML + CW / 4;
   const sigRightX = ML + CW * 3 / 4;
@@ -284,17 +291,19 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
   doc.text('Data: ____/____/________', sigLeftX, y, { align: 'center' });
-  y += 5;
+
+  const sigBaseY = y; // align right column with left "Data" line
+
+  y += 4;
   doc.setTextColor(GRAY);
   doc.setFontSize(8);
   doc.setFont('helvetica', 'italic');
   doc.text('Assinatura do Condutor', sigLeftX, y, { align: 'center' });
-  y += 2;
+  y += 1;
   doc.setDrawColor(DARK);
   doc.setLineWidth(0.3);
   doc.line(sigLeftX - 25, y, sigLeftX + 25, y);
 
-  const sigBaseY = y - 9;
   doc.setTextColor(DARK);
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
