@@ -242,7 +242,7 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
   y = sectionHeader(doc, y, '7', 'DADOS DA LICENÇA');
 
   const rowsLicenca: [string, string][] = [
-    ['Nº de Registo', String(c.numeroOrdem).padStart(3, '0')],
+    ['Nº de Registo', '00' + c.numeroOrdem],
     ['Nº Membro', str(c.numeroMembro)],
     ['Nacionalidade', str(c.nacionalidade || 'Angolana')],
     ['Província', str(c.provincia || 'Lunda Sul')],

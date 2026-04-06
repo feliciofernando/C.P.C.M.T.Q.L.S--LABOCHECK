@@ -168,7 +168,7 @@ export default function PainelConsultar({ autoSearch }: PainelConsultarProps) {
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                 <InfoRow label="Nome Completo" value={condutor.nomeCompleto as string} highlight />
-                <InfoRow label="Nº de Ordem" value={String(condutor.numeroOrdem).padStart(3, '0')} highlight />
+                <InfoRow label="Nº de Ordem" value={"00" + condutor.numeroOrdem} highlight />
                 <InfoRow label="Nº do B.I." value={condutor.numeroBI as string} />
                 <InfoRow label="Data de Nascimento" value={condutor.dataNascimento as string} />
                 <InfoRow label="Sexo" value={condutor.sexo as string} />

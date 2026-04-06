@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
       adminId: admin.id,
       acao: 'CRIAR_FICHA',
       categoria: 'CONDUTORES',
-      detalhes: `Ficha criada para ${data.nomeCompleto || 'N/A'} - Nº ${String(nextNumeroOrdem).padStart(3, '0')} - BI: ${data.numeroBI || 'N/A'}`,
+      detalhes: `Ficha criada para ${data.nomeCompleto || 'N/A'} - Nº ${"00" + nextNumeroOrdem} - BI: ${data.numeroBI || 'N/A'}`,
     }).catch(() => {});
 
     return NextResponse.json(toCamelCase(condutor), { status: 201 });
