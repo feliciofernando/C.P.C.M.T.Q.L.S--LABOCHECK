@@ -19,8 +19,8 @@ export async function POST(request: NextRequest) {
 
     const nextNumeroOrdem = (lastCondutor?.[0]?.numero_ordem || 0) + 1;
 
-    // Gerar numero_membro
-    const numeroMembro = `${String(nextNumeroOrdem).padStart(6, '0')}/C.P.C.M.T.Q.L.S/${String(new Date().getFullYear()).slice(2)}`;
+    // Gerar numero_membro com formato 00 (001, 002... 0010, 0011...)
+    const numeroMembro = `00${nextNumeroOrdem}/C.P.C.M.T.Q.L.S/${String(new Date().getFullYear()).slice(2)}`;
 
     // Gerar QR Code com URL completo do site
     const siteUrl = process.env.NEXTAUTH_URL?.replace(/\/$/, '') || '';
