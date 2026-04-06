@@ -269,7 +269,7 @@ export function generateFichaPDF(c: Record<string, unknown>): Buffer {
     }
     y += 5.5;
   }
-  y += 5;
+  y += 8;
 
   // ── SIGNATURES ──
   // Ensure signatures fit above the green footer bar (at H - 11)
