@@ -133,7 +133,7 @@ function PublicPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-3 w-full py-3.5 px-6 rounded-xl text-white font-semibold text-base shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
-              style={{ backgroundColor: '#25D366' }}
+              style={{ backgroundColor: '#128C7E' }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
