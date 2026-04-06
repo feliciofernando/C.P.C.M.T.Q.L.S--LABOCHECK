@@ -176,7 +176,7 @@ export default function HeroSlideshow() {
 
       {/* Light green blur overlay on top of image */}
       {backgroundImage && (
-        <div className="absolute inset-0 backdrop-blur-[2px] bg-white/30" />
+        <div className="absolute inset-0 backdrop-blur-[1px] bg-white/25" />
       )}
 
       {/* Light green gradient (always present as base) */}
